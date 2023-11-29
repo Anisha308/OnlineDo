@@ -1,12 +1,14 @@
 import React from "react";
 import  './app.css'
+import Layout from "./layout/layout";
 
 function App() {
   return (
     <>
-      <h1 className='text-[20px] text-green-500'>helloooeeeeeeeeeeee</h1>
+      <Layout />
     </>
-  );
+  ); 
+  
 }
 
 export default App;
