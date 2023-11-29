@@ -15,13 +15,19 @@
     @apply max-w-full w-[1200px] px-5 mx-auto ;
 }
 .btn{
-    @apply bg-primaryColor py-[15px] px-[35px] rounded-[50px] text-white font-[600] mt-[38px]
+    @apply bg-whiteText py-[9px] px-[60px]  text-headingColor font-[600] mt-[38px]
 }
 .heading{
     @apply text-[44px] leading-[54px] font-[700] text-headingColor
 }
 .text_para{
-    @apply text-[18px] leading-[30px] font-[400] text-textColor mt-[18px]
+    @apply text-[18px] leading-[30px] font-[400] text-whiteText mt-[18px]
+}
+.header {
+    @apply bg-nav;
+}
+.hero__section{
+    @apply bg-[url('./assets/images/hero-bg.jpg')] bg-no-repeat bg-center bg-cover
 }
 }
 
@@ -33,7 +39,7 @@
     section {
         @apply py-[35px];
     }
-        
+       
 }
 
 @media only screen and (max-width:760px) {
