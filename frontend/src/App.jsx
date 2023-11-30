@@ -1,11 +1,13 @@
 import React from "react";
 import  './app.css'
-import Layout from "./layout/layout";
+import Layout from "./layout/Userlayout";
+
 
 function App() {
   return (
     <>
       <Layout />
+     
     </>
   ); 
   

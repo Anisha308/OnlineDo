@@ -4,7 +4,6 @@ import { PiUsersBold } from "react-icons/pi";
 import { LuClock } from "react-icons/lu";
 
 
-
 function Home() {
   return (
     <>

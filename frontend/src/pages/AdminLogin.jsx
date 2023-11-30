@@ -1,25 +1,23 @@
-import React from 'react'
-import { useState } from 'react'
+import React from 'react';
+import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 
-
-const Login = () => {
+const AdminLogin = () => {
   const [formData, setFormData] = useState({
-    email: ' ',
-    password:' '
-  })
+    email: " ",
+    password: " ",
+  });
 
-  const handleInputChange = e => {
-    setFormData({ ...formData, [e.target.name ]: e.target.value})
-  }
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   return (
     <section className="px-5 lg:px-0">
       <div className="w-full max-w-[570px] mx-auto rounded-lg shadow-md md:p-10">
-        <h3 className="text-HeadingColor text-[22px] leading-9 font-bold mb-10">
-          Hello! <span className="text-primaryColor">Welcome</span>
-          Back
+        <h3 className="text-HeadingColor text-[22px] leading-2 font-bold mb-4">
+          Hello! <span className="text-primaryColor">Welcome </span>Back
         </h3>
-
+        <h4>Admin!</h4>
         <form className="py-4 md:py-0">
           <div className="mb-5">
             <input
@@ -43,17 +41,28 @@ const Login = () => {
               required
             />
           </div>
-          <div className='mt-7'>
-            <button type='submit' className='w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-lg px-4 py-3'>Login</button>
+          <div className="mt-7">
+            <button
+              type="submit"
+              className="w-[150px] bg-black text-white text-[18px] leading-[20px] px-4 py-3"
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              className="w-[150px] bg-gray-500 text-white text-[18px] leading-[20px] px-4 py-3 ml-4"
+              onClick={() => {
+                // Add cancel button logic here
+              }}
+            >
+              Cancel
+            </button>
           </div>
-          <p className='
-          mt-5 text-textColor text-center'>Dont have an account?
-          <Link to='/register' className='text-primaryColor font-medium ml-1'>Register</Link>
-          </p>
+          
         </form>
       </div>
     </section>
   );
 }
 
-export default Login
+export default AdminLogin
