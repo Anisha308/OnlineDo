@@ -26,7 +26,7 @@ const SideBar = () => {
                 {
                   elemBefore: () => (
                     <Link
-                      to="/userlist"
+                      to="/admin/userlist"
                       className="text-primaryColor font-medium ml-1"
                     >
                       UserLists
@@ -43,7 +43,7 @@ const SideBar = () => {
                 {
                   elemBefore: () => (
                     <Link
-                      to="/instructorlist"
+                      to="/admin/instructorlist"
                       className="text-primaryColor font-medium ml-1"
                     >
                      InstructorLists

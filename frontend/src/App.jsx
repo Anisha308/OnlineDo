@@ -1,6 +1,6 @@
 import React from "react";
 import  './app.css'
-import Layout from "./layout/Userlayout";
+import Layout from "./layout/layout";
 
 
 function App() {

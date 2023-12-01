@@ -1,5 +1,12 @@
 import React from "react";
-
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Tooltip,
+} from "@material-tailwind/react";
 import SideBar from "../../components/Header/SideBar";
 const data = [
   {
@@ -7,45 +14,87 @@ const data = [
     email: "Anisha@gmail.com",
     mobile: 7510994412,
   },
+  {
+    name: "Anisha",
+    email: "Anisha@gmail.com",
+    mobile: 7510994412,
+  },
+  {
+    name: "Anisha",
+    email: "Anisha@gmail.com",
+    mobile: 7510994412,
+  },
+  { name: "Aswathi", email: "aswathi@gmail.com", mobile: 73338990 },
   { name: "Aswathi", email: "aswathi@gmail.com", mobile: 73338990 },
 ];
 
 const Userlists = () => {
   return (
-    <div>
-      <div className="flex">
-        <SideBar />
-        <div className="flex-1 p-10">
-          <table className="w-[900px] px-4">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-2 text-left">Name</th>
-                <th className="px-4 py-2 text-left">Email</th>
-                <th className="px-4 py-2 text-left">Mobile</th>
-                <th className="px-4 py-2 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((val, key) => {
-                return (
-                  <tr key={key} className="border-b">
-                    <td className="px-4 py-2 text-left">{val.name}</td>
-                    <td className="px-4 py-2 text-left">{val.email}</td>
-                    <td className="px-4 py-2 text-left">{val.mobile}</td>
-                    <td className="px-4 py-2 text-left">
-                      {/* <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-sm">
-                        Unblock
-                      </button> */}
-                      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-sm">
-                        Block
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+    <div className="flex  ">
+      <SideBar />
+      <div className="ml-5 flex flex-wrap  gap-5">
+        {data.map((instructor, index) => (
+          <Card
+            key={index}
+            className="w-[333px] mb-7 flex-none"
+          >
+            <CardHeader floated={false} className="h-80">
+              <img
+                src="https://docs.material-tailwind.com/img/team-3.jpg"
+                alt="profile-picture"
+              />
+            </CardHeader>
+            <CardBody className="text-center">
+              <Typography variant="h4" color="blue-gray" className="font-bold">
+                {instructor.name}
+              </Typography>
+              <Typography color="blue-gray" className="mb-2" textGradient>
+                Email:{instructor.email}{" "}
+              </Typography>
+              <Typography color="blue-gray" className="mb-" textGradient>
+                Contact : {instructor.mobile}
+              </Typography>
+            </CardBody>
+            <CardFooter className="flex justify-center gap-7 pt-2">
+              <Tooltip content="Like">
+                <Typography
+                  as="a"
+                  href="#facebook"
+                  variant="lead"
+                  color="blue"
+                  textGradient
+                ></Typography>
+              </Tooltip>
+              <Tooltip content="Follow">
+                <Typography
+                  as="a"
+                  href="#twitter"
+                  variant="lead"
+                  color="light-blue"
+                  textGradient
+                >
+                  <i className="fab fa-twitter" />
+                </Typography>
+              </Tooltip>
+              <Tooltip content="Follow">
+                <Typography
+                  as="a"
+                  href="#instagram"
+                  variant="lead"
+                  color="purple"
+                  textGradient
+                >
+                  <i className="fab fa-instagram" />
+                </Typography>
+              </Tooltip>
+              <div>
+                <button className="bg-red-500 text-white px-10 py-2 w-[200px]  rounded-md">
+                  Block
+                </button>
+              </div>
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </div>
   );

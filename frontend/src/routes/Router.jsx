@@ -30,10 +30,9 @@ function Router() {
         <Route path="/instructorLogin" element={<InstructorLogin />} />
         <Route path="/instructorRegister" element={<InstructorSignup />} />
 
-        <Route path="/adminLogin" element={<AdminLogin />} />
-        <Route path="/userlist" element={<Userlists />} />
-        <Route path="/instructorlist" element={<Instructorlist />} />
-        <Route path="/adminhome" element={<Instructorlist />} />
+        <Route path="/admin/Login" element={<AdminLogin />} />
+        <Route path="/admin/userlist" element={<Userlists />} />
+        <Route path="/admin/instructorlist" element={<Instructorlist />} />
       </Routes>
     </>
   );
