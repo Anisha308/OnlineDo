@@ -74,16 +74,10 @@ const AdminHeader = () => {
           </div>
           {/* ==================nav right ==============*/}
           <div className="flex items-center gap-4">
-            <div className="hidden">
-              <Link to="/">
-                <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
-                  <img src={userImg} className="w-full rounded full" alt="" />
-                </figure>
-              </Link>
-            </div>
-            <Link to="/login">
+            
+            <Link to="/logout">
               <button className="bg-black py-2 px-5 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]">
-                Login
+                Logout
               </button>
             </Link>
             <span className="md:hidden" onClick={toggleMenu}>
