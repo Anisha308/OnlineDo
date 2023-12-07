@@ -1,26 +1,59 @@
 import React from 'react'
 import signupImg from '../../assets/images/hero-bg.jpg'
 import { NavLink, Link } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { Form, Button, Row, Col } from "react-bootstrap";
+import {  useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useRegisterMutation } from "../../Slices/usersApiSlice";
+import { setCredentials } from "../../Slices/authSlice";
+import { toast } from "react-toastify";
+import Loader from '../../components/Loader';
+
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    name: " ",
-    email: " ",
-     mobile: " ",
-    password: " ",
-     confirmPassword: " "
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+     confirmPassword: ""
   });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [register, { isLoading }] = useRegisterMutation();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+ useEffect(() => {
+   if (userInfo) {
+     navigate("/login");
+   }
+ }, [navigate, userInfo]);
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const submitHandler = async event => {
-    event.preventDefault()
-  }
+ const submitHandler = async (e) => {
+   e.preventDefault();
 
+const {name,email,mobile,password,confirmPassword} = formData
 
- 
+   if (password !== confirmPassword) {
+     toast.error("Passwords do not match");
+   } else {
+     try {
+       const res = await register({ name, email, password }).unwrap();
+       dispatch(setCredentials({ ...res }));
+       navigate("/login");
+     } catch (err) {
+       toast.error(err?.data?.message || err.error);
+     }
+   }
+ };
   return (
     <section className="px-5 xl:px-0">
       <div className="max-w-[900px] mx-auto  ">
@@ -40,7 +73,7 @@ const SignUp = () => {
             <h3 className="text-headingColor text-[22px] leading-9 front-bold mb-10">
               Create an <span className="text-primaryColor">account</span>
             </h3>
-            <form onSubmit={{ submitHandler }}>
+            <form onSubmit={ submitHandler }>
               <div className="mb-5">
                 <input
                   type="text"
@@ -89,8 +122,8 @@ const SignUp = () => {
                 <input
                   type="password"
                   placeholder="Confirm Password"
-                  name="confirmpassword"
-                  value={formData.confirmpassword}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
                   required
@@ -113,6 +146,9 @@ const SignUp = () => {
                 >
                   Cancel
                 </button>
+                {
+  isLoading && <Loader />
+}
               </div>
 
               <p

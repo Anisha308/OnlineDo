@@ -1,31 +1,56 @@
-import React from 'react';
-import { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import React from "react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useAdminLoginMutation } from "../Slices/adminApiSlice";  // Updated import
+import { setCredentials } from "../Slices/authSlice";
+import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
-const AdminLogin = () => {
-  const [formData, setFormData] = useState({
-    email: " ",
-    password: " ",
-  });
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [login, { isLoading }] = useAdminLoginMutation(); // Updated hook
+
+  const { adminInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (adminInfo) {
+      navigate("/admin");
+    }
+  }, [navigate, adminInfo]);
+
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate("/admin");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
   };
+
   return (
     <section className="px-5 lg:px-0">
       <div className="w-full max-w-[570px] mx-auto rounded-lg shadow-md md:p-10">
-        <h3 className="text-HeadingColor text-[22px] leading-2 font-bold mb-4">
-          Hello! <span className="text-primaryColor">Welcome </span>Back
+        <h3 className="text-HeadingColor text-[22px] leading-9 font-bold mb-10">
+          Hello! <span className="text-primaryColor">Welcome</span> Back
         </h3>
-        <h4>Admin!</h4>
-        <form className="py-4 md:py-0">
+
+        <form onSubmit={submitHandler}>
           <div className="mb-5">
             <input
               type="email"
               placeholder="Enter Your Email"
               name="email"
-              value={formData.email}
-              onChange={handleInputChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
               required
             />
@@ -35,16 +60,17 @@ const AdminLogin = () => {
               type="password"
               placeholder="Password"
               name="password"
-              value={formData.password}
-              onChange={handleInputChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor rounded-md cursor-painter "
               required
             />
           </div>
           <div className="mt-7">
             <button
+              disabled={isLoading}
               type="submit"
-              className="w-[150px] bg-black text-white text-[18px] leading-[20px] px-4 py-3"
+              className="w-[150px] bg-primaryColor text-white text-[18px] leading-[30px] px-4 py-3"
             >
               Login
             </button>
@@ -58,11 +84,17 @@ const AdminLogin = () => {
               Cancel
             </button>
           </div>
-          
+          <p className="mt-5 text-textColor text-center">
+            Don't have an account?
+            <Link to="/register" className="text-primaryColor font-medium ml-1">
+              Register
+            </Link>
+          </p>
         </form>
+        {isLoading && <Loader />}
       </div>
     </section>
   );
-}
+};
 
-export default AdminLogin
+export default Login;
