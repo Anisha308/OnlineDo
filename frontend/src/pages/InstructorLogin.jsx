@@ -1,16 +1,46 @@
 import React from "react";
 import { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useInstructorLoginMutation } from "../Slices/authInstructorSlice,js";
+import { instructorSetCredentials } from "../Slices/instructorApiSlice";
+import { useDispatch } from "react-redux";
 
 const InstructorLogin = () => {
   const [formData, setFormData] = useState({
-    email: " ",
-    password: " ",
+    email: "",
+    password: "",
   });
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log("Updated FormData:", formData);
+
+  };
+
+const dispatch = useDispatch();
+
+  const navigate = useNavigate(); // assuming you are using React Router
+
+  const [login] = useInstructorLoginMutation(); // Assuming 'mutate' is the function used for login
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+      console.log("Submit button clicked");
+      console.log("FormData:", formData);
+    try {
+      const res = await login({
+        email: formData.email,
+        password: formData.password,
+      }).unwrap();
+      console.log("Login successful. Response:", res);
+      dispatch(instructorSetCredentials({ ...res }));
+      navigate("/");
+      toast.success("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjayyyyyyyy");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
   };
   return (
     <section className="px-5 lg:px-0">
@@ -19,7 +49,7 @@ const InstructorLogin = () => {
           Hello! <span className="text-primaryColor">Welcome </span>Back
         </h3>
         <h4>Login to continue teaching...</h4>
-        <form className="py-4 md:py-0">
+        <form className="py-4 md:py-0" onSubmit={submitHandler}>
           <div className="mb-5">
             <input
               type="email"
@@ -64,7 +94,10 @@ const InstructorLogin = () => {
           mt-5 text-textColor text-center"
           >
             Dont have an account?
-            <Link to="/instructorRegister" className="text-primaryColor font-medium ml-1">
+            <Link
+              to="/instructorRegister"
+              className="text-primaryColor font-medium ml-1"
+            >
               Register
             </Link>
           </p>

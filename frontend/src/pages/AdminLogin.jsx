@@ -40,7 +40,7 @@ const Login = () => {
     <section className="px-5 lg:px-0">
       <div className="w-full max-w-[570px] mx-auto rounded-lg shadow-md md:p-10">
         <h3 className="text-HeadingColor text-[22px] leading-9 font-bold mb-10">
-          Hello! <span className="text-primaryColor">Welcome</span> Back
+          Hello! <span className="text-primaryColor">Welcome</span> Admin
         </h3>
 
         <form onSubmit={submitHandler}>

@@ -35,7 +35,7 @@ const navigate = useNavigate();
   };
 
   return (
-    <section className="px-5 lg:px-0">
+    <section className="flex items-center justify-center h-screen">
       <div className="w-full max-w-[570px] mx-auto rounded-lg shadow-md md:p-10">
         <h3 className="text-HeadingColor text-[22px] leading-9 font-bold mb-10">
           Hello! <span className="text-primaryColor">Welcome</span> Back
@@ -68,13 +68,13 @@ const navigate = useNavigate();
             <button
               disabled={isLoading}
               type="submit"
-              className="w-[150px] bg-primaryColor text-white text-[18px] leading-[30px] px-4 py-3"
+              className="w-[140px] bg-black text-white text-[18px] leading-[20px] px-4 py-3"
             >
               Login
             </button>
             <button
               type="button"
-              className="w-[150px] bg-gray-500 text-white text-[18px] leading-[20px] px-4 py-3 ml-4"
+              className="w-[150px] bg-gray-500 text-white text-[18px] leading-[20px] px-4 py-3 ml-10"
               onClick={() => {
                 // Add cancel button logic here
               }}

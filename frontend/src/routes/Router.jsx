@@ -5,7 +5,6 @@ import SignUp from '../pages/Users/UserSignup'
 import Login from '../pages/Users/UserLogin.jsx'
 import Contact from '../pages/Contact'
 import Instructor from '../pages/Intructors/Instructor'
-import InstructorDetails from '../pages/Intructors/InstructorDetails'
 import InstructorLogin from '../pages/InstructorLogin.jsx'
 import InstructorSignup from '../pages/Intructors/InstructorSignup'
 import AdminLogin from '../pages/AdminLogin.jsx'
@@ -14,6 +13,7 @@ import Userlists from '../pages/Admin/Userlists.jsx'
 import Instructorlist from '../pages/Admin/Instructorlist.jsx'
 
 import { Routes, Route } from 'react-router-dom'
+import InstructorDashboard from '../pages/Intructors/Instructor'
 
 function Router() {
   return (
@@ -33,6 +33,7 @@ function Router() {
         <Route path="/admin/Login" element={<AdminLogin />} />
         <Route path="/admin/userlist" element={<Userlists />} />
         <Route path="/admin/instructorlist" element={<Instructorlist />} />
+        <Route path="/instructor/verify" element={<InstructorDashboard/>} />
       </Routes>
     </>
   );

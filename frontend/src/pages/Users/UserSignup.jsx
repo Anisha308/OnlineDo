@@ -46,7 +46,7 @@ const {name,email,mobile,password,confirmPassword} = formData
      toast.error("Passwords do not match");
    } else {
      try {
-       const res = await register({ name, email, password }).unwrap();
+       const res = await register({ name, email,mobile, password }).unwrap();
        dispatch(setCredentials({ ...res }));
        navigate("/login");
      } catch (err) {

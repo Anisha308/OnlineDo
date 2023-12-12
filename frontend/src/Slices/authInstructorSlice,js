@@ -1,0 +1,26 @@
+import { apiSlice } from "./apiSlice";
+const INSTRUCT_URL = "/api/instructor";
+
+export const instructApiSlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    instructorSignUp: builder.mutation({
+      query: (data) => ({
+        url: `${INSTRUCT_URL}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    instructorLogin: builder.mutation({
+      query: (data) => ({
+        url: `${INSTRUCT_URL}/auth`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+  }),
+});
+
+export const {
+useInstructorSignUpMutation,useInstructorLoginMutation
+} = instructApiSlice;

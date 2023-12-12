@@ -2,24 +2,59 @@ import React from "react";
 import signupImg from "../../assets/images/hero-bg.jpg";
 import { NavLink, Link } from "react-router-dom";
 import { useState } from "react";
-
+import { toast } from "react-toastify";
+import { useInstructorSignUpMutation } from "../../Slices/authInstructorSlice,js";
 const InstructorSignup = () => {
   const [formData, setFormData] = useState({
-    name: " ",
-    email: " ",
-    mobile: " ",
-    experience: " ",
-    jobrole: " ",
-    companyname: " ",
-    password: " ",
-    confirmPassword: " ",
+    name: "",
+    email: "",
+    mobile: "",
+    experience: "",
+    jobrole: "",
+    companyname: "",
+    password: "",
+    confirmPassword: "",
   });
+  const [  register ] = useInstructorSignUpMutation(); // Use your register mutation hook
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const {
+      name,
+      email,
+      mobile,
+      experience,
+      jobrole,
+      password,
+      companyname,
+      confirmPassword,
+    } = formData;
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+    } else {
+      try {
+        const res = await register({
+          name,
+          email,
+          mobile,
+          experience,
+          jobrole,
+          companyname,
+          password,
+        }).unwrap();
+        dispatch(setCredentials({ ...res }));
+        navigate("/userlists");
+        
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
   };
 
   return (
@@ -42,8 +77,7 @@ const InstructorSignup = () => {
               Register{" "}
               <span className="text-primaryColor">to be an Instructor!!</span>
             </h3>
-            <form onSubmit={submitHandler
-            }>
+            <form onSubmit={submitHandler}>
               <div className="mb-5">
                 <input
                   type="text"
@@ -125,8 +159,8 @@ const InstructorSignup = () => {
                 <input
                   type="password"
                   placeholder="Confirm Password"
-                  name="confirmpassword"
-                  value={formData.confirmpassword}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
                   required
