@@ -20,7 +20,7 @@ const Login = () => {
 
   useEffect(() => {
     if (adminInfo) {
-      navigate("/admin");
+      navigate("/admin/userlists");
     }
   }, [navigate, adminInfo]);
 
@@ -30,7 +30,7 @@ const Login = () => {
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
-      navigate("/admin");
+      navigate("/admin/userlist");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -84,12 +84,7 @@ const Login = () => {
               Cancel
             </button>
           </div>
-          <p className="mt-5 text-textColor text-center">
-            Don't have an account?
-            <Link to="/register" className="text-primaryColor font-medium ml-1">
-              Register
-            </Link>
-          </p>
+        
         </form>
         {isLoading && <Loader />}
       </div>

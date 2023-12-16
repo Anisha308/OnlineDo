@@ -36,8 +36,8 @@ const dispatch = useDispatch();
       }).unwrap();
       console.log("Login successful. Response:", res);
       dispatch(instructorSetCredentials({ ...res }));
-      navigate("/");
-      toast.success("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjayyyyyyyy");
+      navigate("/instructor/courselist");
+      toast.success("Successfully logged in");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }

@@ -7,7 +7,7 @@ import { useLogoutMutation } from "../../Slices/usersApiSlice";
 import { logout } from "../../Slices/authSlice";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
-const AdminHeader = () => {
+const InstructorHeader = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
   const navigate = useNavigate(); // Initialize useNavigate
@@ -29,7 +29,7 @@ const AdminHeader = () => {
   const logoutHandler = async () => {
     try {
       await logoutApiCall().unwrap();
-      navigate("/admin/Login");
+      navigate("/instructorLogin");
     } catch (err) {
       console.error(err);
     }
@@ -74,4 +74,4 @@ const AdminHeader = () => {
   );
 };
 
-export default AdminHeader;
+export default InstructorHeader;

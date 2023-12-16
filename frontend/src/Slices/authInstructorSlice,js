@@ -18,9 +18,16 @@ export const instructApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+     addcourse: builder.mutation({
+      query: (data) => ({
+        url: `${INSTRUCT_URL}/addcourse`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
 export const {
-useInstructorSignUpMutation,useInstructorLoginMutation
+useInstructorSignUpMutation,useInstructorLoginMutation,useAddcourseMutation
 } = instructApiSlice;

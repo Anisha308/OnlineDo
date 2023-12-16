@@ -50,7 +50,7 @@ const navigate = useNavigate();
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-              required
+            
             />
           </div>
           <div className="mb-5">
@@ -61,7 +61,7 @@ const navigate = useNavigate();
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor rounded-md cursor-painter "
-              required
+             
             />
           </div>
           <div className="mt-7">

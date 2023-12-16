@@ -8,6 +8,8 @@ import Instructor from '../pages/Intructors/Instructor'
 import InstructorLogin from '../pages/InstructorLogin.jsx'
 import InstructorSignup from '../pages/Intructors/InstructorSignup'
 import AdminLogin from '../pages/AdminLogin.jsx'
+import Courselist from '../pages/Intructors/Courselist.jsx'
+import Addcourse from '../pages/Intructors/AddCourse.jsx'
 
 import Userlists from '../pages/Admin/Userlists.jsx'
 import Instructorlist from '../pages/Admin/Instructorlist.jsx'
@@ -29,11 +31,13 @@ function Router() {
         <Route path="/instructor" element={<Instructor />} />
         <Route path="/instructorLogin" element={<InstructorLogin />} />
         <Route path="/instructorRegister" element={<InstructorSignup />} />
+        <Route path="/instructor/courselist" element={<Courselist />} />
+        <Route path="/instructor/addcourse" element={<Addcourse />} />
 
         <Route path="/admin/Login" element={<AdminLogin />} />
         <Route path="/admin/userlist" element={<Userlists />} />
         <Route path="/admin/instructorlist" element={<Instructorlist />} />
-        <Route path="/instructor/verify" element={<InstructorDashboard/>} />
+        <Route path="/instructor/verify" element={<InstructorDashboard />} />
       </Routes>
     </>
   );

@@ -130,14 +130,14 @@ const [unblockInstructorMutation]=useUnblockInstructorMutation()
                   >
                     {instructor.Blocked ? "Unblock" : "Block"}
                   </button>
-                  {instructor.Blocked && (
+                  {/* {instructor.Blocked && (
                     <button
                       onClick={() => handleUnblockInstructor(instructor._id)}
                       className="bg-blue-500 text-white px-10 py-2 w-[140px]  rounded-md ml-3"
                     >
                       Unblock
                     </button>
-                  )}
+                  )} */}
                 </div>
               </CardFooter>
             </Card>
