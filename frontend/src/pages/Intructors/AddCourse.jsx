@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PiFirstAid } from "react-icons/pi";
-import { useAddcourseMutation } from "../../Slices/authInstructorSlice,js";
+import { useAddcourseMutation } from "../../Slices/authInstructorSlice.js";
 
 const AddCourse = () => {
   const [courseName, setCourseName] = useState("");

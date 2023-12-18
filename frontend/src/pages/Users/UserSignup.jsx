@@ -9,7 +9,7 @@ import { useRegisterMutation } from "../../Slices/usersApiSlice";
 import { setCredentials } from "../../Slices/authSlice";
 import { toast } from "react-toastify";
 import Loader from '../../components/Loader';
-import uplaodImageToCloudinary from '../../../../backend/utils/uploadCloudinary';
+import uploadImageToCloudinary from '../../../../backend/utils/uploadCloudinary';
 
 
 const SignUp = () => {
@@ -46,7 +46,7 @@ const SignUp = () => {
     const handleFileChange = async (event) => {
     const file = event.target.files[0];
     try {
-      const data = await uplaodImageToCloudinary(file);
+      const data = await uploadImageToCloudinary(file);
       console.log(data, "data");
 
       setPreviewURL(data.url);
@@ -57,34 +57,7 @@ const SignUp = () => {
     }
   };
 
-   const handleFileUpload = () => {
-     return (
-       <div className="mb-5">
-         <p className="text-gray-500 text-md mb-3 pl-4">Profile Photo</p>
-         <input
-           type="file"
-           accept="image/*"
-           name="profilephoto"
-           onChange={handleFileChange}
-           className=""
-           id="profile-photo-input"
-         />
-         <label htmlFor="profile-photo-input" className="cursor-pointer">
-           <div className="mx-auto w-64 text-center relative">
-             <div className="relative w-64 h-64 flex items-center justify-center">
-               {selectedFile && (
-                 <img
-                   className="w-10 h-10 rounded-full absolute top-0 left-0"
-                   src={selectedFile}
-                   alt=""
-                 />
-               )}
-             </div>
-           </div>
-         </label>
-       </div>
-     );
-  };
+   
    const submitHandler = async (e) => {
      e.preventDefault();
      setLoading(true);
