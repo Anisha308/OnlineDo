@@ -70,11 +70,12 @@ const [showModal, setShowModal] = useState(false);
         {error && <div>Error: {error.message}</div>}
         {users &&
           users.map((user, index) => (
-            <Card key={index} className="w-[333px] mb-7 flex-none">
+            <Card key={user._id} className="w-[333px] mb-7 flex-none">
               <CardHeader floated={false} className="h-80">
                 <img
-                  src="https://docs.material-tailwind.com/img/team-3.jpg"
-                  alt="profile-picture"
+                  src={user.profilephoto}
+                  alt={`${user.name}'s Profile`}
+                  className="w-full h-full"
                 />
               </CardHeader>
               <CardBody className="text-center">
@@ -96,7 +97,7 @@ const [showModal, setShowModal] = useState(false);
                 <div>
                   <button
                     onClick={() => handleBlockUser(user._id)}
-                    className="bg-red-500 text-white px-10 py-2 w-[200px]  rounded-md"
+                    className="bg-red-500 text-white px-10 py-2 w-[200px]  rounded-md mb-3"
                   >
                     {user.Blocked ? "Unblock" : "Block"}
                   </button>
@@ -111,7 +112,6 @@ const [showModal, setShowModal] = useState(false);
           id="popup-modal"
           className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8"
         >
-         
           <p className="mb-4"> Are you sure you want to block this user?</p>
           <div className="flex gap-4">
             <button
