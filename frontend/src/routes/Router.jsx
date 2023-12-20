@@ -13,6 +13,7 @@ import Addcourse from '../pages/Intructors/AddCourse.jsx'
 
 import Userlists from '../pages/Admin/Userlists.jsx'
 import Instructorlist from '../pages/Admin/Instructorlist.jsx'
+import UserProfile from '../pages/Users/UserProfile.jsx'
 
 import { Routes, Route } from 'react-router-dom'
 import InstructorDashboard from '../pages/Intructors/Instructor'
@@ -27,17 +28,17 @@ function Router() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/services" element={<Services />} />
-
         <Route path="/instructor" element={<Instructor />} />
         <Route path="/instructorLogin" element={<InstructorLogin />} />
         <Route path="/instructorRegister" element={<InstructorSignup />} />
         <Route path="/instructor/courselist" element={<Courselist />} />
         <Route path="/instructor/addcourse" element={<Addcourse />} />
-
         <Route path="/admin/Login" element={<AdminLogin />} />
         <Route path="/admin/userlist" element={<Userlists />} />
         <Route path="/admin/instructorlist" element={<Instructorlist />} />
         <Route path="/instructor/verify" element={<InstructorDashboard />} />
+        <Route path="/profile" element={<UserProfile />} />{" "}
+        
       </Routes>
     </>
   );

@@ -3,6 +3,7 @@
     "@material-tailwind/react": "^2.1.5",
     "@mui/icons-material": "^5.15.0",
     "@mui/material": "^5.15.0",
+    "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.41.0",
     "cookie-parser": "^1.4.6",
