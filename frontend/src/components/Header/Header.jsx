@@ -101,15 +101,15 @@ const Header = () => {
           <div className="flex items-center gap-4">
             {userInfo ? (
               <div className="flex items-center">
-                <span className="mr-2">{userInfo.name}</span>
+                <span className="mr-2 text-white">Welcome {userInfo.name}</span>
                 <div>
-                  <Link to="/">
+                  <Link to={`/profile/${userInfo._id}`}>
                     <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
                       <img
                         src={userImg}
                         className="w-full rounded full"
                         alt=""
-                      />
+                      />  
                     </figure>
                   </Link>
                 </div>

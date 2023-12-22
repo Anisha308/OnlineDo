@@ -37,7 +37,7 @@ function Router() {
         <Route path="/admin/userlist" element={<Userlists />} />
         <Route path="/admin/instructorlist" element={<Instructorlist />} />
         <Route path="/instructor/verify" element={<InstructorDashboard />} />
-        <Route path="/profile" element={<UserProfile />} />{" "}
+        <Route path="/profile/:id" element={<UserProfile />} />{" "}
         
       </Routes>
     </>
