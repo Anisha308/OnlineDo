@@ -18,10 +18,23 @@ export const instructApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-     addcourse: builder.mutation({
+    addcourse: builder.mutation({
       query: (data) => ({
         url: `${INSTRUCT_URL}/addcourse`,
         method: "POST",
+        body: data,
+      }),
+    }),
+    getInstructProfile: builder.query({
+      query: (instructorId) => ({
+        url: `${INSTRUCT_URL}/showprofile/${instructorId}`, // Assuming this endpoint returns user profile details
+        method: "GET",
+      }),
+    }),
+    updateInstructProfile: builder.mutation({
+      query: (data) => ({
+        url: `${INSTRUCT_URL}/showprofile/${data.instructorId}`,
+        method: "PUT",
         body: data,
       }),
     }),
@@ -29,5 +42,9 @@ export const instructApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-useInstructorSignUpMutation,useInstructorLoginMutation,useAddcourseMutation
+  useInstructorSignUpMutation,
+  useInstructorLoginMutation,
+  useGetInstructProfileQuery,
+useUpdateInstructProfileMutation,
+  useAddcourseMutation,
 } = instructApiSlice;

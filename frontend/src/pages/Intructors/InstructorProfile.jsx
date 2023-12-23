@@ -1,80 +1,92 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import { Avatar } from "@material-tailwind/react";
 import { useSelector } from "react-redux";
 import {
-  useGetProfileQuery,
-  useUpdateProfileMutation,
-} from "../../Slices/usersApiSlice";
+  useGetInstructProfileQuery,
+  useUpdateInstructProfileMutation
+} from "../../Slices/authInstructorSlice";
 
-const UserProfile = () => {
-  const user = JSON.parse(localStorage.getItem("userInfo"));
+const InstructorProfile = () => {
+  const instructor = JSON.parse(localStorage.getItem("instructorInfo"));
 
-  const { data, error, isLoading } = useGetProfileQuery(user._id);
-  const [users, setUsers] = useState([]);
+const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
+console.log("Query Status:", { data, error, isLoading });
+  const [instructors, setInstructors] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null); // Add this state
+  const [selectedInstructorId, setSelectedInstructorId] = useState(null); // Add this state
 
-  const [editedUserData, setEditedUserData] = useState({
+  const [editedInstructorData, setEditedInstructorData] = useState({
     name: "",
     email: "",
     mobile: "",
+    experience: "",
+    jobrole: "",
+    companyname:"",
     profilephoto: "",
   });
-console.log(data,'dataaaaaaa');
-  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
- 
+
+
+ console.log("Instructor ID:", instructor._id);
+ console.log("Data:", data);
+ console.log("Error:", error);
+ console.log("Is Loading:", isLoading);
+  console.log(instructors,'instructorssssssssssssssss')
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateInstructProfileMutation();
+
   useEffect(() => {
     if (error) {
-      console.error("Error from useGetProfileQuery:", error);
+    console.error("Error fetching instructor profile:", error);
       // Handle the error, e.g., show a user-friendly message
-    } else if (data && data.users) {
-      setUsers(data.users);
+    } else if (data && data.instructors) {
+      setInstructors(data.instructors);
     }
   }, [data, error]);
 
-  
   const handleEditProfile = () => {
-    setEditedUserData({
-      name: users.name || "",
-      email: users.email || "",
-      mobile: users.mobile || "",
-      profilephoto: users.profilephoto || "",
+    setEditedInstructorData({
+      name: instructors.name || "",
+      email: instructors.email || "",
+      mobile: instructors.mobile || "",
+      experience: instructors.experience || "",
+      jobrole: instructors.jobrole || "",
+      companyname:instructors.companyname || "",
+      profilephoto: instructors.profilephoto || "",
     });
-    setSelectedUserId(users._id); // Set the selected user ID
+    setSelectedInstructorId(instructors._id); // Set the selected user ID
 
     setIsModalOpen(true);
   };
 
   const handleUpdateProfile = async () => {
     try {
-      console.log("Updating profile for user ID:", selectedUserId); // Use selectedUserId here
-      console.log("Data to be sent:", editedUserData);
+      console.log("Updating profile forInstructorr IDddddddddddddddddddddddddddd:", selectedInstructorId); // Use selectedUserId here
+      console.log("Data to be senttttttttttttttttttttt:", editedInstructorData);
 
       const response = await updateProfile({
-        userId: selectedUserId,
-        ...editedUserData,
+        instructorId: selectedInstructorId,
+        ...editedInstructorData
       }).unwrap();
       console.log("API Response:", response);
       if (response.error) {
         console.error("Profile update failed:", response.error.message);
       } else {
-
-        setEditedUserData((prevData) => ({
+        setEditedInstructorData((prevData) => ({
           ...prevData,
           name: response.name,
           email: response.email,
           mobile: response.mobile,
+          experience: response.experience,
+          jobrole: response.jobrole,
+          companyname:response.companyname,
           profilephoto: response.profilephoto,
         }));
-                                  setIsModalOpen(false);
 
-     
+        setIsModalOpen(false);
       }
     } catch (error) {
       console.error("An error occurred while updating profile:", error);
     }
   };
-
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -82,7 +94,7 @@ console.log(data,'dataaaaaaa');
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setEditedUserData((prevData) => ({
+        setEditedInstructorData((prevData) => ({
           ...prevData,
           profilephoto: reader.result,
         }));
@@ -92,10 +104,10 @@ console.log(data,'dataaaaaaa');
   };
 
   const handleCloseModal = () => {
-      console.log("Closing modal...");
+    console.log("Closing modal...");
 
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
@@ -103,17 +115,15 @@ console.log(data,'dataaaaaaa');
     if (type === "file") {
       handleFileChange(e);
     } else {
-      setEditedUserData((prevData) => ({
+      setEditedInstructorData((prevData) => ({
         ...prevData,
         [name]: type === "file" ? e.target.files[0] : value,
       }));
     }
- 
   };
 
   return (
     <section className="bg-gray-100 ">
-      {/* {users.map((, index) => ( */}
       <div key="#key" className="container mx-auto ">
         <div className="row">
           <div className=" lg:flex lg:items-center lg:justify-between flex-wrap">
@@ -132,33 +142,33 @@ console.log(data,'dataaaaaaa');
                 </li>
                 <li className="breadcrumb-item">
                   <a href="#" className="text-blue-500">
-                    User
+                    Instructor
                   </a>
                 </li>
                 <li className="breadcrumb-item">
                   <span className="text-gray-500">/</span>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
-                  User Profile
+                  Instructor Profile
                 </li>
               </ol>
             </nav>
           </div>
         </div>
 
-        <div className="   lg:flex lg:items-center justify-between md:mb-0  ">
-          <div className="lg:w-1/2  mb-4 lg:mr-4 lg:h-full h-100">
-            <div className="card mb-4 bg-gradient-to-r from-white via-white to-gray-200 border shadow-2xl">
+        <div className="   lg:flex lg:items-center justify-between md:mb-10 px-6  ">
+          <div className="lg:w-1/2   lg:mr-4 lg:h-full h-96">
+            <div className="card  bg-gradient-to-r from-white via-white to-gray-200 border shadow-2xl">
               <div className="card-body text-center bg-white p-4 flex flex-col items-center">
                 <img
-                  src={users.profilephoto}
-                  alt={`Profile Photo of ${users.name}`}
+                  src={instructors.profilephoto}
+                  alt={`Profile Photo of ${instructors.name}`}
                   className="rounded-circle mb-3"
                   style={{ width: 150, height: 150 }}
                 />
-                <h5 className="my-2">{users.name}</h5>
-                <p className="text-muted mb-2">Student</p>
-                <p className="text-muted mb-4">{users.email}</p>
+                <h5 className="my-2">{instructors.name}</h5>
+                <p className="text-muted mb-2">{instructors.jobrolef}</p>
+                <p className="text-muted mb-4">{instructors.email}</p>
                 <div className="flex justify-center mb-2">
                   {/* <button type="button" className="btn btn-blue me-1">
                     Edit profile
@@ -166,7 +176,7 @@ console.log(data,'dataaaaaaa');
                   <button
                     type="button"
                     className="btn btn-outline-success"
-                    onClick={() => handleEditProfile(users._id)}
+                    onClick={() => handleEditProfile(instructors._id)}
                   >
                     Edit Profile
                   </button>
@@ -174,46 +184,60 @@ console.log(data,'dataaaaaaa');
               </div>
             </div>
           </div>
-          <div className="lg:w-full mr-4 h-97 bg-gradient-to-r from-white via-white to-gray-200 border shadow-2xl sm:w-full px-6 mb-7">
+          <div className="lg:w-full mr-4 h-85 bg-gradient-to-r from-white via-white to-gray-200 border shadow-2xl sm:w-full px-6 ">
             <div className="card-body justify-content-center flex flex-col">
-              <div className="flex mb-10">
+              <div className="flex mb-7">
                 <div className="col-sm-3">
                   <p className="mb-2 mt-10 ">Full Name :</p>
                 </div>
                 <div className="col-sm-9">
-                  <p className="text-muted  mt-9 ml-16 ">{users.name}</p>
+                  <p className="text-muted  mt-9 ml-20">{instructors.name}</p>
                 </div>
               </div>
 
-              <hr className="mb-5" />
+              <hr className="mb-0" />
               <div className="flex mb-10">
                 <div className="col-sm-3">
-                  <p className="mb-2">Email :</p>
+                  <p className="mb-1">Email :</p>
                 </div>
                 <div className="col-sm-9">
-                  <p className="text-muted mb-2 ml-24">{users.email}</p>
+                  <p className="text-muted mb-1 ml-24">{instructors.email}</p>
                 </div>
               </div>
-              <hr className="mb-5" />
+              <hr className="mb-0" />
               <div className="flex mb-10">
                 <div className="col-sm-3">
                   <p className="mb-2">Mobile : </p>
                 </div>
                 <div className="col-sm-9">
-                  <p className="text-muted mb-2 ml-20">{users.mobile}</p>
+                  <p className="text-muted mb-1 ml-24">{instructors.mobile}</p>
                 </div>
               </div>
-              <hr className="mb-5" />
+              <hr className="mb-0" />
+
               <div className="flex mb-10">
                 <div className="col-sm-3">
-                  <p className="mb-2 ">courses :</p>
+                  <p className="mb-1">Experience : </p>
                 </div>
                 <div className="col-sm-9">
-                  <button className="text-muted mb-2 ml-16">
-                    Enrolled Courses
-                  </button>
+                  <p className="text-muted mb-1 ml-16">
+                    {instructors.experience} years
+                  </p>
                 </div>
               </div>
+              <hr className="mb-0" />
+
+              <div className="flex mb-10">
+                <div className="col-sm-3">
+                  <p className="mb-1">Company Name : </p>
+                </div>
+                <div className="col-sm-9">
+                  <p className="text-muted mb-1 ml-7">
+                    {instructors.companyname}
+                  </p>
+                </div>
+              </div>
+
               {/* <hr className="mb-5" /> */}
               {/* <div className="flex mb-6">
                   <div className="col-sm-3">
@@ -232,7 +256,7 @@ console.log(data,'dataaaaaaa');
       {/* ))} */}
 
       {isModalOpen && (
-        <div className="fixed top-0 right-0 left-0  flex items-center z-50 overflow-y-auto overflow-x-hidden justify-center items-center w-full inset-0 h-modal md:h-100">
+        <div className="fixed top-0 right-0 left-0  flex items-center z-50 overflow-y-auto overflow-x-hidden justify-center items-center w-full inset-0 h-modal md:h-90">
           <div className="relative p-4 w-full max-w-2xl h-full md:h-auto">
             <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
               <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
@@ -260,8 +284,11 @@ console.log(data,'dataaaaaaa');
                   <span className="sr-only">Close modal</span>
                 </button>
               </div>
-              <form action="#">
-                <div className="grid gap-2 mb-4 ">
+              <form
+                action="#"
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              >
+                <div className=" mb-0 ">
                   <label
                     htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -272,16 +299,16 @@ console.log(data,'dataaaaaaa');
                     type="text"
                     name="name"
                     id="name"
-                    defaultValue={editedUserData.name}
+                    defaultValue={editedInstructorData.name}
                     onChange={handleInputChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Enter your name"
                   />
                 </div>
-                <div>
+                <div className="grid gap-2 mb-4 ">
                   <label
                     htmlFor="Email"
-                    className="block mb-4 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block  text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Email
                   </label>
@@ -289,32 +316,83 @@ console.log(data,'dataaaaaaa');
                     type="email"
                     name="email"
                     id="email"
-                    value={editedUserData.email}
+                    value={editedInstructorData.email}
                     onChange={handleInputChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Eg: email@gmail.com"
                   />
                 </div>
-                <div>
+                <div className="grid gap-2 mb-4 ">
                   <label
                     htmlFor="mobile"
-                    className="block mb-4 mt-4 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-2  text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Mobile
                   </label>
                   <input
                     type="number"
-                    value={editedUserData.mobile}
+                    value={editedInstructorData.mobile}
                     onChange={handleInputChange}
                     name="mobile"
                     id="number"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Enter your contact number"
+                  />
+                </div>
+                <div className="grid gap-2 mb-4 ">
+                  <label
+                    htmlFor="experience"
+                    className="block  text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Experience
+                  </label>
+                  <input
+                    type="number"
+                    name="experience"
+                    id="experience"
+                    defaultValue={editedInstructorData.experience}
+                    onChange={handleInputChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Enter your experience"
+                  />
+                </div>
+                <div className="grid gap-2 mb-4 ">
+                  <label
+                    htmlFor="text"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Job Role
+                  </label>
+                  <input
+                    type="text"
+                    name="jobrole"
+                    id="jobrole"
+                    defaultValue={editedInstructorData.jobrole}
+                    onChange={handleInputChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Enter your name"
+                  />
+                </div>
+                <div className="grid gap-2 mb-4 ">
+                  <label
+                    htmlFor="text"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Company Name :
+                  </label>
+                  <input
+                    type="text"
+                    name="companyname"
+                    id="companyname"
+                    defaultValue={editedInstructorData.companyname}
+                    onChange={handleInputChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Enter your name"
                   />
                 </div>
                 <div className="sm:col-span-2">
                   <label
-                    htmlFor="mobile"
+                    htmlFor="profilephoto"
                     className="block mb-4 mt-4 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Profile photo
@@ -328,9 +406,9 @@ console.log(data,'dataaaaaaa');
                     className="hidden"
                   />
 
-                  {editedUserData.profilephoto && (
+                  {editedInstructorData.profilephoto && (
                     <Avatar
-                      src={editedUserData.profilephoto}
+                      src={editedInstructorData.profilephoto}
                       alt="avatar"
                       withBorder={true}
                       className="p-0.5 w-16 mb-4"
@@ -340,7 +418,7 @@ console.log(data,'dataaaaaaa');
                     htmlFor="profilephoto"
                     className="cursor-pointer text-blue-500 hover:underline"
                   >
-                    {editedUserData.profilephoto
+                    {editedInstructorData.profilephoto
                       ? "Change profilePhoto"
                       : "Add profilePhoto"}
                   </label>
@@ -372,4 +450,4 @@ console.log(data,'dataaaaaaa');
   );
 };
 
-export default UserProfile;
+export default InstructorProfile;

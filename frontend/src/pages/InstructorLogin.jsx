@@ -6,8 +6,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { useInstructorLoginMutation } from "../Slices/authInstructorSlice.js";
 import { instructorSetCredentials } from "../Slices/instructorApiSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const InstructorLogin = () => {
+    const instructorInfo = useSelector(
+      (state) => state.authInstructor.instructorInfo
+    );
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",

@@ -14,9 +14,9 @@ import Addcourse from '../pages/Intructors/AddCourse.jsx'
 import Userlists from '../pages/Admin/Userlists.jsx'
 import Instructorlist from '../pages/Admin/Instructorlist.jsx'
 import UserProfile from '../pages/Users/UserProfile.jsx'
-
 import { Routes, Route } from 'react-router-dom'
 import InstructorDashboard from '../pages/Intructors/Instructor'
+import InstructorProfile from '../pages/Intructors/InstructorProfile.jsx'
 
 function Router() {
   return (
@@ -38,7 +38,10 @@ function Router() {
         <Route path="/admin/instructorlist" element={<Instructorlist />} />
         <Route path="/instructor/verify" element={<InstructorDashboard />} />
         <Route path="/profile/:id" element={<UserProfile />} />{" "}
-        
+        <Route
+          path="/instructor/showprofile/:id"
+          element={<InstructorProfile />}
+        />
       </Routes>
     </>
   );
