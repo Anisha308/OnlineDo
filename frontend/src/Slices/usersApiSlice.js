@@ -37,6 +37,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    verifyOtp: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/otpverify`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getAllCourse: builder.query({
+      query: () => ({
+        url: `${USERS_URL}/getcourse`, // Assuming this endpoint returns user profile details
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -46,6 +59,7 @@ export const {
   useRegisterMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
-
+  useVerifyOtpMutation,
+useGetAllCourseQuery
    } =
   userApiSlice;

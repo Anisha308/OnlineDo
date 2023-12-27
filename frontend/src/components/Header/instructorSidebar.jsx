@@ -5,7 +5,7 @@ import Icon from './Icons';
 import { NavLink, Link } from "react-router-dom";
 
 
-const InstructorSidebar = () => {
+const InstructorSidebar = ({ instructorId }) => {
   return (
     <div className="w-[250px]">
       <Navigation
@@ -26,7 +26,7 @@ const InstructorSidebar = () => {
               {
                 elemBefore: () => (
                   <Link
-                    to="/instructor/courselist"
+                    to={`/instructor/${instructorId}/courselist`}
                     className="text-primaryColor font-medium ml-1"
                   >
                     CourseList
@@ -36,7 +36,7 @@ const InstructorSidebar = () => {
               {
                 elemBefore: () => (
                   <Link
-                    to="/instructor/addcourse"
+                    to={`/instructor/addcourse/${instructorId}`}
                     className="text-primaryColor font-medium ml-1"
                   >
                     Add Courses

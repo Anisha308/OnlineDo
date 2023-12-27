@@ -19,9 +19,7 @@ const [showModal, setShowModal] = useState(false);
   const [userIdToBlock, setUserIdToBlock] = useState(null);
   
   useEffect(() => {
-    console.log("Data:", data);
     if (data && data.users) {
-      console.log("setusers:", data.users);
       setUsers(data.users);
     }
   }, [data]);
@@ -33,7 +31,6 @@ const [showModal, setShowModal] = useState(false);
   const confirmBlock = async () => {
     if (userIdToBlock) {
       try {
-        console.log(userIdToBlock, "id"); // Use userIdToBlock instead of userId
 
         const result = await blockUserMutation(userIdToBlock).unwrap();
         setUsers((prevUsers) =>
@@ -43,7 +40,6 @@ const [showModal, setShowModal] = useState(false);
               : user
           )
         );
-        console.log("Block user result:", result);
 
         // Check if there's an error in the response
         if (result.error) {
@@ -67,7 +63,6 @@ const [showModal, setShowModal] = useState(false);
       <SideBar />
       <div className="ml-5 flex flex-wrap  gap-5">
         {isLoading && <div>Loading...</div>}
-        {error && <div>Error: {error.message}</div>}
         {users &&
           users.map((user, index) => (
             <Card key={user._id} className="w-[333px] mb-7 flex-none">

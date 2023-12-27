@@ -4,14 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useInstructorLoginMutation } from "../Slices/authInstructorSlice.js";
-import { instructorSetCredentials } from "../Slices/instructorApiSlice";
+import { instructorSetCredentials,logout } from "../Slices/instructorApiSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
 const InstructorLogin = () => {
-    const instructorInfo = useSelector(
-      (state) => state.authInstructor.instructorInfo
-    );
+    // const instructorInfo = useSelector(
+    //   (state) => state.authInstructor.instructorInfo
+    // );
 
   const [formData, setFormData] = useState({
     email: "",
@@ -30,7 +30,7 @@ const dispatch = useDispatch();
 
   const [login] = useInstructorLoginMutation(); // Assuming 'mutate' is the function used for login
 
-  const submitHandler = async (e) => {
+  const submitHandler = async (e) => {-
     e.preventDefault();
       console.log("Submit button clicked");
       console.log("FormData:", formData);
@@ -40,8 +40,12 @@ const dispatch = useDispatch();
         password: formData.password,
       }).unwrap();
       console.log("Login successful. Response:", res);
+     console.log("Payload:", { ...res });
+
       dispatch(instructorSetCredentials({ ...res }));
-      navigate("/instructor/courselist");
+console.log("Dispatched instructorSetCredentials", res._id);
+
+navigate(`/instructor/${res._id}/courselist`);
       toast.success("Successfully logged in");
     } catch (err) {
       toast.error(err?.data?.message || err.error);

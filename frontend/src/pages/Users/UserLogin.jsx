@@ -5,28 +5,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../../Slices/usersApiSlice";
 import { setCredentials } from "../../Slices/authSlice";
 import { toast } from "react-toastify";
-import Loader from "../../components/Loader"
+import Loader from "../../components/Loader";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [login, { isLoading }] = useLoginMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-     if (userInfo) {
-       navigate("/");
-     }
+    if (userInfo) {
+      navigate("/");
+    }
   }, [navigate, userInfo]);
-   const submitHandler = async (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
+      console.log("API response:", res);
       dispatch(setCredentials({ ...res }));
       navigate("/");
     } catch (err) {
@@ -50,7 +51,6 @@ const navigate = useNavigate();
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-            
             />
           </div>
           <div className="mb-5">
@@ -61,7 +61,6 @@ const navigate = useNavigate();
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor rounded-md cursor-painter "
-             
             />
           </div>
           <div className="mt-7">

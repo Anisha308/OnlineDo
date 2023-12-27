@@ -8,21 +8,10 @@ import {
   Typography,
   Tooltip,
 } from "@material-tailwind/react";
-import InstructorSidebar from '../../components/Header/instructorSidebar'
-import { useGetCourseQuery } from "../../Slices/authInstructorSlice";
-import { useParams } from "react-router-dom";
-
-const Courselists = () => {
-  const { instructorId } = useParams();
-  console.log(instructorId, "id ");
-  console.log(typeof instructorId); // log the type of instructorId
-
-const { data, error, isLoading } = useGetCourseQuery(instructorId);
-
-
-
-  console.log("Query Response:", { data, error, isLoading });
-console.log("Error Details:", error);
+import InstructorSidebar from "../../components/Header/instructorSidebar";
+import { useGetAllCourseQuery } from "../../Slices/usersApiSlice";
+const Allcourse = () => {
+  const { data, error, isLoading } = useGetAllCourseQuery();
 
   const [courses, setCourses] = useState([]);
 
@@ -34,10 +23,7 @@ console.log("Error Details:", error);
 
   return (
     <div className="flex  ">
-      <InstructorSidebar instructorId={instructorId} />
       <div className="ml-5 flex flex-wrap  gap-5">
-        {isLoading && <div>Loading...</div>}
-
         {courses &&
           courses.map((course, index) => (
             <Card key={index} className="w-[333px] mb-7 flex-none">
@@ -56,7 +42,7 @@ console.log("Error Details:", error);
                   {course.name}
                 </Typography>
                 <Typography color="blue-gray" className="mb-2" textGradient>
-                {course.duration} of  {course.description}{" "}
+                  {course.duration} of {course.description}{" "}
                 </Typography>
                 <Typography color="blue-gray" className="mb-" textGradient>
                   Price : ₹{course.price}
@@ -76,4 +62,4 @@ console.log("Error Details:", error);
   );
 };
 
-export default Courselists;
+export default Allcourse;

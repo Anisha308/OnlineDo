@@ -17,7 +17,8 @@ import UserProfile from '../pages/Users/UserProfile.jsx'
 import { Routes, Route } from 'react-router-dom'
 import InstructorDashboard from '../pages/Intructors/Instructor'
 import InstructorProfile from '../pages/Intructors/InstructorProfile.jsx'
-
+import Courselists from '../pages/Intructors/Courselist.jsx'
+import Allcourse  from '../pages/Users/Allcourse.jsx'
 function Router() {
   return (
     <>
@@ -31,17 +32,24 @@ function Router() {
         <Route path="/instructor" element={<Instructor />} />
         <Route path="/instructorLogin" element={<InstructorLogin />} />
         <Route path="/instructorRegister" element={<InstructorSignup />} />
-        <Route path="/instructor/courselist" element={<Courselist />} />
-        <Route path="/instructor/addcourse" element={<Addcourse />} />
+        <Route
+          path="/instructor/:instructorId/courselist"
+          element={<Courselists />}
+        />
+        <Route
+          path="/instructor/addcourse/:instructorId"
+          element={<Addcourse />}
+        />
         <Route path="/admin/Login" element={<AdminLogin />} />
         <Route path="/admin/userlist" element={<Userlists />} />
         <Route path="/admin/instructorlist" element={<Instructorlist />} />
         <Route path="/instructor/verify" element={<InstructorDashboard />} />
         <Route path="/profile/:id" element={<UserProfile />} />{" "}
         <Route
-          path="/instructor/showprofile/:id"
+          path="/instructor/showprofile/:instructorId"
           element={<InstructorProfile />}
         />
+        <Route path="/getcourse" element={<Allcourse />} />
       </Routes>
     </>
   );

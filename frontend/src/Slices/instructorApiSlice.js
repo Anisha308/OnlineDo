@@ -11,8 +11,11 @@ const authInstructorSlice = createSlice({
   initialState,
   reducers: {
     instructorSetCredentials: (state, action) => {
-      state.instructorInfo = action.payload;
-      localStorage.setItem("instructorInfo", JSON.stringify(action.payload));
+      const { payload } = action;
+      state.instructorInfo = payload;
+      localStorage.setItem("instructorInfo", JSON.stringify(payload));
+  console.log("Local storage set:", payload);
+
     },
     logout: (state, action) => {
       state.instructorInfo = null;
@@ -21,6 +24,6 @@ const authInstructorSlice = createSlice({
   },
 });
 
-export const { instructorSetCredentials, adminlogout } = authInstructorSlice.actions;
+export const { instructorSetCredentials, logout } = authInstructorSlice.actions;
 
 export default authInstructorSlice;

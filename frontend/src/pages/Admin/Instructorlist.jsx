@@ -31,9 +31,7 @@ const InstructorLists = () => {
   const [confirmVerify,setConfirmVerify]=useState(null)
 
   useEffect(() => {
-     console.log("Data:", data);
     if (data && data.instructors) {
-            console.log("setusers:", data.users);
 
       setInstructors(data.instructors);
     }
@@ -88,11 +86,9 @@ const InstructorLists = () => {
     if (instructorIdToBlock) {
    
       try {
-        console.log(instructorIdToBlock, 'instrutid')
         const result = await blockInstructorMutation({
           instructorId: instructorIdToBlock,
         }).unwrap();
-        console.log(result,"reslt");
         setInstructors((prevInstructors) =>
           prevInstructors.map((instructor) =>
             instructor._id === instructorIdToBlock
@@ -100,7 +96,6 @@ const InstructorLists = () => {
               : instructor
           )
         );
-        console.log("Blockinstruct result:", result);
         if (result.error) {
           console.error("Error in blockUser response:", result.error);
         }
@@ -115,6 +110,7 @@ const InstructorLists = () => {
    const cancelBlock = () => {
      setShowModal(false);
      setInstructorIdToBlock(null);
+
    };
 
   const handleUnblockInstructor = async (instructorId) => {
@@ -123,7 +119,6 @@ const InstructorLists = () => {
         instructorId,
       }).unwrap();
 
-      console.log("Unblock Instructor Response:", response);
 
       setInstructors((prevInstructors) =>
         prevInstructors.map((instructor) =>
@@ -206,7 +201,6 @@ const InstructorLists = () => {
       <SideBar />
       <div className="ml-5 flex flex-wrap  gap-5">
         {isLoading && <div>Loading...</div>}
-        {error && <div>Error: {error.message}</div>}
 
         {instructors &&
           instructors.map((instructor) => (

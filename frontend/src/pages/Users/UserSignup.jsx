@@ -1,16 +1,15 @@
-import React from "react";
-import signupImg from "../../assets/images/hero-bg.jpg";
-import { NavLink, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useRegisterMutation } from "../../Slices/usersApiSlice";
-import { setCredentials } from "../../Slices/authSlice";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 import uploadImageToCloudinary from "../../../../backend/utils/uploadCloudinary";
-
+import { useVerifyOtpMutation } from "../../Slices/usersApiSlice"
+import { useNavigate } from "react-router-dom";
+import { setCredentials } from "../../Slices/authSlice";
+import Modal from "react-modal";
+import signupImg from "../../assets/images/hero-bg.jpg"
 const SignUp = () => {
   const [previewURL, setPreviewURL] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,45 +20,106 @@ const SignUp = () => {
     profilephoto: null,
     password: "",
     confirmPassword: "",
+    otp: "", // Add OTP state
   });
+  const [isOpen, setIsOpen] = useState(false); // Define isOpen state
+
+  const [isEmailVerificationModalOpen, setIsEmailVerificationModalOpen] =
+    useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [register, { isLoading }] = useRegisterMutation();
+  const [verifyOtp, { data, error }] = useVerifyOtpMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (userInfo) {
-      navigate("/login");
+      setIsEmailVerificationModalOpen(true); // Open the email verification modal
     }
-  }, [navigate, userInfo]);
+  }, [userInfo]);
+ const onRequestClose = () => {
+   // Logic to handle closing the modal
+   setIsOpen(false);
+       setIsEmailVerificationModalOpen(false);
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+ };
+
+ const handleInputChange = (e) => {
+   const { name, value } = e.target;
+
+   setFormData((prevFormData) => ({
+     ...prevFormData,
+     [name]: value,
+   }));
+ };;
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     try {
       const data = await uploadImageToCloudinary(file);
-      console.log(data, "data");
 
       setPreviewURL(data.url);
-      console.log(data.url, "dataurl");
+
       setFormData({ ...formData, profilephoto: data.url });
     } catch (error) {
       console.log("error uploading img", error);
     }
   };
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault()
+    console.log('ffffffff')
+    try {
+      console.log('f',formData,formData.email);
+      if (!formData.otp || !formData.email) {
+        console.error("OTP or email is not set");
+        return;
+      }
 
+      const response = await verifyOtp({
+        otp: formData.otp,
+        email: formData.email,
+        name: formData.name,
+        mobile: formData.mobile,
+        password:formData.password,
+        typedOtp: formData.otp, // Include the user-typed OTP
+      });
+
+      if (response.error) {
+        console.error("OTP verification failed:", response.error);
+        // Handle OTP verification failure
+      } else {
+        const data = response.data;
+
+        if (data.success) {
+          dispatch(setCredentials({ ...data }));
+          navigate("/");
+          setIsOpen(false); // Close the modal after successful verification
+        } else {
+          console.error("OTP verification failed:", data.message);
+          // Handle OTP verification failure
+        }
+      }
+    } catch (error) {
+      console.error("Error triggering OTP verification:", error.message);
+      // Handle other errors, e.g., network issues or server errors
+    }
+  };
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const { name, email, mobile, profilephoto, password, confirmPassword } =
-      formData;
+    const {
+      name,
+      email,
+      otp,
+      mobile,
+      profilephoto,
+      password,
+      confirmPassword,
+    } = formData;
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
@@ -71,10 +131,12 @@ const SignUp = () => {
           mobile,
           profilephoto,
           password,
+          otp,
         }).unwrap();
-        dispatch(setCredentials({ ...res }));
-        toast.success("Registration successful");
-        navigate("/login");
+        console.log('otp send');
+
+        setIsOpen(true); // Open the modal
+        toast.success("otp send successful");
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -182,27 +244,26 @@ const SignUp = () => {
                   </label>
                 </div>
               </div>
-
               <div className="mx-auto w-64 text-center relative">
-                  <div className="mt-5 flex justify-between items-center">
-                    <button
-                      type="submit"
-                      className="w-[150px] bg-black text-white text-[18px] leading-[20px] px-4 py-3"
-                    >
-                      Register
-                    </button>
-                    <button
-                      type="button"
-                      className="w-[150px] bg-gray-500 text-white text-[18px] leading-[20px] px-4 py-3 ml-4"
-                      onClick={() => {
-                        // Add cancel button logic here
-                      }}
-                    >
-                      Cancel
-                    </button>
-                    {isLoading && <Loader />}
-                  </div>
-                
+                <div className="mt-5 flex justify-between items-center">
+                  <button
+                    type="submit"
+                    className="w-[150px] bg-black text-white text-[18px] leading-[20px] px-4 py-3"
+                  >
+                    Register
+                  </button>
+                  <button
+                    type="button"
+                    className="w-[150px] bg-gray-500 text-white text-[18px] leading-[20px] px-4 py-3 ml-4"
+                    onClick={() => {
+                      // Add cancel button logic here
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  {isLoading && <Loader />}
+                </div>
+
                 <p
                   className="
                      mt-5 text-textColor text-center"
@@ -217,6 +278,65 @@ const SignUp = () => {
                 </p>
               </div>
             </form>
+            <Modal
+              isOpen={isOpen}
+              onRequestClose={onRequestClose}
+              contentLabel="Email Verification Modal"
+              className="modal-content" // Add your custom styling for the modal content
+            >
+              <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
+                <div className="mx-auto flex w-full max-w-md flex-col space-y-16">
+                  <div className="flex flex-col items-center justify-center text-center space-y-2">
+                    <div className=" text-gray-500 ">
+                      <div className="pr-72">Email Verification</div>
+                    </div>
+                    <div className="flex flex-row text-sm font-medium text-gray-400">
+                      <p>We have sent a code to your email</p>
+                    </div>
+                  </div>
+
+                  <form action="" method="post">
+                    <div className="flex flex-col space-y-16">
+                      <div className="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
+                        <div className="w-200 ">
+                          <input
+                            className="w-full h-9 border-black flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                            type="text"
+                            placeholder="Enter OTP"
+                            name="otp"
+                            value={formData.otp || ""} // Use formData.otp or an empty string if null
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col space-y-5">
+                        <div>
+                          <button
+                            onClick={handleVerifyOtp}
+                            className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-900 border-none text-white text-sm shadow-sm"
+                          >
+                            Verify Account
+                          </button>
+                        </div>
+
+                        <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
+                          <p>Didn't receive code?</p>{" "}
+                          <a
+                            className="flex flex-row items-center text-blue-600"
+                            href="http://"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Resend
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </Modal>
           </div>
           <div></div>
         </div>

@@ -10,7 +10,6 @@ const InstructorProfile = () => {
   const instructor = JSON.parse(localStorage.getItem("instructorInfo"));
 
 const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
-console.log("Query Status:", { data, error, isLoading });
   const [instructors, setInstructors] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstructorId, setSelectedInstructorId] = useState(null); // Add this state
@@ -26,11 +25,7 @@ console.log("Query Status:", { data, error, isLoading });
   });
 
 
- console.log("Instructor ID:", instructor._id);
- console.log("Data:", data);
- console.log("Error:", error);
- console.log("Is Loading:", isLoading);
-  console.log(instructors,'instructorssssssssssssssss')
+ 
   const [updateProfile, { isLoading: isUpdating }] = useUpdateInstructProfileMutation();
 
   useEffect(() => {
@@ -59,14 +54,13 @@ console.log("Query Status:", { data, error, isLoading });
 
   const handleUpdateProfile = async () => {
     try {
-      console.log("Updating profile forInstructorr IDddddddddddddddddddddddddddd:", selectedInstructorId); // Use selectedUserId here
-      console.log("Data to be senttttttttttttttttttttt:", editedInstructorData);
+     
+      
 
       const response = await updateProfile({
         instructorId: selectedInstructorId,
         ...editedInstructorData
       }).unwrap();
-      console.log("API Response:", response);
       if (response.error) {
         console.error("Profile update failed:", response.error.message);
       } else {
@@ -104,7 +98,6 @@ console.log("Query Status:", { data, error, isLoading });
   };
 
   const handleCloseModal = () => {
-    console.log("Closing modal...");
 
     setIsModalOpen(false);
   };

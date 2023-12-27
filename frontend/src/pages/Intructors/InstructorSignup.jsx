@@ -1,6 +1,6 @@
 import React from "react";
 import signupImg from "../../assets/images/hero-bg.jpg";
-import {  Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useInstructorSignUpMutation } from "../../Slices/authInstructorSlice.js";
@@ -24,13 +24,13 @@ const InstructorSignup = () => {
     confirmPassword: "",
   });
   const [register] = useInstructorSignUpMutation(); // Use your register mutation hook
+const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const toggleModal = () => {
-    console.log('modal open');
     setIsModalOpen(!isModalOpen)
   }
  
@@ -60,7 +60,6 @@ const InstructorSignup = () => {
     try {
             const data = await uploadImageToCloudinary(file);
     setExperienceCertificateFile(data.url)
-    console.log("Experience Certificate URL:", data.url);
 
     } catch (error) {
                   console.error("upload exp error", error);
@@ -91,10 +90,12 @@ const InstructorSignup = () => {
        experienceCertificateFile: experienceCertificateUrl.url,
      }).unwrap();
 
-     console.log("Registration successful:", res);
 
    
      toggleModal();
+           toast.success("Successfully Registered");
+     navigate("/instructorLogin");
+
 
    } catch (err) {
      toast.error(err?.data?.message || err.error);
@@ -109,7 +110,7 @@ const { password, confirmPassword } = formData;
 if (password !== confirmPassword) {
   toast.error("Passwords do not match");
 } else {
-console.log("Form submitted");
+
   // Open the modal for file uploads
   toggleModal();
 }
