@@ -45,6 +45,12 @@ export const instructApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    instructorlogout: builder.mutation({
+      query: () => ({
+        url: `${INSTRUCT_URL}/logout`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -55,4 +61,5 @@ export const {
 useUpdateInstructProfileMutation,
   useAddcourseMutation,
   useGetCourseQuery,
+  useInstructorlogoutMutation
 } = instructApiSlice;

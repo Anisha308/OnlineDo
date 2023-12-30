@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Avatar } from "@material-tailwind/react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   useGetProfileQuery,
   useUpdateProfileMutation,
@@ -10,29 +11,30 @@ const UserProfile = () => {
   const user = JSON.parse(localStorage.getItem("userInfo"));
 
   const { data, error, isLoading } = useGetProfileQuery(user._id);
+
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [count, setCount] = useState(0);
   const [selectedUserId, setSelectedUserId] = useState(null); // Add this state
-
+  const navigate = useNavigate();
   const [editedUserData, setEditedUserData] = useState({
     name: "",
     email: "",
     mobile: "",
     profilephoto: "",
   });
-console.log(data,'dataaaaaaa');
+  console.log(data, "data");
+
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
- 
+
   useEffect(() => {
     if (error) {
       console.error("Error from useGetProfileQuery:", error);
-      // Handle the error, e.g., show a user-friendly message
     } else if (data && data.users) {
       setUsers(data.users);
     }
   }, [data, error]);
 
-  
   const handleEditProfile = () => {
     setEditedUserData({
       name: users.name || "",
@@ -47,18 +49,13 @@ console.log(data,'dataaaaaaa');
 
   const handleUpdateProfile = async () => {
     try {
-      console.log("Updating profile for user ID:", selectedUserId); // Use selectedUserId here
-      console.log("Data to be sent:", editedUserData);
-
       const response = await updateProfile({
         userId: selectedUserId,
         ...editedUserData,
       }).unwrap();
-      console.log("API Response:", response);
       if (response.error) {
         console.error("Profile update failed:", response.error.message);
       } else {
-
         setEditedUserData((prevData) => ({
           ...prevData,
           name: response.name,
@@ -66,15 +63,14 @@ console.log(data,'dataaaaaaa');
           mobile: response.mobile,
           profilephoto: response.profilephoto,
         }));
-                                  setIsModalOpen(false);
+        setCount((prevCount) => prevCount + 1);
 
-     
+        setIsModalOpen(false);
       }
     } catch (error) {
       console.error("An error occurred while updating profile:", error);
     }
   };
-
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -92,10 +88,8 @@ console.log(data,'dataaaaaaa');
   };
 
   const handleCloseModal = () => {
-      console.log("Closing modal...");
-
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
@@ -108,7 +102,6 @@ console.log(data,'dataaaaaaa');
         [name]: type === "file" ? e.target.files[0] : value,
       }));
     }
- 
   };
 
   return (

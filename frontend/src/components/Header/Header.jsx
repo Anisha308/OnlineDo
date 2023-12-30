@@ -1,5 +1,5 @@
 import React,{useEffect,useRef} from 'react'
-import logo from '../../assets/images/logo.png'
+import ONLINEDO from '../../assets/images/ONLINEDO.png'
 import {NavLink,Link} from 'react-router-dom'
 import userImg from '../../assets/images/profile.png'
 import {BiMenu} from 'react-icons/bi'
@@ -16,7 +16,7 @@ const navLinks = [
     display: "Home",
   },
   {
-    path: "/courses",
+    path: "/getcourse",
     display: "Courses",
   },
   {
@@ -32,7 +32,6 @@ const Header = () => {
   const menuRef = useRef(null)
   
     const { userInfo } = useSelector((state) => state.auth);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -66,16 +65,16 @@ const Header = () => {
   const toggleMenu = () => menuRef.current.classList.toggle('show__menu')
   
   return (
-    <header className="header flex Items-center bg-blue" ref={headerRef}>
+    <header className="header flex Items-center bg-blue-900" ref={headerRef}>
       <div className="container">
         <div className="flex items-center justify-between">
           {/*-------- logo ------- */}
           <div>
             <img
-              src={logo}
+              src={ONLINEDO}
               alt=""
               style={{ maxWidth: "90px" }}
-              className="pr-[20px] "
+              className="pr-[20px] w-300 h-25 "
             />
           </div>
           {/*-------menu-------*/}
@@ -101,6 +100,7 @@ const Header = () => {
           <div className="flex items-center gap-4">
             {userInfo ? (
               <div className="flex items-center">
+              
                 <span className="mr-2 text-white">Welcome {userInfo.name}</span>
                 <div>
                   <Link to={`/profile/${userInfo._id}`}>
@@ -109,7 +109,7 @@ const Header = () => {
                         src={userImg}
                         className="w-full rounded full"
                         alt=""
-                      />  
+                      />
                     </figure>
                   </Link>
                 </div>

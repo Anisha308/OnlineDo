@@ -3,10 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   userInfo: (() => {
     try {
-      console.log("reaching here")
+   
       return JSON.parse(localStorage.getItem("userInfo")) || null;
     } catch (error) {
-      console.error("Error parsing userInfo from localStorage:", error);
       return null;
     }
   })(),

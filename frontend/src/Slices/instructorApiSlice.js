@@ -1,29 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  instructorInfo: localStorage.getItem("instructorInfo")
-    ? JSON.parse(localStorage.getItem("instructorInfo"))
-    : null,
+  instructorInfo: (() => {
+    try {
+      return JSON.parse(localStorage.getItem("instructorInfo")) || null;
+    } catch (error) {
+      return null;
+    }
+  })(),
 };
-
 const authInstructorSlice = createSlice({
   name: "authInstructor",
   initialState,
   reducers: {
     instructorSetCredentials: (state, action) => {
-      const { payload } = action;
-      state.instructorInfo = payload;
-      localStorage.setItem("instructorInfo", JSON.stringify(payload));
-  console.log("Local storage set:", payload);
+      state.instructorInfo = action.payload;
+      localStorage.setItem("instructorInfo", JSON.stringify(action.payload));
 
     },
-    logout: (state, action) => {
+    instructlogout: (state, action) => {
       state.instructorInfo = null;
       localStorage.removeItem("instructorInfo");
     },
   },
 });
 
-export const { instructorSetCredentials, logout } = authInstructorSlice.actions;
+export const { instructorSetCredentials, instructlogout } = authInstructorSlice.actions;
 
-export default authInstructorSlice;
+export default authInstructorSlice.reducer;

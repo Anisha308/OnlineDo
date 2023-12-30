@@ -29,11 +29,11 @@ const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
   const [updateProfile, { isLoading: isUpdating }] = useUpdateInstructProfileMutation();
 
   useEffect(() => {
-    if (error) {
-    console.error("Error fetching instructor profile:", error);
-      // Handle the error, e.g., show a user-friendly message
-    } else if (data && data.instructors) {
+    if (data && data.instructors) {
+    
       setInstructors(data.instructors);
+   } else {
+     console.error('error fetching');;
     }
   }, [data, error]);
 
@@ -159,8 +159,8 @@ const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
                   className="rounded-circle mb-3"
                   style={{ width: 150, height: 150 }}
                 />
-                <h5 className="my-2">{instructors.name}</h5>
-                <p className="text-muted mb-2">{instructors.jobrolef}</p>
+                <h5 className="my-2">{instructor.name}</h5>
+                <p className="text-muted mb-2">{instructors.jobrole}</p>
                 <p className="text-muted mb-4">{instructors.email}</p>
                 <div className="flex justify-center mb-2">
                   {/* <button type="button" className="btn btn-blue me-1">
@@ -231,17 +231,6 @@ const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
                 </div>
               </div>
 
-              {/* <hr className="mb-5" /> */}
-              {/* <div className="flex mb-6">
-                  <div className="col-sm-3">
-                    <p className="mb-4">Address :</p>
-                  </div>
-                  <div className="col-sm-9">
-                    <p className="text-muted ml-14 ">
-                      Bay Area, San Francisco, CA
-                    </p>
-                  </div>
-                </div> */}
             </div>
           </div>
         </div>

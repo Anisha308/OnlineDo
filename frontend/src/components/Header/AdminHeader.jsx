@@ -1,15 +1,18 @@
 import { useEffect, useRef } from "react";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/yes.png";
 import { NavLink, Link } from "react-router-dom";
 import userImg from "../../assets/images/profile.png";
 import { BiMenu } from "react-icons/bi";
-import { useLogoutMutation } from "../../Slices/usersApiSlice";
-import { logout } from "../../Slices/authSlice";
+import { useAdminlogoutMutation } from "../../Slices/adminApiSlice";
+import { adminlogout } from "../../Slices/authAdminSlice";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useDispatch } from "react-redux";
 
 const AdminHeader = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
+    const dispatch = useDispatch();
+
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleStickyHeader = () => {
@@ -24,16 +27,21 @@ const AdminHeader = () => {
       }
     });
   };
-  const [logoutApiCall] = useLogoutMutation();
+  const [logoutApiCall] = useAdminlogoutMutation();
 
   const logoutHandler = async () => {
     try {
-      await logoutApiCall().unwrap();
+      
+     const res= await logoutApiCall().unwrap();
+     
+      dispatch(adminlogout());
       navigate("/admin/Login");
+     
     } catch (err) {
-      console.error(err);
+      console.error("Error during logout:", err);
     }
   };
+
   useEffect(() => {
     handleStickyHeader();
     return () => window.removeEventListener("scroll", handleStickyHeader);
@@ -56,7 +64,9 @@ const AdminHeader = () => {
           {/*-------menu-------*/}
 
           {/* ==================nav right ==============*/}
+
           <div className="flex items-center gap-4">
+            <div className="text-white">Welcome Admin!</div>
             <button
               onClick={logoutHandler}
               className="bg-black py-2 px-5 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]"

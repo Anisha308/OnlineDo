@@ -14,15 +14,12 @@ import { useParams } from "react-router-dom";
 
 const Courselists = () => {
   const { instructorId } = useParams();
-  console.log(instructorId, "id ");
-  console.log(typeof instructorId); // log the type of instructorId
+ 
 
 const { data, error, isLoading } = useGetCourseQuery(instructorId);
 
+console.log(data,'kkkkkkkkkk');
 
-
-  console.log("Query Response:", { data, error, isLoading });
-console.log("Error Details:", error);
 
   const [courses, setCourses] = useState([]);
 

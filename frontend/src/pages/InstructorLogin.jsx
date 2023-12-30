@@ -4,48 +4,51 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useInstructorLoginMutation } from "../Slices/authInstructorSlice.js";
-import { instructorSetCredentials,logout } from "../Slices/instructorApiSlice";
+import { instructorSetCredentials } from "../Slices/instructorApiSlice.js";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const InstructorLogin = () => {
-    // const instructorInfo = useSelector(
-    //   (state) => state.authInstructor.instructorInfo
-    // );
+  const { instructorInfo } = useSelector((state) => state.instructorAuth);
+  console.log(instructorInfo, "kkkkkkkkkkkkkkkkk");
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log("Updated FormData:", formData);
-
-  };
-
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const navigate = useNavigate(); // assuming you are using React Router
 
+  useEffect(() => {
+    if (instructorInfo) {
+      console.log('yes');
+      navigate("/instructor");
+    }
+  }, [instructorInfo, navigate]);
+
+  const handleInputChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   const [login] = useInstructorLoginMutation(); // Assuming 'mutate' is the function used for login
 
-  const submitHandler = async (e) => {-
-    e.preventDefault();
-      console.log("Submit button clicked");
-      console.log("FormData:", formData);
+  const submitHandler = async (e) => {
+    -e.preventDefault();
+
     try {
       const res = await login({
         email: formData.email,
         password: formData.password,
       }).unwrap();
-      console.log("Login successful. Response:", res);
-     console.log("Payload:", { ...res });
 
-      dispatch(instructorSetCredentials({ ...res }));
-console.log("Dispatched instructorSetCredentials", res._id);
+      dispatch(instructorSetCredentials(res));
 
-navigate(`/instructor/${res._id}/courselist`);
+      navigate(`/instructor`);
       toast.success("Successfully logged in");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
@@ -81,6 +84,7 @@ navigate(`/instructor/${res._id}/courselist`);
               required
             />
           </div>
+
           <div className="mt-7">
             <button
               type="submit"
@@ -98,6 +102,7 @@ navigate(`/instructor/${res._id}/courselist`);
               Cancel
             </button>
           </div>
+
           <p
             className="
           mt-5 text-textColor text-center"
@@ -114,7 +119,6 @@ navigate(`/instructor/${res._id}/courselist`);
       </div>
     </section>
   );
-}
+};
 
-
-export default InstructorLogin
+export default InstructorLogin;

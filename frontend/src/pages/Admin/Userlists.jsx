@@ -9,6 +9,7 @@ import {
 import SideBar from "../../components/Header/SideBar";
 import { useGetUserListQuery } from "../../Slices/adminApiSlice";
 import { useBlockuserMutation } from "../../Slices/adminApiSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const Userlists = () => {
@@ -28,6 +29,8 @@ const [showModal, setShowModal] = useState(false);
     setUserIdToBlock(userId);
     setShowModal(true);
   };
+
+
   const confirmBlock = async () => {
     if (userIdToBlock) {
       try {
@@ -45,6 +48,7 @@ const [showModal, setShowModal] = useState(false);
         if (result.error) {
           console.error("Error in blockUser response:", result.error);
         }
+       
       } catch (error) {
         console.error("Error blocking/unblocking user:", error);
       } finally {

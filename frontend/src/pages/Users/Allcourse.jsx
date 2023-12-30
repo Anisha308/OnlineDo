@@ -10,8 +10,15 @@ import {
 } from "@material-tailwind/react";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
 import { useGetAllCourseQuery } from "../../Slices/usersApiSlice";
+import { useNavigate } from "react-router-dom";
 const Allcourse = () => {
+  const navigate = useNavigate()
   const { data, error, isLoading } = useGetAllCourseQuery();
+
+  if (!data) {
+   navigate('/login')
+  }
+  console.log(data,'data');
 
   const [courses, setCourses] = useState([]);
 
@@ -22,7 +29,9 @@ const Allcourse = () => {
   }, [data]);
 
   return (
+    
     <div className="flex  ">
+     
       <div className="ml-5 flex flex-wrap  gap-5">
         {courses &&
           courses.map((course, index) => (
