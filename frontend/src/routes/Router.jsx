@@ -59,7 +59,7 @@ function Router() {
           element={<InstructorPrivateRoute><InstructorProfile /></InstructorPrivateRoute>}
         />
         <Route path="/getcourse" element={<Allcourse />} />
-        <Route path="/service" element={<Services />} />
+        {/* <Route path="/service" element={<Services />} /> */}
       </Routes>
     </>
   );

@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
 import { Avatar } from "@material-tailwind/react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useGetProfileMutation,
   useUpdateProfileMutation,
 } from "../../Slices/usersApiSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { setCredentials } from "../../Slices/authSlice";
+
 const UserProfile = () => {
+
   const user = useSelector((state) => state.auth.userInfo);
   const dispatch = useDispatch();
 
   // const { data, error, isLoading } = useGetProfileQuery(user?._id);
   const [getProfile] = useGetProfileMutation();
+
 
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,8 +28,17 @@ const UserProfile = () => {
     mobile: "",
     profilephoto: "",
   });
+  console.log(data, "data");
 
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
+useEffect(() => {
+  if (error) {
+    console.error("Error from useGetProfileQuery:", error);
+  } else if (data && data.users) {
+    setUsers(data.users);
+  }
+}, [data, error]);
+  
 
   const handleEditProfile = () => {
     setEditedUserData({
@@ -36,6 +48,7 @@ const UserProfile = () => {
       profilephoto: users.profilephoto || "",
     });
     setSelectedUserId(users._id); // Set the selected user ID
+
     setIsModalOpen(true);
   };
 
@@ -48,6 +61,7 @@ const UserProfile = () => {
       if (response.error) {
         console.error("Profile update failed:", response.error.message);
       } else {
+       
         dispatch(setCredentials(response));
 
         setCount((prevCount) => prevCount + 1);
@@ -58,18 +72,6 @@ const UserProfile = () => {
       console.error("An error occurred while updating profile:", error);
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getProfile({ userId: user._id });
-        setUsers(data.data.users);
-      } catch (error) {
-        console.log("error fetching:", error);
-      }
-    };
-    fetchData();
-  }, [count, getProfile]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -224,7 +226,7 @@ const UserProfile = () => {
       {/* ))} */}
 
       {isModalOpen && (
-        <div className="fixed top-0 right-0 left-0  flex items-center z-50 overflow-y-auto overflow-x-hidden justify-center items-center w-full inset-0 h-modal md:h-100">
+        <div className="fixed top-0 right-0 left-0  flex items-center z-50 overflow-y-auto overflow-x-hidden justify-center w-full inset-0 h-modal md:h-100">
           <div className="relative p-4 w-full max-w-2xl h-full md:h-auto">
             <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
               <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
