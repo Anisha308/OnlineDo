@@ -11,7 +11,6 @@ import { useEffect } from "react";
 
 const InstructorLogin = () => {
   const { instructorInfo } = useSelector((state) => state.instructorAuth);
-  console.log(instructorInfo, "kkkkkkkkkkkkkkkkk");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -23,7 +22,6 @@ const InstructorLogin = () => {
 
   useEffect(() => {
     if (instructorInfo) {
-      console.log('yes');
       navigate("/instructor");
     }
   }, [instructorInfo, navigate]);

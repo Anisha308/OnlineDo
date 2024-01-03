@@ -18,7 +18,6 @@ const Courselists = () => {
 
 const { data, error, isLoading } = useGetCourseQuery(instructorId);
 
-console.log(data,'kkkkkkkkkk');
 
 
   const [courses, setCourses] = useState([]);

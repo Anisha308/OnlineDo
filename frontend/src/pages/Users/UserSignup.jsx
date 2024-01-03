@@ -5,14 +5,11 @@ import { useRegisterMutation } from "../../Slices/usersApiSlice";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 import uploadImageToCloudinary from "../../../../backend/utils/uploadCloudinary";
-import { useVerifyOtpMutation } from "../../Slices/usersApiSlice"
+import { useVerifyOtpMutation } from "../../Slices/usersApiSlice";
 import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../../Slices/authSlice";
 import Modal from "react-modal";
-import signupImg from "../../assets/images/hero-bg.jpg"
-
-
-
+import signupImg from "../../assets/images/hero-bg.jpg";
 const SignUp = () => {
   const [previewURL, setPreviewURL] = useState("");
   const [loading, setLoading] = useState(false);
@@ -52,6 +49,7 @@ const SignUp = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -62,7 +60,9 @@ const SignUp = () => {
     const file = event.target.files[0];
     try {
       const data = await uploadImageToCloudinary(file);
+
       setPreviewURL(data.url);
+
       setFormData({ ...formData, profilephoto: data.url });
     } catch (error) {
       console.log("error uploading img", error);
@@ -70,11 +70,8 @@ const SignUp = () => {
   };
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
-          try {
-      // if (!formData.otp) {
-      //   toast.error("otp is invalid")
-      // }
-      if ( !formData.email) {
+    try {
+      if (!formData.email) {
         console.error("OTP or email is not set");
         return;
       }
@@ -85,20 +82,23 @@ const SignUp = () => {
         name: formData.name,
         mobile: formData.mobile,
         password: formData.password,
-        profilephoto: formData.profilephoto,
+       profilephoto:formData.profilephoto,
         typedOtp: recievedOtp, // Include the user-typed OTP
       });
+
       if (response.error) {
-        toast.error('Invalid otp')
+        toast.error("Invalid otp");
+
         console.error("OTP verification failed:", response.error);
         // Handle OTP verification failure
       } else {
         const data = response.data;
+
         if (data.success) {
-       dispatch(setCredentials({ ...data }));
+          dispatch(setCredentials({ ...data }));
           navigate("/");
           setIsOpen(false); // Close the modal after successful verification
-          toast.success("Registration successfull")
+          toast.success("Registration successfull");
         } else {
           console.error("OTP verification failed:", data.message);
           // Handle OTP verification failure
@@ -116,12 +116,13 @@ const SignUp = () => {
     const {
       name,
       email,
-      
+      otp,
       mobile,
       profilephoto,
       password,
       confirmPassword,
     } = formData;
+
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
     } else {
@@ -136,9 +137,7 @@ const SignUp = () => {
         }).unwrap();
         const recievedOtp = res.otp;
         setRecievedOtp(recievedOtp);
-     
         setIsOpen(true); // Open the modal
-
         toast.success("otp send successful");
       } catch (err) {
         toast.error(err?.data?.message || err.error);

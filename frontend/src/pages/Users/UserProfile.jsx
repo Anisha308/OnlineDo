@@ -1,16 +1,22 @@
 import { useState, useEffect } from "react";
 import { Avatar } from "@material-tailwind/react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
-  useGetProfileQuery,
+
+  useGetProfileMutation,
   useUpdateProfileMutation,
 } from "../../Slices/usersApiSlice";
-
+import { useSelector, useDispatch } from "react-redux";
+import { setCredentials } from "../../Slices/authSlice";
 const UserProfile = () => {
-  const user = JSON.parse(localStorage.getItem("userInfo"));
+  const user = useSelector((state) => state.auth.userInfo);
+  const dispatch = useDispatch();
 
-  const { data, error, isLoading } = useGetProfileQuery(user._id);
+  // const { data, error, isLoading } = useGetProfileQuery(user?._id);
+  const [getProfile] = useGetProfileMutation();
+  
+
+
 
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,17 +29,10 @@ const UserProfile = () => {
     mobile: "",
     profilephoto: "",
   });
-  console.log(data, "data");
 
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
-  useEffect(() => {
-    if (error) {
-      console.error("Error from useGetProfileQuery:", error);
-    } else if (data && data.users) {
-      setUsers(data.users);
-    }
-  }, [data, error]);
+  
 
   const handleEditProfile = () => {
     setEditedUserData({
@@ -43,7 +42,6 @@ const UserProfile = () => {
       profilephoto: users.profilephoto || "",
     });
     setSelectedUserId(users._id); // Set the selected user ID
-
     setIsModalOpen(true);
   };
 
@@ -56,13 +54,9 @@ const UserProfile = () => {
       if (response.error) {
         console.error("Profile update failed:", response.error.message);
       } else {
-        setEditedUserData((prevData) => ({
-          ...prevData,
-          name: response.name,
-          email: response.email,
-          mobile: response.mobile,
-          profilephoto: response.profilephoto,
-        }));
+       
+        dispatch(setCredentials(response));
+
         setCount((prevCount) => prevCount + 1);
 
         setIsModalOpen(false);
@@ -71,6 +65,18 @@ const UserProfile = () => {
       console.error("An error occurred while updating profile:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getProfile({ userId: user._id });
+        setUsers(data.data.users);
+      } catch (error) {
+        console.log("error fetching:", error);
+      }
+    };
+    fetchData();
+  }, [count, getProfile]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];

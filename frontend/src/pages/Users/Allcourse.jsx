@@ -18,7 +18,6 @@ const Allcourse = () => {
   if (!data) {
    navigate('/login')
   }
-  console.log(data,'data');
 
   const [courses, setCourses] = useState([]);
 

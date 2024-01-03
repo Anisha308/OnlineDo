@@ -1,21 +1,23 @@
-import React from 'react'
+import React, { useRef } from "react";
 import { Navigation } from "react-minimal-side-navigation";
 import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
-import Icon from './Icons';
+import Icon from "./Icons";
 import { NavLink, Link } from "react-router-dom";
-
+import { BiMenu } from "react-icons/bi";
 
 const SideBar = () => {
-    return (
-      <div className="w-[250px]">
+  return (
+    <div className="w-[250px] h-[200px]">
+  
         <Navigation
           activeItemId="/users/members"
-          onSelect={({ itemId }) => {}}
+          onSelect={({ itemId }) => {
+            
+          }}
           items={[
             {
               title: "Dashboard",
               itemId: "/dashboard",
-
               elemBefore: () => <Icon name="inbox" />,
             },
             {
@@ -46,7 +48,7 @@ const SideBar = () => {
                       to="/admin/instructorlist"
                       className="text-primaryColor font-medium ml-1"
                     >
-                     InstructorLists
+                      InstructorLists
                     </Link>
                   ),
                 },
@@ -55,7 +57,9 @@ const SideBar = () => {
           ]}
         />
       </div>
-    );
+   
+   
+  )
 }
 
-export default SideBar
+export default SideBar;
