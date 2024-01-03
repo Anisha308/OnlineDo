@@ -51,15 +51,8 @@ export const instructApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
-    instructverifyOtp: builder.mutation({
-      query: (data) => ({
-        url: `${INSTRUCT_URL}/instructotpverify`,
-        method: "POST",
-        body: data,
-      }),
-    }),
-  })
-})
+  }),
+});
 
 export const {
   useInstructorSignUpMutation,
@@ -68,6 +61,5 @@ export const {
 useUpdateInstructProfileMutation,
   useAddcourseMutation,
   useGetCourseQuery,
-  useInstructorlogoutMutation,
-  useInstructverifyOtpMutation
+  useInstructorlogoutMutation
 } = instructApiSlice;
