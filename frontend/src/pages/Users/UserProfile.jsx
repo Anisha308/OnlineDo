@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Avatar } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import {
-
   useGetProfileMutation,
   useUpdateProfileMutation,
 } from "../../Slices/usersApiSlice";
@@ -14,9 +13,6 @@ const UserProfile = () => {
 
   // const { data, error, isLoading } = useGetProfileQuery(user?._id);
   const [getProfile] = useGetProfileMutation();
-  
-
-
 
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,8 +27,6 @@ const UserProfile = () => {
   });
 
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
-
-  
 
   const handleEditProfile = () => {
     setEditedUserData({
@@ -54,7 +48,6 @@ const UserProfile = () => {
       if (response.error) {
         console.error("Profile update failed:", response.error.message);
       } else {
-       
         dispatch(setCredentials(response));
 
         setCount((prevCount) => prevCount + 1);
