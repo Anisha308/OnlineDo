@@ -4,9 +4,8 @@ import { useParams } from "react-router-dom";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
 import { toast } from "react-toastify";
 
-
 const AddCourse = () => {
-const { instructorId } = useParams();
+  const { instructorId } = useParams();
 
   const [courseName, setCourseName] = useState("");
   const [description, setDescription] = useState("");
@@ -27,19 +26,16 @@ const { instructorId } = useParams();
   };
 
   const handleDurationChange = (e) => {
-
     setDuration(e.target.value);
   };
 
   const handlePaidChange = (e) => {
-
     setPaid(e.target.value);
   };
 
-  const [addCourseMutation ] = useAddcourseMutation();
+  const [addCourseMutation] = useAddcourseMutation();
 
   const addCourse = async () => {
-
     try {
       const { data } = await addCourseMutation({
         courseName,

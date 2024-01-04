@@ -16,7 +16,6 @@ const authInstructorSlice = createSlice({
     instructorSetCredentials: (state, action) => {
       state.instructorInfo = action.payload;
       localStorage.setItem("instructorInfo", JSON.stringify(action.payload));
-
     },
     instructlogout: (state, action) => {
       state.instructorInfo = null;
@@ -25,6 +24,7 @@ const authInstructorSlice = createSlice({
   },
 });
 
-export const { instructorSetCredentials, instructlogout } = authInstructorSlice.actions;
+export const { instructorSetCredentials, instructlogout } =
+  authInstructorSlice.actions;
 
 export default authInstructorSlice.reducer;

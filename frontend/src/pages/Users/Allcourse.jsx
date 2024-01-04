@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Pagination from "../../components/Header/Pagination";
-
+import apiInstance from "../../../Api";
 import {
   Card,
   CardHeader,

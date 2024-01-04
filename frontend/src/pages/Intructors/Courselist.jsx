@@ -8,18 +8,14 @@ import {
   Typography,
   Tooltip,
 } from "@material-tailwind/react";
-import InstructorSidebar from '../../components/Header/instructorSidebar'
+import InstructorSidebar from "../../components/Header/instructorSidebar";
 import { useGetCourseQuery } from "../../Slices/authInstructorSlice";
 import { useParams } from "react-router-dom";
 
 const Courselists = () => {
   const { instructorId } = useParams();
- 
 
-const { data, error, isLoading } = useGetCourseQuery(instructorId);
-
-console.log(data,'kkkkkkkkkk');
-
+  const { data, error, isLoading } = useGetCourseQuery(instructorId);
 
   const [courses, setCourses] = useState([]);
 
@@ -53,7 +49,7 @@ console.log(data,'kkkkkkkkkk');
                   {course.name}
                 </Typography>
                 <Typography color="blue-gray" className="mb-2" textGradient>
-                {course.duration} of  {course.description}{" "}
+                  {course.duration} of {course.description}{" "}
                 </Typography>
                 <Typography color="blue-gray" className="mb-" textGradient>
                   Price : ₹{course.price}

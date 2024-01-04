@@ -1,7 +1,6 @@
 import { apiSlice } from "./apiSlice";
 const USERS_URL = "/api/users";
 
-
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
@@ -26,7 +25,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     getProfile: builder.mutation({
       query: (params) => ({
-        url: `${USERS_URL}/profile/${params.userId}`,
+        url: `${USERS_URL}/profile/${params.userId}`, // Assuming this endpoint returns user profile details
         method: "GET",
       }),
     }),
@@ -60,6 +59,5 @@ export const {
   useGetProfileMutation,
   useUpdateProfileMutation,
   useVerifyOtpMutation,
-useGetAllCourseQuery
-   } =
-  userApiSlice;
+  useGetAllCourseQuery,
+} = userApiSlice;

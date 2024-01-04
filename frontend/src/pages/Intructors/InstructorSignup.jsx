@@ -1,18 +1,22 @@
 import React from "react";
 import signupImg from "../../assets/images/hero-bg.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useInstructorSignUpMutation } from "../../Slices/authInstructorSlice.js";
+import { useInstructverifyOtpMutation } from "../../Slices/authInstructorSlice.js";
 import { Modal } from "react-bootstrap";
-import uploadImageToCloudinary from '../../../../backend/utils/uploadCloudinary';
-
+import uploadImageToCloudinary from "../../../../backend/utils/uploadCloudinary";
+import { useSelector, useDispatch } from "react-redux";
+import { instructorSetCredentials } from "../../Slices/instructorApiSlice.js";
 
 const InstructorSignup = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [idProof, setIdProofFile] = useState(null)
-  const [experienceCertificateFile, setExperienceCertificateFile] = useState(null)
-  const [profilephoto,setprofilephoto]=useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [idProof, setIdProofFile] = useState(null);
+  const [experienceCertificateFile, setExperienceCertificateFile] =
+    useState(null);
+  const [recievedOtp, setRecievedOtp] = useState("");
+  const [profilephoto, setprofilephoto] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,99 +26,183 @@ const InstructorSignup = () => {
     companyname: "",
     password: "",
     confirmPassword: "",
+    otp: "",
   });
+  const [Emailverify, setEmailverify] = useState(false);
+
   const [register] = useInstructorSignUpMutation(); // Use your register mutation hook
-const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+  const [verifyOtp] = useInstructverifyOtpMutation();
+  const { instructorInfo } = useSelector((state) => state.authInstructor) || {};
+
+  // useEffect(() => {
+  //   setIsOpen(true);
+  // }, [isModalOpen]);
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen)
-  }
- 
-  const handleprofilephotoUpload = async (file) => {
+  const onRequestClose = () => {
+    // Logic to handle closing the modal
+    setEmailverify(false);
+    setIsModalOpen(false);
+  };
+
+  const handleModalSubmit = async (e) => {
     try {
-      const data = await uploadImageToCloudinary(file)
-      setprofilephoto(data.url)
-    } catch (error) {
-      console.error("upload error",error);
+      const {
+        name,
+        email,
+        otp,
+        mobile,
+        password,
+        experience,
+        jobrole,
+        companyname,
+      } = formData;
+
+      const res = await register({
+        ...formData,
+        name,
+        email,
+        mobile,
+        experience,
+        jobrole,
+        companyname,
+        password,
+        profilephoto,
+        idProof,
+        experienceCertificateFile,
+        otp,
+      }).unwrap();
+
+      const recievedOtp = res.otp;
+      setRecievedOtp(recievedOtp);
+      setIsModalOpen(false);
+      setEmailverify(true);
+      toast.success("otp send successful");
+
+      // navigate("/instructorLogin");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
     }
-   
-  }
-  
-  const handleIdProofUpload = async(file) => {
+  };
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
     try {
-      const data = await uploadImageToCloudinary(file)
+      // if (!formData.otp) {
+      //   toast.error("otp is invalid")
+      // }
 
-    setIdProofFile(data.url)
+      if (!formData.email) {
+        console.error("OTP or email is not set");
+        return;
+      }
+
+      const response = await verifyOtp({
+        otp: formData.otp,
+        email: formData.email,
+        name: formData.name,
+        mobile: formData.mobile,
+        password: formData.password,
+        profilephoto,
+        idProof,
+        experienceCertificateFile,
+        experience: formData.experience,
+        jobrole: formData.jobrole,
+        companyname: formData.companyname,
+        typedOtp: recievedOtp, // Include the user-typed OTP
+      });
+      if (response.error) {
+        toast.error("Invalid otp");
+        console.error("OTP verification failed:", response.error);
+        // Handle OTP verification failure
+      } else {
+        const data = response.data;
+        if (data.success) {
+          dispatch(instructorSetCredentials({ ...data }));
+          navigate("/instructor");
+
+          setEmailverify(false); // Close the modal after successful verification
+          setIsModalOpen(true); // Open the Email Verification Modal
+
+          toast.success("Registration successfull");
+        } else {
+          console.error("OTP verification failed:", data.message);
+          // Handle OTP verification failure
+        }
+      }
     } catch (error) {
-            console.error("upload id proof error",error);
-
+      console.error("Error triggering OTP verification:", error.message);
+      // Handle other errors, e.g., network issues or server errors
     }
-      
-  }
+  };
 
-  const handleExperienceCertificateUpload = async (file) => {
-    try {
-            const data = await uploadImageToCloudinary(file);
-    setExperienceCertificateFile(data.url)
-
-    } catch (error) {
-                  console.error("upload exp error", error);
-
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const {
+      name,
+      email,
+      mobile,
+      experience,
+      jobrole,
+      companyname,
+      password,
+      confirmPassword,
+    } = formData;
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+    } else {
+      // Open the modal for file uploads
+      setIsModalOpen(true);
+      // setIsOpen(true);
     }
+  };
 
-  }
- const handleModalSubmit = async () => {
-   try {
-     // Upload files to Cloudinary or your desired service
-     const profilephotoUrl = await uploadImageToCloudinary(profilephoto);
-     const idProofUrl = await uploadImageToCloudinary(idProof);
-     const experienceCertificateUrl = await uploadImageToCloudinary(
-       experienceCertificateFile
-     );
+  const handleprofilephotoUpload = (e) => {
+    const file = e.target.files[0];
+    setFileToBase(file);
+  };
 
-     // Perform registration with the obtained URLs
-     const res = await register({
-       name: formData.name,
-       email: formData.email,
-       mobile: formData.mobile,
-       experience: formData.experience,
-       jobrole: formData.jobrole,
-       companyname: formData.companyname,
-       password: formData.password,
-       profilephoto: profilephotoUrl,
-       idProof: idProofUrl,
-       experienceCertificateFile: experienceCertificateUrl.url,
-     }).unwrap();
+  const setFileToBase = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setprofilephoto(reader.result);
+    };
+  };
 
+  const handleIdProofUpload = (e) => {
+    const file = e.target.files[0];
+    setFileToBase2(file);
+  };
 
-   
-     toggleModal();
-           toast.success("Successfully Registered");
-     navigate("/instructorLogin");
+  const setFileToBase2 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setIdProofFile(reader.result);
+    };
+  };
 
+  const handleExperienceCertificateUpload = (e) => {
+    const file = e.target.files[0];
+    setFileToBase3(file);
+  };
 
-   } catch (err) {
-     toast.error(err?.data?.message || err.error);
-   }
- };
-
- const submitHandler = async (e) => {
-e.preventDefault();
-const { password, confirmPassword } = formData;
-
-
-if (password !== confirmPassword) {
-  toast.error("Passwords do not match");
-} else {
-
-  // Open the modal for file uploads
-  toggleModal();
-}
-};
+  const setFileToBase3 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setExperienceCertificateFile(reader.result);
+    };
+  };
 
   return (
     <section className="px-5 xl:px-0">
@@ -136,7 +224,7 @@ if (password !== confirmPassword) {
               Register{" "}
               <span className="text-primaryColor">to be an Instructor!!</span>
             </h3>
-            <form onSubmit={submitHandler} encType="multipart/form-data">
+            <form onSubmit={submitHandler}>
               <div className="mb-5">
                 <input
                   type="text"
@@ -229,7 +317,6 @@ if (password !== confirmPassword) {
               <div className="mt-7 flex justify-between items-center">
                 <button
                   type="submit"
-                  onClick={submitHandler}
                   className="w-[150px] bg-black text-white text-[18px] leading-[20px] px-4 py-3"
                 >
                   Register
@@ -281,9 +368,7 @@ if (password !== confirmPassword) {
                       type="file"
                       id="profilephoto"
                       accept="image/*"
-                      onChange={(e) =>
-                        handleprofilephotoUpload(e.target.files[0])
-                      }
+                      onChange={handleprofilephotoUpload}
                     />
                   </div>
                   <div className="mb-5">
@@ -296,8 +381,7 @@ if (password !== confirmPassword) {
                     <input
                       type="file"
                       id="idProof"
-                     
-                      onChange={(e) => handleIdProofUpload(e.target.files[0])}
+                      onChange={handleIdProofUpload}
                     />
                   </div>
                   <div className="mb-5">
@@ -310,10 +394,7 @@ if (password !== confirmPassword) {
                     <input
                       type="file"
                       id="experienceCertificate"
-                      
-                      onChange={(e) =>
-                        handleExperienceCertificateUpload(e.target.files[0])
-                      }
+                      onChange={handleExperienceCertificateUpload}
                     />
                   </div>
                   <div className="flex justify-between items-center">
@@ -335,10 +416,64 @@ if (password !== confirmPassword) {
                 </div>
               )}
             </form>
+            {Emailverify && (
+              <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
+                <div className="mx-auto flex w-full max-w-md flex-col space-y-16">
+                  <div className="flex flex-col items-center justify-center text-center space-y-2">
+                    <div className=" text-gray-500 ">
+                      <div className="pr-72">Email Verification</div>
+                    </div>
+                    <div className="flex flex-row text-sm font-medium text-gray-400">
+                      <p>We have sent a code to your email</p>
+                    </div>
+                  </div>
+
+                  <form action="" method="post">
+                    <div className="flex flex-col space-y-16">
+                      <div className="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
+                        <div className="w-200 ">
+                          <input
+                            className="w-full h-9 border-black flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                            type="text"
+                            placeholder="Enter OTP"
+                            name="otp"
+                            value={formData.otp || ""} // Use formData.otp or an empty string if null
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col space-y-5">
+                        <div>
+                          <button
+                            onClick={handleVerifyOtp}
+                            className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-900 border-none text-white text-sm shadow-sm"
+                          >
+                            Verify Account
+                          </button>
+                        </div>
+
+                        <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
+                          <p>Didn't receive code?</p>{" "}
+                          <a
+                            className="flex flex-row items-center text-blue-600"
+                            href="http://"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Resend
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </section>
   );
-}
+};
 export default InstructorSignup;

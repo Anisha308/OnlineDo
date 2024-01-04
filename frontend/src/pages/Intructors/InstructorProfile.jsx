@@ -1,15 +1,15 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { Avatar } from "@material-tailwind/react";
 import { useSelector } from "react-redux";
 import {
   useGetInstructProfileQuery,
-  useUpdateInstructProfileMutation
+  useUpdateInstructProfileMutation,
 } from "../../Slices/authInstructorSlice";
 
 const InstructorProfile = () => {
   const instructor = JSON.parse(localStorage.getItem("instructorInfo"));
 
-const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
+  const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
   const [instructors, setInstructors] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstructorId, setSelectedInstructorId] = useState(null); // Add this state
@@ -20,20 +20,18 @@ const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
     mobile: "",
     experience: "",
     jobrole: "",
-    companyname:"",
+    companyname: "",
     profilephoto: "",
   });
 
-
- 
-  const [updateProfile, { isLoading: isUpdating }] = useUpdateInstructProfileMutation();
+  const [updateProfile, { isLoading: isUpdating }] =
+    useUpdateInstructProfileMutation();
 
   useEffect(() => {
     if (data && data.instructors) {
-    
       setInstructors(data.instructors);
-   } else {
-     console.error('error fetching');;
+    } else {
+      console.error("error fetching");
     }
   }, [data, error]);
 
@@ -44,7 +42,7 @@ const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
       mobile: instructors.mobile || "",
       experience: instructors.experience || "",
       jobrole: instructors.jobrole || "",
-      companyname:instructors.companyname || "",
+      companyname: instructors.companyname || "",
       profilephoto: instructors.profilephoto || "",
     });
     setSelectedInstructorId(instructors._id); // Set the selected user ID
@@ -54,12 +52,9 @@ const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
 
   const handleUpdateProfile = async () => {
     try {
-     
-      
-
       const response = await updateProfile({
         instructorId: selectedInstructorId,
-        ...editedInstructorData
+        ...editedInstructorData,
       }).unwrap();
       if (response.error) {
         console.error("Profile update failed:", response.error.message);
@@ -71,7 +66,7 @@ const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
           mobile: response.mobile,
           experience: response.experience,
           jobrole: response.jobrole,
-          companyname:response.companyname,
+          companyname: response.companyname,
           profilephoto: response.profilephoto,
         }));
 
@@ -98,7 +93,6 @@ const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
   };
 
   const handleCloseModal = () => {
-
     setIsModalOpen(false);
   };
 
@@ -230,7 +224,6 @@ const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
                   </p>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
