@@ -14,7 +14,6 @@ import Userlists from '../pages/Admin/Userlists.jsx'
 import Instructorlist from '../pages/Admin/Instructorlist.jsx'
 import UserProfile from '../pages/Users/UserProfile.jsx'
 import { Routes, Route } from 'react-router-dom'
-import InstructorDashboard from '../pages/Intructors/Instructor'
 import InstructorProfile from '../pages/Intructors/InstructorProfile.jsx'
 import Courselists from '../pages/Intructors/Courselist.jsx'
 import Allcourse from '../pages/Users/Allcourse.jsx'
@@ -36,15 +35,37 @@ function Router() {
         <Route path="/instructorRegister" element={<InstructorSignup />} />
         <Route
           path="/instructor/:instructorId/courselist"
-          element={<InstructorPrivateRoute><Courselists /></InstructorPrivateRoute>}
+          element={
+            <InstructorPrivateRoute>
+              <Courselists />
+            </InstructorPrivateRoute>
+          }
         />
         <Route
           path="/instructor/addcourse/:instructorId"
-          element={<InstructorPrivateRoute><Addcourse /></InstructorPrivateRoute>}
+          element={
+            <InstructorPrivateRoute>
+              <Addcourse />
+            </InstructorPrivateRoute>
+          }
         />
         <Route path="/admin/Login" element={<AdminLogin />} />
-        <Route path="/admin/userlist" element={<AdminPrivateRoute><Userlists /></AdminPrivateRoute>} />
-        <Route path="/admin/instructorlist" element={<AdminPrivateRoute><Instructorlist /></AdminPrivateRoute>} />
+        <Route
+          path="/admin/userlist"
+          element={
+            <AdminPrivateRoute>
+              <Userlists />
+            </AdminPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/instructorlist"
+          element={
+            <AdminPrivateRoute>
+              <Instructorlist />
+            </AdminPrivateRoute>
+          }
+        />
         {/* <Route path="/instructor/verify" element={<InstructorDashboard />} /> */}
         <Route
           path="/profile/:id"
@@ -56,10 +77,15 @@ function Router() {
         />{" "}
         <Route
           path="/instructor/showprofile/:instructorId"
-          element={<InstructorPrivateRoute><InstructorProfile /></InstructorPrivateRoute>}
+          element={
+            <InstructorPrivateRoute>
+              <InstructorProfile />
+            </InstructorPrivateRoute>
+          }
         />
         <Route path="/getcourse" element={<Allcourse />} />
-        {/* <Route path="/service" element={<Services />} /> */}
+        <Route path="/instructorconfirm" element={<Instructor />} />
+        <Route path="/service" element={<Services />} />
       </Routes>
     </>
   );

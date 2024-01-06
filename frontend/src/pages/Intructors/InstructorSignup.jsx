@@ -88,7 +88,6 @@ const InstructorSignup = () => {
       setEmailverify(true);
       toast.success("otp send successful");
 
-      // navigate("/instructorLogin");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -127,10 +126,11 @@ const InstructorSignup = () => {
         const data = response.data;
         if (data.success) {
           dispatch(instructorSetCredentials({ ...data }));
-          navigate("/instructor");
-
           setEmailverify(false); // Close the modal after successful verification
-          setIsModalOpen(true); // Open the Email Verification Modal
+          setIsModalOpen(false); // Open the Email Verification Modal
+          console.log("before");
+window.location.href = "/instructorLogin";
+          console.log("After");
 
           toast.success("Registration successfull");
         } else {
@@ -397,6 +397,7 @@ const InstructorSignup = () => {
                       onChange={handleExperienceCertificateUpload}
                     />
                   </div>
+                  
                   <div className="flex justify-between items-center">
                     <button
                       type="button"

@@ -108,7 +108,6 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="mail@gmail.com"
-                    defaultValue="mail@gmail.com"
                   />
                 </div>
                 <div className="mt-8 content-center">
@@ -123,7 +122,6 @@ const Login = () => {
                     id="password"
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    defaultValue=""
                   />
                 </div>
                 <div className="flex items-center justify-between">
