@@ -21,7 +21,7 @@ const InstructorSidebar = ({ instructorId }) => {
           {
             title: "Courses",
             itemId: "/users",
-            elemBefore: () => <Icon name="users" />,
+            elemBefore: () => <Icon name="instructor" />,
             subNav: [
               {
                 elemBefore: () => (
@@ -45,23 +45,23 @@ const InstructorSidebar = ({ instructorId }) => {
               },
             ],
           },
-          //   {
-          //     title: "Instructors",
-          //     itemId: "/Instructor",
-          //     elemBefore: () => <Icon name="instructor" />,
-          //     subNav: [
-          //       {
-          //         elemBefore: () => (
-          //           <Link
-          //             to="/admin/instructorlist"
-          //             className="text-primaryColor font-medium ml-1"
-          //           >
-          //             InstructorLists
-          //           </Link>
-          //         ),
-          //       },
-          //     ],
-          //   },
+            {
+              title: "Categories",
+              itemId: "/addcategory",
+              elemBefore: () => <Icon name="users" />,
+              subNav: [
+                {
+                  elemBefore: () => (
+                    <Link
+                      to="/instructor/addcategory"
+                      className="text-primaryColor font-medium ml-1"
+                    >
+                      Category
+                    </Link>
+                  ),
+                },
+              ],
+            },
         ]}
       />
     </div>

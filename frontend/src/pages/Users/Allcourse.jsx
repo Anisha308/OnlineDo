@@ -273,7 +273,7 @@ console.log(response,'res');
                 All Courses
               </h1>
               <div
-                className="flex w-[30rem] rounded mt-5 mb-5 w-80 bg-gray-300"
+                className="flex  rounded mt-5 mb-5 w-80 bg-gray-300"
                 data-x-data="{ search: '' }"
               >
                 <input
