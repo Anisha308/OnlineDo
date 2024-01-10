@@ -425,8 +425,13 @@ console.log(response,'res');
                                         className="h-44"
                                       >
                                         <img
-                                          src="https://docs.material-tailwind.com/img/team-3.jpg"
+                                          src={course.thumbnail}
                                           alt="profile-picture"
+                                          style={{
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "cover",
+                                          }}
                                         />
                                       </CardHeader>
                                       <CardBody className="text-center">

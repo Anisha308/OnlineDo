@@ -4,136 +4,176 @@ import { useParams } from "react-router-dom";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
 import { toast } from "react-toastify";
 import uploadToCloudinary from "../../../../backend/utils/uploadCloudinary";
+import apiInstance from "../../../Api";
+import { useEffect } from "react";
 const AddCourse = () => {
   const { instructorId } = useParams();
-console.log("Instructor ID:", instructorId);
-
+  const [loading, setLoading] = useState(false);
   const [courseName, setCourseName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [duration, setDuration] = useState("");
-  const [paid, setPaid] = useState("Paid"); // Set a default value for 'Paid'
-const [modules, setModules] = useState([
-  { title: "", module: "", video: "", videos: [] },
-]);
-  
+  const [paid, setPaid] = useState("Paid");
+  const [modules, setModules] = useState([
+    { title: "", videos: [{ url: "" }] },
+  ]);
+  const [categories, setCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [image, setImage] = useState("");
+  const handleImageUpload = async (e) => {
+    console.log("fdkssssssssssss");
+    const file=e.target.files[0]
+    console.log(file);
+    try {
+      const response = await uploadToCloudinary(file);
+      console.log(response, "rekfdllllllllllllllllllllllll");
+      setImage(response);
+    } catch (error) {
+      console.log("error in image upload", error);
+    }
+  };
   const handleCourseNameChange = (e) => {
+    console.log("changed name");
     setCourseName(e.target.value);
   };
 
   const handleDescriptionChange = (e) => {
+    console.log("changed descrip");
+
     setDescription(e.target.value);
   };
 
   const handlePriceChange = (e) => {
+    console.log("changed price");
+
     setPrice(e.target.value);
   };
 
   const handleDurationChange = (e) => {
+    console.log("changed durati");
+
     setDuration(e.target.value);
   };
 
   const handlePaidChange = (e) => {
+    console.log("changed paid");
+
     setPaid(e.target.value);
   };
 
   const [addCourseMutation] = useAddcourseMutation();
 
-  const addCourse = async () => {
+  const addCourse = async (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+
     try {
-      console.log(instructorId,'insssssssssssss');
-      console.log(modules,'modulesssssssssssssssss');
       const { data } = await addCourseMutation({
         courseName,
         description,
         price,
         duration,
         paid,
-      
+        categories,
+        image: image.secure_url, // Extract the secure URL from the Cloudinary response
         modules,
-     
-        instructorId, // Ensure this is not 'undefined'
+        instructorId,
       });
-      // Check if data is defined before accessing properties
+      console.log(data, "data");
       if (data) {
         toast.success("Course added successfully:", data);
       } else {
         console.error("Failed to add course. Response data is undefined.");
       }
     } catch (error) {
-      // Handle error if needed
       console.error("Error adding course:", error);
     }
   };
 
-const handleModuleChange = (index, field, value) => {
-  const updatedModules = [...modules];
-  updatedModules[index][field] = value;
-  setModules(updatedModules);
+  const handleModuleChange = (index, field, value) => {
+    console.log("changed module");
 
-  console.log("Updated Modules:", updatedModules);
-};
-
-
-
-// const addModule = (e) => {
-//   e.preventDefault();
-//     setModules([...modules, { title: "", module: "", video: "" }]);
-// };
+    const updatedModules = [...modules];
+    console.log(updatedModules, "updated");
+    updatedModules[index][field] = value;
+    setModules(updatedModules);
+  };
 
   const deleteModule = (index) => {
+    console.log("delete");
+
     const updatedModules = [...modules];
+    console.log(updatedModules, "upppp");
+
     updatedModules.splice(index, 1);
     setModules(updatedModules);
   };
 
-const handleOnUpload = async (file, index) => {
-  try {
-    const isImage = file.type.startsWith("image");
-    const cloudinaryResponse = await uploadToCloudinary(file, isImage);
-console.log('kkjk',cloudinaryResponse);
+  const handleOnUpload = async (file, moduleIndex, videoIndex) => {
+    console.log("handleonupload");
+
+    try {
+      const isVideo = file.type.startsWith("video"); // Corrected variable name
+      setLoading(true);
+      const cloudinaryResponse = await uploadToCloudinary(file, isVideo);
+
+      if (isVideo) {
+        const updatedModules = [...modules];
+
+        updatedModules[moduleIndex].videos[videoIndex].url =
+          cloudinaryResponse.secure_url;
+
+        setModules(updatedModules);
+        console.log(updatedModules, "modules");
+      }
+    } catch (error) {
+      console.error("Error uploading video:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addModule = (e, isVideo = false) => {
+    console.log("addmodule");
+
+    e.preventDefault();
+
+    const newModule = isVideo
+      ? { title: "", videos: [] }
+      : { title: "", videos: [] };
+    console.log(newModule);
+    setModules([...modules, newModule]);
+  };
+
+  const addVideo = (e, moduleIndex) => {
+    e.preventDefault();
     const updatedModules = [...modules];
-    updatedModules[index].video = cloudinaryResponse.secure_url;
+    console.log(updatedModules, "kodsax");
+    if (!updatedModules[moduleIndex].videos) {
+      console.log("dsffd");
+      updatedModules[moduleIndex].videos = [];
+    }
+    const newVideo = { url: "" };
+
+    updatedModules[moduleIndex].videos.push(newVideo);
 
     setModules(updatedModules);
-    console.log(updatedModules,'modules');
-  } catch (error) {
-    console.error("Error uploading video:", error);
-  }
-
-};
-
-
-const addModule = (e, isVideo = false) => {
-  e.preventDefault();
-
-  // Create a new video module if isVideo is true, else create a regular module
-  const newModule = isVideo
-    ? { title: "", video: "" }
-    : { title: "", module: "", video: "" };
-
-  setModules([...modules, newModule]);
-};
-
-
-const addVideo = (e, index) => {
-  e.preventDefault();
-console.log('yesssssssssss');
-  // Create a new video object
-  const newVideo = { video: "" };
-console.log(newVideo,'newvideo');
-  // Update the state to add the new video to the specific module at the given index
-  const updatedModules = [...modules];
-
-  if (!updatedModules[index].videos) {
-    updatedModules[index].videos = [];
-  }
-
-  updatedModules[index].videos.push(newVideo);
-  setModules(updatedModules);
-};
-
-
+  };
+  const handlecategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+  const getCategories = async (req, res) => {
+    try {
+      const response = await apiInstance.get("api/instructor/categories");
+      console.log(response, "resssssssssssssss");
+      console.log(response.data, "dataaaaaaaaaaaaaaaaaaaaa");
+      setCategory(response.data);
+    } catch (error) {
+      console.error("Error fetching categories", error);
+    }
+  };
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   return (
     <div className="flex ">
@@ -162,6 +202,7 @@ console.log(newVideo,'newvideo');
                 </h6>
               </div>
             </div>
+
             <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
               <form>
                 <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
@@ -207,25 +248,47 @@ console.log(newVideo,'newvideo');
                       </select>
                     </div>
                   </div>
-
-                  {/* <div className="w-full lg:w-6/12 px-4"> */}
-                  <div className="relative w-full lg:w-12/12 px-4 mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      description
-                    </label>
-                    <input
-                      type="text"
-                      id="description"
-                      value={description}
-                      onChange={handleDescriptionChange}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    />
-                    {/* </div> */}
+                  <div className="w-full lg:w-6/12 px-4">
+                    <div className="relative w-full mb-3">
+                      <label
+                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        htmlFor="grid-password"
+                      >
+                        description
+                      </label>
+                      <input
+                        type="text"
+                        id="description"
+                        value={description}
+                        onChange={handleDescriptionChange}
+                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      />
+                    </div>
                   </div>
-
+                  <div className="w-full lg:w-6/12 px-4">
+                    <div className="relative w-full mb-3">
+                      <label
+                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        htmlFor="grid-password"
+                      >
+                        Category
+                      </label>
+                      <select
+                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        value={selectedCategory}
+                        onChange={handlecategoryChange}
+                      >
+                        <option value="" key="0">
+                          Select a category
+                        </option>
+                        {categories.map((category) => (
+                          <option value={category._id} key="{category._id}">
+                            {category.categoryName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
                       <label
@@ -261,6 +324,44 @@ console.log(newVideo,'newvideo');
                     </div>
                   </div>
                 </div>
+                <div className="relative w-full mb-3 ml-2">
+                  <label
+                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                    // htmlFor={`video-${videoIndex}`}
+                  >
+                    Add Thumbnail {/* Video{videoIndex + 1} */}
+                  </label>
+                  <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
+                    {loading ? (
+                      <img
+                        className="h-16 w-16"
+                        src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                        alt=""
+                      />
+                    ) : (
+                      <svg
+                        className="w-8 h-8"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                      </svg>
+                    )}
+
+                    <span className="mt-2 text-base leading-normal">
+                      Select a file
+                    </span>
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={(e) => {
+                        handleImageUpload(e);
+                      }}
+                    />
+                  </label>
+                </div>
+
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
                 <div className="flex flex-wrap items-center ml-17">
                   <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
@@ -268,14 +369,13 @@ console.log(newVideo,'newvideo');
                   </h6>
                   <div className="  px-2 flex items-center">
                     <button
-                      className="btn btn-outline-success ml-96 w-19 px-5 h-10 text-white bg-blue-900 rounded-md"
+                      className="btn btn-outline-success  w-19 px-5 h-10 text-white bg-blue-900 rounded-md"
                       onClick={(e) => addModule(e)}
                     >
                       + Add Module
                     </button>
                   </div>
                 </div>
-
                 <div className="flex flex-wrap">
                   {modules.map((module, index) => (
                     <div key={index} className="w-full lg:w-12/12 px-4">
@@ -298,104 +398,93 @@ console.log(newVideo,'newvideo');
                           />
                         </div>
                       </div>
-                      {/* <div className="relative w-full mb-3">
-                        <label
-                          className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                          htmlFor={`module-${index}`}
-                        >
-                          Module
-                        </label>
-                        <input
-                          type="text"
-                          id={`module-${index}`}
-                          value={module.module}
-                          onChange={(e) =>
-                            handleModuleChange(index, "module", e.target.value)
-                          }
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                        />
-                      </div> */}
-                      <div className="relative w-full mb-3 ml-2">
-                        <label
-                          className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                          htmlFor={`video-${index}`}
-                        >
-                          Video
-                        </label>
-                        <div className="flex  items-center justify-center bg-grey-lighter">
-                          <label className="w-64 flex flex-col items-center px-4 py-7 mr-96 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white">
-                            <button
-                              type="button"
-                              className="btn btn-outline-success ml-96 w-19 px-5 h-10 text-white bg-blue-900 rounded-md"
-                              onClick={(e) => addVideo(e, index)}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-6 h-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                />
-                              </svg>
-                            </button>
 
-                            <span className="mt-2 text-base leading-normal">
-                              Select a file
-                            </span>
-
-                            <input
-                              type="file"
-                              onChange={(e) =>
-                                handleOnUpload(e.target.files[0], index)
-                              }
-                              className="hidden"
-                            />
-                          </label>
-                          {/* <button
-                            className="btn btn-outline-success bg-green-500 text-white p-2 rounded-full flex items-center w-10 h-10 justify-center ml-2"
-                            onClick={(e) => addModule(e)}
+                      {module.videos &&
+                        module.videos.map((video, videoIndex) => (
+                          <div
+                            key={videoIndex}
+                            className="relative w-full mb-3 ml-2"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-6 h-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
+                            <label
+                              className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                              htmlFor={`video-${index}-${videoIndex}`}
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                              />
-                            </svg>
-                          </button> */}
-                          <div className="md:flex justify-start ml-3">
-                            <button
-                              className="btn btn-outline-danger bg-red-500 text-white p-2 rounded-full flex items-center w-10 h-10 justify-center"
-                              onClick={() => deleteModule(index)}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-16 h-16 flex items-center mx-auto"
-                                viewBox="0 0 20 20"
-                                fillRule="currentColor"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                  clipRule="evenodd"
+                              Video{videoIndex + 1}
+                            </label>
+                            <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
+                              {loading ? (
+                                <img
+                                  className="h-16 w-16"
+                                  src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                                  alt=""
                                 />
-                              </svg>
-                            </button>
+                              ) : (
+                                <svg
+                                  className="w-8 h-8"
+                                  fill="currentColor"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
+                              )}
+
+                              <span className="mt-2 text-base leading-normal">
+                                Select a file
+                              </span>
+                              <input
+                                type="file"
+                                className="hidden"
+                                onChange={(e) => {
+                                  handleOnUpload(
+                                    e.target.files[0],
+                                    index,
+                                    videoIndex
+                                  );
+                                }}
+                              />
+                            </label>
                           </div>
-                        </div>
+                        ))}
+
+                      <button
+                        className="btn btn-outline-success ml-96 w-19 px-5 h-10 text-white bg-blue-900 rounded-md"
+                        onClick={(e) => addVideo(e, index)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-6 h-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                          />
+                        </svg>
+                      </button>
+
+                      <div className="md:flex justify-start ml-3">
+                        <button
+                          className="btn btn-outline-danger bg-red-500 text-white p-2 rounded-full flex items-center w-10 h-10 justify-center"
+                          onClick={() => deleteModule(index)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-16 h-16 flex items-center mx-auto"
+                            viewBox="0 0 20 20"
+                            fillRule="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   ))}
