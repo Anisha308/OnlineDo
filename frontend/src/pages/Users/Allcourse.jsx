@@ -11,7 +11,8 @@ import {
 } from "@material-tailwind/react";
 import { useGetAllCourseQuery } from "../../Slices/usersApiSlice";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import ViewCourse from "./ViewCourse";
 const ITEMS_PER_PAGE = 6;
 
 const Allcourse = () => {
@@ -19,19 +20,19 @@ const Allcourse = () => {
 
   const { data, error, isLoading } = useGetAllCourseQuery();
 
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState(null);
- 
-useEffect(() => {
-  if (data && data.courses) {
-    setCourses(data.courses);
-  }
-}, [data]);
+
+  useEffect(() => {
+    if (data && data.courses) {
+      console.log(data,'dddddddddddddddddddddd');
+      setCourses(data.courses);
+    }
+  }, [data]);
 
   const handlesort = async (sortOrder) => {
     try {
@@ -41,7 +42,7 @@ useEffect(() => {
       });
       console.log(response, "res");
       if (response.data && response.data.courses) {
-        console.log(response.data.courses,'llllllllllllllllllll');
+        console.log(response.data.courses, "llllllllllllllllllll");
         setCourses(response.data.courses);
       }
     } catch (error) {
@@ -49,23 +50,23 @@ useEffect(() => {
     }
   };
 
-  const handlefilter = async (filterorder,e) => {
+  const handlefilter = async (filterorder, e) => {
     e.preventDefault(); // Prevents the default form submission behavior
-console.log(filterorder,'filterorder');
+    console.log(filterorder, "filterorder");
     try {
       const response = await apiInstance.get("api/users/getcourse/filter", {
         params: { query: filterorder },
       });
-console.log(response,'res');
+      console.log(response, "res");
       if (response.data && response.data.courses) {
         console.log(response.data.courses);
         setCourses(response.data.courses);
       }
-      setIsSidebarOpen(false)
+      setIsSidebarOpen(false);
     } catch (error) {
       console.error("error in filter", error);
     }
-  }
+  };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -74,7 +75,7 @@ console.log(response,'res');
   const totalPages = Math.ceil((courses && courses.length) / ITEMS_PER_PAGE);
 
   const handleSearch = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     try {
       console.log(search);
@@ -360,24 +361,7 @@ console.log(response,'res');
                     </div>
                   )}
                 </div>
-                {/* <button
-                  type="button"
-                  className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
-                > */}
-                {/* <span className="sr-only">View grid</span> */}
-                {/* <svg
-                    className="h-5 w-5"
-                    aria-hidden="true"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.25 2A2.25 2.25 0 002 4.25v2.5A2.25 2.25 0 004.25 9h2.5A2.25 2.25 0 009 6.75v-2.5A2.25 2.25 0 006.75 2h-2.5zm0 9A2.25 2.25 0 002 13.25v2.5A2.25 2.25 0 004.25 18h2.5A2.25 2.25 0 009 15.75v-2.5A2.25 2.25 0 006.75 11h-2.5zm9-9A2.25 2.25 0 0011 4.25v2.5A2.25 2.25 0 0013.25 9h2.5A2.25 2.25 0 0018 6.75v-2.5A2.25 2.25 0 0015.75 2h-2.5zm0 9A2.25 2.25 0 0011 13.25v2.5A2.25 2.25 0 0013.25 18h2.5A2.25 2.25 0 0018 15.75v-2.5A2.25 2.25 0 0015.75 11h-2.5z"
-                      clipRule="evenodd"
-                    />
-                  </svg> */}
-                {/* </button> */}
+
                 <button
                   type="button"
                   className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6  "
@@ -416,56 +400,62 @@ console.log(response,'res');
                                     currentPage * ITEMS_PER_PAGE
                                   )
                                   .map((course, index) => (
-                                    <Card
+                                    <Link
+                                      to={{ pathname: `/viewcourse/${course._id}`, state: { course } }}
                                       key={index}
-                                      className="w-[330px]  mb-7 p-2 flex-none"
+                                      className="hover:no-inderline"
                                     >
-                                      <CardHeader
-                                        floated={false}
-                                        className="h-44"
+
+                                      <Card
+                                        key={index}
+                                        className="w-[332px]  mb-7 p-2 flex-none"
                                       >
-                                        <img
-                                          src={course.thumbnail}
-                                          alt="profile-picture"
-                                          style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                          }}
-                                        />
-                                      </CardHeader>
-                                      <CardBody className="text-center">
-                                        <Typography
-                                          variant="h4"
-                                          color="blue-gray"
-                                          className="font-bold"
+                                        <CardHeader
+                                          floated={false}
+                                          className="h-44"
                                         >
-                                          {course.name}
-                                        </Typography>
-                                        <Typography
-                                          color="blue-gray"
-                                          className="mb-2"
-                                          textGradient
-                                        >
-                                          {course.duration} of{" "}
-                                          {course.description}{" "}
-                                        </Typography>
-                                        <Typography
-                                          color="blue-gray"
-                                          className="mb-"
-                                          textGradient
-                                        >
-                                          Price : ₹{course.price}
-                                        </Typography>
-                                      </CardBody>
-                                      <CardFooter className="flex justify-center gap-7 pt-2">
-                                        <div>
+                                          <img
+                                            src={course.thumbnail}
+                                            alt="profile-picture"
+                                            style={{
+                                              width: "100%",
+                                              height: "100%",
+                                              objectFit: "cover",
+                                            }}
+                                          />
+                                        </CardHeader>
+                                        <CardBody className="text-start">
+                                          <Typography
+                                            variant="h8"
+                                            className="font-bold"
+                                          >
+                                            {course.courseName}
+                                          </Typography>
+                                          <Typography
+                                            color="blue-gray"
+                                            className="mb-2"
+                                          >
+                                            {/* {/* {course.duration} of{" "} */}
+                                            {course.instructor.name}
+                                          </Typography>
+                                          <Typography
+                                            color="blue-gray"
+                                            className="mb-"
+                                            textGradient
+                                          >
+                                            ₹{course.price}
+                                          </Typography>
+                                        </CardBody>
+
+                                        <CardFooter className="flex justify-center gap-7 pt-2">
+                                          {/* <div>
                                           <button className="bg-blue-900 text-white px-10 mb-6 py-2 w-[200px]  rounded-md">
                                             view
                                           </button>
-                                        </div>
-                                      </CardFooter>
-                                    </Card>
+                                        </div> */}
+                                        </CardFooter>
+                                      </Card>
+                                    </Link>
                                   ))}
                               {(!courses || courses.length === 0) && (
                                 <p>No courses found.</p>

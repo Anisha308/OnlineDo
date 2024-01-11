@@ -12,6 +12,8 @@ import { Routes, Route } from "react-router-dom";
 
 import Allcourse from "../pages/Users/Allcourse.jsx";
 import UserPrivateRoute from "../components/PrivateRoute/userPrivateRoute.jsx";
+import ViewCourse from "../pages/Users/ViewCourse.jsx";
+
 function UserRouter() {
   return (
     <>
@@ -32,6 +34,7 @@ function UserRouter() {
         />{" "}
         <Route path="/getcourse" element={<Allcourse />} />
         <Route path="/service" element={<Services />} />
+        <Route path="/viewcourse/:id" element={<ViewCourse/>}/>
       </Routes>
     </>
   );
