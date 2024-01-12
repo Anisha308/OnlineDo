@@ -8,6 +8,7 @@ import Category from '../models/categoryModel.js'
 import generateTokenInstructor from "../utils/generateTokenInstructor.js";
 import generateOTP from "../utils/otp.js";
 import sendEmail from "../utils/nodemailer.js";
+import apiInstance from "../../frontend/Api.js";
 
 const authInstructor = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -185,7 +186,6 @@ const instructotpVerify = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error, "err");
     res.status(500).json({ message: "Internal Server Error " });
   }
 };
@@ -199,14 +199,10 @@ const logoutInstructor = (req, res) => {
 
 const addCourse = asyncHandler(async (req, res) => {
   const instructorId = req.params.instructorId;
-  console.log('instr',instructorId);
   const { courseName, paid, description, duration, price ,modules,categories,image} = req.body;
-  console.log(modules, 'modulsfffff');
-  console.log(courseName,paid,description,duration,price,'koooooooooooooo');
   try {
     // Check if the instructor exists
     const instructor = await Instructor.findById(instructorId);
-console.log(instructor,'instructor');
     if (!instructor) {
       res.status(404);
       throw new Error("Instructor not found");
@@ -225,7 +221,6 @@ console.log(instructor,'instructor');
       modules, // Corrected to use the modules state
     });
 
-    console.log(course,'coursessssssssssssssssssssssssssssssssssssssssssssss');
 if (req.file) {
   // Assuming you want to add the file to the first module's videos
   if (modules.length > 0 && modules[0].videos && modules[0].videos.length > 0) {
@@ -237,25 +232,20 @@ if (req.file) {
 
     // Save the course
     const savedCourse = await course.save();
-console.log(savedCourse,'savedCourse');
     // Add the course to the instructor's courses array
     instructor.courses.push(savedCourse._id);
     await instructor.save();
 
     res.status(200).json(savedCourse);
   } catch (error) {
-    console.error("Error adding course:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 
 const addCategories = asyncHandler(async (req, res) => {
-  console.log('dddctegory');
   try {
-    console.log("laassdsf");
     const { categoryName, description, liststatus } = req.body;
-    console.log(categoryName, description, liststatus, "kojuiyufg ");
 
     const newCategory = await Category.create({
       categoryName,
@@ -263,12 +253,9 @@ const addCategories = asyncHandler(async (req, res) => {
       liststatus,
     });
 
-    console.log(newCategory, "new");
     const savedCategory = await newCategory.save();
-    console.log(savedCategory, "savedcategory");
     res.status(200).json(savedCategory);
   } catch (error) {
-   console.error("Error adding ctegory", error);
        res.status(500).json({ error: "Internal Server Error" });
 
  }
@@ -290,7 +277,6 @@ const getInstructorProfile = asyncHandler(async (req, res) => {
     });
     res.status(200).json({ instructors });
   } catch (error) {
-    console.error("Error fetching instructor profile:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -332,7 +318,6 @@ const updateInstructProfile = asyncHandler(async (req, res) => {
       throw new Error("User not found");
     }
   } catch (error) {
-    console.error("Error updating user profile:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -355,7 +340,6 @@ const getInstructorCourses = asyncHandler(async (req, res) => {
     // Return the list of courses for the instructor
     res.status(200).json({ success: true, courses: instructor.courses });
   } catch (error) {
-    console.error("Error fetching instructor courses:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -365,7 +349,6 @@ const getCategories = async (req, res) => {
     const categories = await Category.find();
     res.status(200).json(categories)
   } catch (error) {
-    console.error("Error fetching categories", error);
     res.status(500).json({error:"Internal server error"})
   }
 }
@@ -375,9 +358,28 @@ const showCategory = asyncHandler(async (req, res) => {
     const category = await Category.find();
     res.status(200).json(category)
   } catch (error) {
-        console.error("Error fetching categories", error);
     res.status(500).json({ error: "Internal server error" });
 
+  }
+})
+
+const courseCategory = asyncHandler(async (req, res) => {
+  try {
+    const categoryid = req.params.categoryId
+    const category = await Category.findById(categoryid)
+    res.status(200).json({success: true, category})
+  } catch (error) {
+    console.error('Error fetching category',error);
+  }
+})
+
+const getInstructor = asyncHandler(async (req, res) => {
+  try {
+    const instructorid = req.params.instructorId
+    const instructor = await Instructor.findById(instructorid)
+    res.status(200).json({success:true,instructor})
+  } catch (error) {
+    
   }
 })
 export {
@@ -392,4 +394,6 @@ export {
   addCategories,
   getCategories,
   showCategory,
+  courseCategory,
+  getInstructor,
 };

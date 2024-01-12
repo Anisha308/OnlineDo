@@ -405,7 +405,7 @@ const Allcourse = () => {
                                       key={index}
                                       className="hover:no-inderline"
                                     >
-
+{/* <ViewCourse course={course}/> */}
                                       <Card
                                         key={index}
                                         className="w-[332px]  mb-7 p-2 flex-none"

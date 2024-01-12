@@ -12,6 +12,8 @@ import {
   addCategories,
   getCategories,
   showCategory,
+  courseCategory,
+  getInstructor,
 } from "../controllers/instructorController.js";
 import { protect } from "../middleware/instructorAuthMiddleware.js"
 
@@ -25,5 +27,7 @@ router.get("/:instructorId/courselist" ,getInstructorCourses);
 router.post("/instructotpverify", instructotpVerify);
 router.post("/addcategory", addCategories);
 router.get("/getcategory", getCategories)
-router.get("/categories",showCategory)
+router.get("/categories", showCategory)
+router.get("/getCategory/:categoryId", courseCategory)
+router.get('/getInstructor/:instructorId',getInstructor)
 export default router;

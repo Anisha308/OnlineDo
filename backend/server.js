@@ -1,10 +1,12 @@
 import express from "express";
+import cors from  'cors'
 import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes.js";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import adminRoutes from "./routes/adminRoutes.js";
 import instructorRoutes from "./routes/instructorRoutes.js";
+
 
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
@@ -19,7 +21,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDAPISECRET,
 });
 
-
+const corsOptions = {
+  origin: true,
+  credentials:true
+}
 const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
@@ -34,6 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes)
 app.use("/api/instructor", instructorRoutes);
+app.use(cors(corsOptions))
 
 app.get("/", (req, res) => res.send("Server is ready"));
 

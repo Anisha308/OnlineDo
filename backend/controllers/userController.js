@@ -133,9 +133,7 @@ const otpVerify = async (req, res) => {
         profilephoto: profilephoto,
       });
       await newUser.save();
-      console.log(newUser, "newUser");
       const jwtoken = generateToken(res, newUser._id);
-      console.log(jwtoken, "jwtoken");
    
       res.status(200).json({
         _id:newUser._id,
@@ -146,7 +144,6 @@ const otpVerify = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error, "err");
     res.status(500).json({ message: "Internal Server Error " });
   }
 };
@@ -165,10 +162,20 @@ const getUserProfile = asyncHandler(async (req, res) => {
 
     res.status(200).json({ success: true, users });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+const viewCourse = asyncHandler(async (req, res) => {
+  try {
+    const courseId = req.params.id
+    const course = await Course.findById(courseId)
+    res.status(200).json({ success: true,course })
+  } catch (error) {
+    console.error("Error fetching course",error);
+  }
+})
+
 
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
@@ -203,7 +210,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       throw new Error("User not found");
     }
   } catch (error) {
-    console.error("Error updating user profile:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -218,22 +224,19 @@ const getAllCourses = asyncHandler(async (req, res) => {
     const transformedCourses=courses.map(course=>course.toJSON())
     res.status(200).json({ success: true, courses: transformedCourses });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
+
+
 const searchCourses = asyncHandler(async (req, res) => {
-  console.log("searchCourses");
   try {
     const { query } = req.query;
-    console.log(req.query, "req.query");
     if (!query) {
-      console.log("!query");
       res.status(400).json({ error: "Query parameter is required" });
       return;
     }
-    console.log("Iam here");
     const courses = await Course.find({
       $or: [
         { coursename: { $regex: query, $options: "i" } },
@@ -241,10 +244,8 @@ const searchCourses = asyncHandler(async (req, res) => {
       ],
     });
 
-    console.log(courses, "courses");
     res.status(200).json({ success: true, courses });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 })
@@ -252,7 +253,6 @@ const searchCourses = asyncHandler(async (req, res) => {
 const sortCourses = asyncHandler(async (req, res) => {
   try {
     const { query } = req.query;
-    console.log(query);
     let sortOption;
     switch (query) {
       case 'lowtohigh':
@@ -268,12 +268,9 @@ const sortCourses = asyncHandler(async (req, res) => {
         sortOption = {createdAt:1};
         break;
     }
-console.log(sortOption,'sortoptiob');
     const courses = await Course.find({}).sort(sortOption)
-    console.log(courses,'courses');
     res.status(200).json({success:true,courses})
   } catch (error) {
-        console.error(error);
     res.status(500).json({ error: "Internal server error" });
 
   }
@@ -282,7 +279,6 @@ console.log(sortOption,'sortoptiob');
 const filterCourses = asyncHandler(async (req, res) => {
   try {
     const { query } = req.query
-    console.log(query,'query');
     let filterOption;
     switch (query) {
       case '1-500':
@@ -299,13 +295,10 @@ const filterCourses = asyncHandler(async (req, res) => {
         break;
     }
 
-    console.log(filterOption);
 
     const courses = await Course.find(filterOption)
-    console.log(courses, 'courses');
     res.status(200).json({success:true,courses})
   } catch (error) {
-    console.error('error in filter by price', error);
     res.status(500).json({error:"Internal server error"})
   }
 })
@@ -321,4 +314,5 @@ export {
   searchCourses,
   sortCourses,
   filterCourses,
+  viewCourse,
 };

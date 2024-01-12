@@ -6,11 +6,14 @@ import {
   logoutUser,
   getUserProfile,
   updateUserProfile,
-    getAllCourses,
+  getAllCourses,
   searchCourses,
   sortCourses,
-  filterCourses
+  filterCourses,
+  viewCourse,
+  
 } from "../controllers/userController.js";
+import {setstripe} from "../controllers/paymentController.js"
 const router = express.Router();
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -23,5 +26,6 @@ router.get("/getcourse", getAllCourses);
 router.get("/getcourse/search", searchCourses);
 router.get("/getcourse/sort", sortCourses);
 router.get("/getcourse/filter", filterCourses);
-
+router.get("/getcourse/:id",viewCourse)
+router.post("/create-checkout-session/:price", setstripe);
 export default router;

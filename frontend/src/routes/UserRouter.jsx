@@ -13,6 +13,9 @@ import { Routes, Route } from "react-router-dom";
 import Allcourse from "../pages/Users/Allcourse.jsx";
 import UserPrivateRoute from "../components/PrivateRoute/userPrivateRoute.jsx";
 import ViewCourse from "../pages/Users/ViewCourse.jsx";
+import Fail from "../components/paymentfail/Fail.jsx";
+import Success from "../components/paymentsuccess/success.jsx";
+// import Payment from "../pages/Users/payment.jsx";
 
 function UserRouter() {
   return (
@@ -34,7 +37,11 @@ function UserRouter() {
         />{" "}
         <Route path="/getcourse" element={<Allcourse />} />
         <Route path="/service" element={<Services />} />
-        <Route path="/viewcourse/:id" element={<ViewCourse/>}/>
+        <Route path="/viewcourse/:id" element={<ViewCourse />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/fail" element={<Fail/>}/>
+        {/* <Route path="/payment/:price" element={<Payment/>} /> */}
+
       </Routes>
     </>
   );
