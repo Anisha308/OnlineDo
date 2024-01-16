@@ -2,9 +2,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
+
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), nodePolyfills()],
   server: {
     port: 3002,
     proxy: {
@@ -14,5 +16,4 @@ export default defineConfig({
       },
     },
   },
- 
 });

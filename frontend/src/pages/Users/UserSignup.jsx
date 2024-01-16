@@ -39,6 +39,7 @@ const SignUp = () => {
   useEffect(() => {
     if (userInfo) {
       setIsEmailVerificationModalOpen(true); // Open the email verification modal
+      navigate('/')
     }
   }, [userInfo]);
   const onRequestClose = () => {
@@ -69,6 +70,7 @@ const SignUp = () => {
     }
   };
   const handleVerifyOtp = async (e) => {
+    console.log('nana');
     e.preventDefault();
     try {
       if (!formData.email) {
@@ -85,7 +87,7 @@ const SignUp = () => {
         profilephoto: formData.profilephoto,
         typedOtp: recievedOtp, // Include the user-typed OTP
       });
-
+console.log(response,'oooo');
       if (response.error) {
         toast.error("Invalid otp");
 

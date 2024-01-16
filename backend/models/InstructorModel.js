@@ -7,7 +7,7 @@ const instructorSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-   
+
     email: {
       type: String,
       required: true,
@@ -46,6 +46,8 @@ const instructorSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    role: { type: String, default: "instructor" },
+
     Blocked: {
       type: Boolean,
       default: false,

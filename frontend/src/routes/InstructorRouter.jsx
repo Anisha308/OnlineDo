@@ -1,7 +1,6 @@
 import React from "react";
 import InstructorLogin from "../pages/InstructorLogin";
 import InstructorSignup from "../pages/Intructors/InstructorSignup";
-import InstructorPrivateRoute from "../components/PrivateRoute/instructorPrivateRoute";
 import Courselists from "../pages/Intructors/Courselist";
 import Addcourse from "../pages/Intructors/AddCourse.jsx";
 import InstructorProfile from "../pages/Intructors/InstructorProfile";
@@ -19,33 +18,25 @@ function InstructorRouter() {
         <Route
           path="/instructor/:instructorId/courselist"
           element={
-            <InstructorPrivateRoute>
               <Courselists />
-            </InstructorPrivateRoute>
           }
         />
         <Route
           path="/instructor/addcourse/:instructorId"
           element={
-            <InstructorPrivateRoute>
               <Addcourse />
-            </InstructorPrivateRoute>
           }
         />
         <Route
           path="/instructor/showprofile/:instructorId"
           element={
-            <InstructorPrivateRoute>
               <InstructorProfile />
-            </InstructorPrivateRoute>
           }
         />
         <Route
           path="/instructor/showprofile/:instructorId"
           element={
-            <InstructorPrivateRoute>
               <InstructorProfile />
-            </InstructorPrivateRoute>
           }
         />
         <Route path="/instructor" element={<InstructorHome />} />

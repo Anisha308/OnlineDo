@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import apiInstance from "../../../Api";
+import { useNavigate } from "react-router-dom";
 
 const InstructorDashboard = () => {
   const { instructor } = useSelector((state) => state.authInstructor) || {};
   const [loading, setLoading] = useState(true);
+  const navigate=useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Make sure to include the instructor ID in the request if needed
         const response = await apiInstance.get("/api/users/instructorconfirm");
-        console.log(response.data, "response");
 
         // Assuming the response contains instructor details
         const instructorData = response.data;
 
-        // Handle the instructor data as needed
-        // For example, you might dispatch an action to update the instructor state
-
-        // Set loading to false once data is fetched
+    
         setLoading(false);
       } catch (error) {
         console.error("Error fetching instructor data", error);
@@ -30,6 +28,8 @@ const InstructorDashboard = () => {
 
     if (instructor) {
       fetchData();
+    } else {
+      navigate('/instructorLogin')
     }
   }, [instructor]); // Run the effect when the instructor changes
 

@@ -6,10 +6,9 @@ import { toast } from "react-toastify";
 import { useInstructorSignUpMutation } from "../../Slices/authInstructorSlice.js";
 import { useInstructverifyOtpMutation } from "../../Slices/authInstructorSlice.js";
 import { Modal } from "react-bootstrap";
-import uploadImageToCloudinary from "../../../../backend/utils/uploadCloudinary";
+import uploadImageToCloudinary from "../../../../backend/utils/uploadCloudinary.js";
 import { useSelector, useDispatch } from "react-redux";
 import { instructorSetCredentials } from "../../Slices/instructorApiSlice.js";
-
 const InstructorSignup = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [idProof, setIdProofFile] = useState(null);
@@ -37,9 +36,6 @@ const InstructorSignup = () => {
   const [verifyOtp] = useInstructverifyOtpMutation();
   const { instructorInfo } = useSelector((state) => state.authInstructor) || {};
 
-  // useEffect(() => {
-  //   setIsOpen(true);
-  // }, [isModalOpen]);
 
   const handleInputChange = (e) => {
     setFormData((prevData) => ({
@@ -55,6 +51,7 @@ const InstructorSignup = () => {
   };
 
   const handleModalSubmit = async (e) => {
+    e.preventDefault()
     try {
       const {
         name,
@@ -66,7 +63,6 @@ const InstructorSignup = () => {
         jobrole,
         companyname,
       } = formData;
-
       const res = await register({
         ...formData,
         name,
@@ -81,7 +77,6 @@ const InstructorSignup = () => {
         experienceCertificateFile,
         otp,
       }).unwrap();
-
       const recievedOtp = res.otp;
       setRecievedOtp(recievedOtp);
       setIsModalOpen(false);
@@ -128,15 +123,16 @@ const InstructorSignup = () => {
           dispatch(instructorSetCredentials({ ...data }));
           setEmailverify(false); // Close the modal after successful verification
           setIsModalOpen(false); // Open the Email Verification Modal
-          console.log("before");
-window.location.href = "/instructorLogin";
-          console.log("After");
 
           toast.success("Registration successfull");
+navigate("/instructorLogin");
         } else {
           console.error("OTP verification failed:", data.message);
           // Handle OTP verification failure
         }
+
+      
+
       }
     } catch (error) {
       console.error("Error triggering OTP verification:", error.message);

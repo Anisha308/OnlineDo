@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Avatar } from "@material-tailwind/react";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   useGetInstructProfileQuery,
   useUpdateInstructProfileMutation,
@@ -23,17 +23,23 @@ const InstructorProfile = () => {
     companyname: "",
     profilephoto: "",
   });
-
+const navigate=useNavigate()
   const [updateProfile, { isLoading: isUpdating }] =
     useUpdateInstructProfileMutation();
 
   useEffect(() => {
-    if (data && data.instructors) {
-      setInstructors(data.instructors);
-    } else {
-      console.error("error fetching");
+    if (error) {
+      // Handle specific error cases
+      if (error.statusCode === 401) {
+        // Redirect to login page for unauthorized access
+        return <Redirect to="/login" />;
+      }
+
+      if (data && data.instructors) {
+        setInstructors(data.instructors);
+      }
     }
-  }, [data, error]);
+  }, [data,error]);
 
   const handleEditProfile = () => {
     setEditedInstructorData({

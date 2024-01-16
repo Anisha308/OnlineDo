@@ -19,11 +19,21 @@ const Login = () => {
 const { adminInfo } = useSelector((state) => state.authAdmin);
 
 
+
   useEffect(() => {
     if (adminInfo) {
       navigate("/admin/userlist");
     }
-  }, [navigate, adminInfo]);
+
+    const adminJwt = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("adminJwt="));
+
+    if (adminJwt) {
+      // Redirect to instructor page if token exists
+      navigate("/admin/userlist");
+    }
+  }, [adminInfo, navigate]);
 
 
 const submitHandler = async (e) => {

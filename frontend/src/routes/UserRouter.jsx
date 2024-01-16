@@ -5,13 +5,12 @@ import Login from "../pages/Users/UserLogin.jsx";
 import Contact from "../pages/Contact.jsx";
 
 
-import Services from "../pages/Services.jsx";
+// import Services from "../pages/Services.jsx";
 
 import UserProfile from "../pages/Users/UserProfile.jsx";
 import { Routes, Route } from "react-router-dom";
 
 import Allcourse from "../pages/Users/Allcourse.jsx";
-import UserPrivateRoute from "../components/PrivateRoute/userPrivateRoute.jsx";
 import ViewCourse from "../pages/Users/ViewCourse.jsx";
 import Fail from "../components/paymentfail/Fail.jsx";
 import Success from "../components/paymentsuccess/success.jsx";
@@ -30,13 +29,13 @@ function UserRouter() {
         <Route
           path="/profile/:id"
           element={
-            <UserPrivateRoute>
+         
               <UserProfile />
-            </UserPrivateRoute>
+          
           }
         />{" "}
         <Route path="/getcourse" element={<Allcourse />} />
-        <Route path="/service" element={<Services />} />
+        {/* <Route path="/service" element={<Services />} /> */}
         <Route path="/viewcourse/:id" element={<ViewCourse />} />
         <Route path="/success" element={<Success />} />
         <Route path="/fail" element={<Fail/>}/>

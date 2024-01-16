@@ -5,8 +5,8 @@ import UserRouter from '../routes/UserRouter'
 import AdminRouter from '../routes/AdminRouter'
 import InstructorRouter from '../routes/InstructorRouter'
 import { useLocation } from "react-router-dom";
-import AdminHeader from '../components/Header/AdminHeader';
-import InstructorHeader from '../components/Header/InstructorHeader'
+import AdminHeader from '../components/Header/AdminHeader.jsx';
+import InstructorHeader from '../components/Header/InstructorHeader.jsx'
 
 const Layout = () => {
   const location = useLocation();

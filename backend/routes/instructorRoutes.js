@@ -15,19 +15,19 @@ import {
   courseCategory,
   getInstructor,
 } from "../controllers/instructorController.js";
-import { protect } from "../middleware/instructorAuthMiddleware.js"
+import { instructorProtect } from "../middleware/instructorAuthMiddleware.js"
 
 
-router.post("/", registerInstructor);
+router.post("/",registerInstructor);
 router.post("/auth", authInstructor);
-router.post("/logout", logoutInstructor);
-router.route("/showprofile/:id").get(getInstructorProfile).put(updateInstructProfile)
-router.post('/addcourse/:instructorId', addCourse);  // Added this line for the new route
-router.get("/:instructorId/courselist" ,getInstructorCourses);
+router.post("/logout",logoutInstructor);
+router.route("/showprofile/:id").get(instructorProtect,getInstructorProfile).put(instructorProtect,updateInstructProfile)
+router.post("/addcourse/:instructorId",instructorProtect, addCourse);
+router.get("/:instructorId/courselist",instructorProtect,getInstructorCourses);
 router.post("/instructotpverify", instructotpVerify);
-router.post("/addcategory", addCategories);
-router.get("/getcategory", getCategories)
-router.get("/categories", showCategory)
-router.get("/getCategory/:categoryId", courseCategory)
+router.post("/addcategory",instructorProtect,addCategories)
+router.get("/getcategory",instructorProtect, getCategories)
+router.get("/categories",instructorProtect, showCategory)
+router.get("/getCategory/:categoryId",courseCategory)
 router.get('/getInstructor/:instructorId',getInstructor)
 export default router;

@@ -5,14 +5,14 @@ import { useNavigate } from "react-router-dom";
 
 const ViewCourse = () => {
   const { id } = useParams();
-
   const [course, setCourse] = useState(null);
   const [instructor, setInstructor] = useState(null);
   const [categoryId, setCategoryId] = useState(null);
   const [instructorId, setInstructorId] = useState(null);
   const [category, setCategory] = useState(null);
-
+const navigate =useNavigate()
   useEffect(() => {
+
     const fetchCourse = async () => {
       try {
         const response = await apiInstance.get(`/api/users/getCourse/${id}`);
@@ -32,15 +32,22 @@ const ViewCourse = () => {
         setCategory(categoryresponse.data);
       } catch (error) {
         console.error("Error fetching course", error);
+       navigate('/login')
       }
     };
+    console.log('fetchcourseee');
     fetchCourse();
   }, [id]);
 const handleBuyClick = async(price) => {
   try {
-   console.log(price,'orice');
-   const response = await apiInstance.post(`api/users/create-checkout-session/${price}`)       
-    console.log(response, 'res');
+        const instructorName = instructor.instructor.name;
+
+      const response = await apiInstance.post(
+        `api/users/create-checkout-session/${price}`,
+        {
+          instructorName: instructorName,
+        }
+      );      
     const stripeCheckoutUrl = response.data;
 
     // Navigate to the Stripe checkout page

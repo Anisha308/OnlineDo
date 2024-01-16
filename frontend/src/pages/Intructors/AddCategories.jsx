@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
 import apiInstance from "../../../Api";
 import { toast } from "react-toastify";
+import { Navigate, useNavigate } from "react-router-dom";
 const AddCategories = () => {
   const [categoryName, setCategoryName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedOption, setSelectedOption] = useState("List");
-  const [categories,setCategories]=useState([])
-  
-  
+  const [categories, setCategories] = useState([]);
+  const Navigate = useNavigate();
+
   const handleSelectChange = (e) => {
-    console.log("Selected Optionssssssssssssss:", e.target.value);
     setSelectedOption(e.target.value);
   };
 
@@ -22,18 +22,13 @@ const AddCategories = () => {
   };
   const addCategory = async () => {
     try {
-      console.log("Selected Option:", selectedOption);
-
-      console.log("started");
       const response = await apiInstance.post("/api/instructor/addcategory", {
         categoryName,
         description,
         liststatus: selectedOption,
       });
 
-      console.log(response.data, "res");
       if (response.data) {
-        console.log("hiiif");
         toast.success("Category added successfullyy");
       } else {
         toast.error("failed to add course");
@@ -45,35 +40,43 @@ const AddCategories = () => {
 
   const fetchCategories = async () => {
     try {
-    const response=await apiInstance.get("/api/instructor/getcategory")
- 
-      if (response.data) {
-   setCategories(response.data)
- }
-    } catch (error) {
-      console.error("failed to fetch categories:",error);
-    }
-  }
- const  handleListStatusChange = async (categoryId,newListStatus) => {
-   try {
-     const response = await apiInstance.patch(`/api/instructor/${categoryId}`, {
-      liststatus:newListStatus,
-     })
-     if (response.data) {
-       toast.success(`category ${newListStatus==="List"? "listed":"unlisted"} successfully`)
-       fetchCategories();
-     
-     } else {
-       toast.error("failed to update list status")
-     }
-   } catch (error) {
-          console.error("Failed to update list status:", error);
+      const response = await apiInstance.get("/api/instructor/getcategory");
 
-   }
- }
+      if (response.data) {
+        setCategories(response.data);
+      }
+    } catch (error) {
+      console.error("failed to fetch categories:", error);
+      Navigate("/instructorLogin");
+      console.error("Unauthorized access. Redirecting to login...");
+    }
+  };
+  const handleListStatusChange = async (categoryId, newListStatus) => {
+    try {
+      const response = await apiInstance.patch(
+        `/api/instructor/${categoryId}`,
+        {
+          liststatus: newListStatus,
+        }
+      );
+      if (response.data) {
+        toast.success(
+          `category ${
+            newListStatus === "List" ? "listed" : "unlisted"
+          } successfully`
+        );
+        fetchCategories();
+      } else {
+        toast.error("failed to update list status");
+      }
+    } catch (error) {
+      console.error("Failed to update list status:", error);
+    }
+  };
   useEffect(() => {
-    fetchCategories()
-  },[])
+    fetchCategories();
+  }, []);
+
   return (
     <div className="flex">
       <InstructorSidebar />
@@ -255,13 +258,17 @@ const AddCategories = () => {
                                   </button>
                                 )}
                                 {category.liststatus === "Unlist" && (
-
-                            <button
-              className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 bg-red-200 opacity-50 rounded-full"
-                 onClick={() => handleListStatusChange(category._id, "Unlist")}
-               >
-                 Unlist
-                               </button>
+                                  <button
+                                    className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 bg-red-200 opacity-50 rounded-full"
+                                    onClick={() =>
+                                      handleListStatusChange(
+                                        category._id,
+                                        "Unlist"
+                                      )
+                                    }
+                                  >
+                                    Unlist
+                                  </button>
                                 )}
                               </div>
                             </td>

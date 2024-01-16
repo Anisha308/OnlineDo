@@ -1,21 +1,38 @@
 import jwt from "jsonwebtoken";
+
 import asyncHandler from "express-async-handler";
 import Instructor from "../models/InstructorModel.js";
 
-const protect = asyncHandler(async (req, res, next) => {
-  const parentDir = path.dirname(currentWorkingDir);
-  if (enviornment === 'production') {
-    const __dirname = path.resolve();
-    app.use(express.static(path.join(parentDir, '/frontend/dist')));
-  
-    app.get('*', (req, res) =>
-      res.sendFile(path.resolve(parentDir, 'frontend', 'dist', 'index.html'))
-    );
+const instructorProtect = asyncHandler(async (req, res, next) => {
+  let token = req.cookies.instructorjwt;
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.INSTRUCTOR_SECRET);
+      console.log(decoded,'oooooooooooooooooooooooooo');
+      req.instructor = await Instructor.findById(decoded.instructorId).select("-password");
+       if (!req.instructor) {
+        res.status(401)
+        throw new Error("Not authorzied,user not found")
+      }
+
+      const { role } = req.instructor
+      if (role && role.includes('instructor')) {
+       
+        next();
+      } else {
+        res.status(403);
+        throw new Error('Not authorized, insufficient privileges');
+
+      }
+    } catch (error) {
+      res.status(401).json({ message: "Not authorized, token failed" });
+    }
   } else {
-    app.get('/', (req, res) => {
-      res.send('API is running....');
-    });
+    res
+      .status(401)
+      .json({ message: "Not authorized, no tokensssssssssssssss" });
   }
-  const currentWorkingDir = path.resolve();
-})
-export { protect };
+});
+
+export { instructorProtect };

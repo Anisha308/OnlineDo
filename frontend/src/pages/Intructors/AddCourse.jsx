@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useAddcourseMutation } from "../../Slices/authInstructorSlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
 import { toast } from "react-toastify";
 import uploadToCloudinary from "../../../../backend/utils/uploadCloudinary";
 import apiInstance from "../../../Api";
 import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
 const AddCourse = () => {
   const { instructorId } = useParams();
   const [loading, setLoading] = useState(false);
@@ -20,44 +21,33 @@ const AddCourse = () => {
   const [categories, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [image, setImage] = useState("");
+  const Navigate = useNavigate();
   const handleImageUpload = async (e) => {
-    console.log("fdkssssssssssss");
-    const file=e.target.files[0]
-    console.log(file);
+    const file = e.target.files[0];
     try {
       const response = await uploadToCloudinary(file);
-      console.log(response, "rekfdllllllllllllllllllllllll");
       setImage(response);
     } catch (error) {
       console.log("error in image upload", error);
     }
   };
   const handleCourseNameChange = (e) => {
-    console.log("changed name");
     setCourseName(e.target.value);
   };
 
   const handleDescriptionChange = (e) => {
-    console.log("changed descrip");
-
     setDescription(e.target.value);
   };
 
   const handlePriceChange = (e) => {
-    console.log("changed price");
-
     setPrice(e.target.value);
   };
 
   const handleDurationChange = (e) => {
-    console.log("changed durati");
-
     setDuration(e.target.value);
   };
 
   const handlePaidChange = (e) => {
-    console.log("changed paid");
-
     setPaid(e.target.value);
   };
 
@@ -78,7 +68,7 @@ const AddCourse = () => {
         modules,
         instructorId,
       });
-      console.log(data, "data");
+
       if (data) {
         toast.success("Course added successfully:", data);
       } else {
@@ -90,27 +80,19 @@ const AddCourse = () => {
   };
 
   const handleModuleChange = (index, field, value) => {
-    console.log("changed module");
-
     const updatedModules = [...modules];
-    console.log(updatedModules, "updated");
     updatedModules[index][field] = value;
     setModules(updatedModules);
   };
 
   const deleteModule = (index) => {
-    console.log("delete");
-
     const updatedModules = [...modules];
-    console.log(updatedModules, "upppp");
 
     updatedModules.splice(index, 1);
     setModules(updatedModules);
   };
 
   const handleOnUpload = async (file, moduleIndex, videoIndex) => {
-    console.log("handleonupload");
-
     try {
       const isVideo = file.type.startsWith("video"); // Corrected variable name
       setLoading(true);
@@ -123,7 +105,6 @@ const AddCourse = () => {
           cloudinaryResponse.secure_url;
 
         setModules(updatedModules);
-        console.log(updatedModules, "modules");
       }
     } catch (error) {
       console.error("Error uploading video:", error);
@@ -133,23 +114,18 @@ const AddCourse = () => {
   };
 
   const addModule = (e, isVideo = false) => {
-    console.log("addmodule");
-
     e.preventDefault();
 
     const newModule = isVideo
       ? { title: "", videos: [] }
       : { title: "", videos: [] };
-    console.log(newModule);
     setModules([...modules, newModule]);
   };
 
   const addVideo = (e, moduleIndex) => {
     e.preventDefault();
     const updatedModules = [...modules];
-    console.log(updatedModules, "kodsax");
     if (!updatedModules[moduleIndex].videos) {
-      console.log("dsffd");
       updatedModules[moduleIndex].videos = [];
     }
     const newVideo = { url: "" };
@@ -164,11 +140,12 @@ const AddCourse = () => {
   const getCategories = async (req, res) => {
     try {
       const response = await apiInstance.get("api/instructor/categories");
-      console.log(response, "resssssssssssssss");
-      console.log(response.data, "dataaaaaaaaaaaaaaaaaaaaa");
+
       setCategory(response.data);
     } catch (error) {
       console.error("Error fetching categories", error);
+      Navigate("/instructorLogin");
+      console.error("Unauthorized access. Redirecting to login...");
     }
   };
   useEffect(() => {

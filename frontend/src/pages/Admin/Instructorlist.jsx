@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -17,6 +17,7 @@ import {
 import Instructor from "../../../../backend/models/InstructorModel";
 
 const InstructorLists = () => {
+const navigate=useNavigate()
   const { data, error, isLoading } = useGetInstructorlistQuery();
   const [instructors, setInstructors] = useState([]);
 
@@ -33,6 +34,8 @@ const InstructorLists = () => {
   useEffect(() => {
     if (data && data.instructors) {
       setInstructors(data.instructors);
+    } else{
+      navigate("/admin/Login");
     }
   }, [data]);
   const openPreview = (image) => {
@@ -42,6 +45,7 @@ const InstructorLists = () => {
   const closePreview = () => {
     setPreviewImage(null);
   };
+  
 
   const handleVerifyInstructor = async (instructorId) => {
     try {
@@ -102,6 +106,8 @@ const InstructorLists = () => {
       }
     }
   };
+
+
   const cancelBlock = () => {
     setShowModal(false);
     setInstructorIdToBlock(null);

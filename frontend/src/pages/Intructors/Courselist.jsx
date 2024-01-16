@@ -11,19 +11,24 @@ import {
 import InstructorSidebar from "../../components/Header/instructorSidebar";
 import { useGetCourseQuery } from "../../Slices/authInstructorSlice";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Style } from "@mui/icons-material";
 
 const Courselists = () => {
   const { instructorId } = useParams();
-
+const Navigate=useNavigate()
   const { data, error, isLoading } = useGetCourseQuery(instructorId);
 
   const [courses, setCourses] = useState([]);
-
+const [instructor,setInstructor]=useState([])
   useEffect(() => {
     if (data && data.courses) {
       setCourses(data.courses);
+      setInstructor(data.instructor); // Assuming data has a property named 'instructor'
+    } else if (error && error.status === 401) {
+      Navigate("/instructorLogin");
     }
-  }, [data]);
+  }, [data,error]);
 
   return (
     <div className="flex  ">
@@ -32,27 +37,32 @@ const Courselists = () => {
         {isLoading && <div>Loading...</div>}
 
         {courses &&
+           instructor &&
           courses.map((course, index) => (
-            <Card key={index} className="w-[333px] mb-7 flex-none">
-              <CardHeader floated={false} className="h-80">
+            <Card key={index} className="w-[240px] mb-7 flex-none">
+              <CardHeader floated={false} className="h-25">
                 <img
-                  src="https://docs.material-tailwind.com/img/team-3.jpg"
+                  src={course.thumbnail}
                   alt="profile-picture"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
                 />
               </CardHeader>
-              <CardBody className="text-center">
+              <CardBody className="">
                 <Typography
-                  variant="h4"
-                  color="blue-gray"
+                  variant="h8"
                   className="font-bold"
                 >
-                  {course.name}
+                  {course.courseName}
                 </Typography>
                 <Typography color="blue-gray" className="mb-2" textGradient>
-                  {course.duration} of {course.description}{" "}
+                  {instructor.name}
                 </Typography>
                 <Typography color="blue-gray" className="mb-" textGradient>
-                  Price : ₹{course.price}
+                  ₹ {course.price}
                 </Typography>
               </CardBody>
               <CardFooter className="flex justify-center gap-7 pt-2">
@@ -63,7 +73,10 @@ const Courselists = () => {
                 </div>
               </CardFooter>
             </Card>
-          ))}
+          )
+          )
+        }
+          
       </div>
     </div>
   );

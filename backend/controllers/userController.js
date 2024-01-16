@@ -66,8 +66,7 @@ const registerUser = asyncHandler(async (req, res) => {
       "Invalid password. Password must be at least 6 characters long."
     );
   }
-
-  if (mobile.length < 10 && mobile.length > 10) {
+  if (mobile.length < 10 || mobile.length > 10) {
     res.status(401);
     throw new Error("Invalid Mobile Number. Mobilenumber must be 10 digits.");
   }
@@ -131,12 +130,13 @@ const otpVerify = async (req, res) => {
         password: password,
         mobile: mobile,
         profilephoto: profilephoto,
+        role: "user",
       });
       await newUser.save();
       const jwtoken = generateToken(res, newUser._id);
-   
+
       res.status(200).json({
-        _id:newUser._id,
+        _id: newUser._id,
         name: newUser.name, // Update with the actual user properties
         email: newUser.email,
         userJwt: jwtoken,
@@ -168,14 +168,13 @@ const getUserProfile = asyncHandler(async (req, res) => {
 
 const viewCourse = asyncHandler(async (req, res) => {
   try {
-    const courseId = req.params.id
-    const course = await Course.findById(courseId)
-    res.status(200).json({ success: true,course })
+    const courseId = req.params.id;
+    const course = await Course.findById(courseId);
+    res.status(200).json({ success: true, course });
   } catch (error) {
-    console.error("Error fetching course",error);
+    console.error("Error fetching course", error);
   }
-})
-
+});
 
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
@@ -218,17 +217,22 @@ const getAllCourses = asyncHandler(async (req, res) => {
   try {
     const courses = await Course.find(
       {},
-      { courseName: 1, description: 1, price: 1, duration: 1,instructor:1, _id: 1 }
-    ).populate('instructor','name');
-
-    const transformedCourses=courses.map(course=>course.toJSON())
+      {
+        courseName: 1,
+        description: 1,
+        price: 1,
+        duration: 1,
+        instructor: 1,
+        thumbnail: 1,
+        _id: 1,
+      }
+    ).populate("instructor", "name");
+    const transformedCourses = courses.map((course) => course.toJSON());
     res.status(200).json({ success: true, courses: transformedCourses });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
 
 const searchCourses = asyncHandler(async (req, res) => {
   try {
@@ -248,60 +252,58 @@ const searchCourses = asyncHandler(async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
-})
+});
 
 const sortCourses = asyncHandler(async (req, res) => {
   try {
     const { query } = req.query;
     let sortOption;
     switch (query) {
-      case 'lowtohigh':
+      case "lowtohigh":
         sortOption = { price: 1 };
         break;
-      case 'hightolow':
-        sortOption = { price: -1 }
+      case "hightolow":
+        sortOption = { price: -1 };
         break;
-      case 'newest':
-        sortOption = { createdAt: -1 }
+      case "newest":
+        sortOption = { createdAt: -1 };
         break;
       default:
-        sortOption = {createdAt:1};
+        sortOption = { createdAt: 1 };
         break;
     }
-    const courses = await Course.find({}).sort(sortOption)
-    res.status(200).json({success:true,courses})
+    const courses = await Course.find({}).sort(sortOption);
+    res.status(200).json({ success: true, courses });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
-
   }
-})
+});
 
 const filterCourses = asyncHandler(async (req, res) => {
   try {
-    const { query } = req.query
+    const { query } = req.query;
     let filterOption;
     switch (query) {
-      case '1-500':
-        filterOption = { price: { $gt: 1, $lte: 500 } }
+      case "1-500":
+        filterOption = { price: { $gt: 1, $lte: 500 } };
         break;
-      case '501-1000':
-        filterOption = { price: { $gte: 501, $lte: 1000 } }
+      case "501-1000":
+        filterOption = { price: { $gte: 501, $lte: 1000 } };
         break;
-      case '1001-2000':
-        filterOption = { price: { $gte: 1001, $lte: 2000 } }
+      case "1001-2000":
+        filterOption = { price: { $gte: 1001, $lte: 2000 } };
         break;
-      case '2001-above':
-        filterOption = { price: { $gte: 2001 } }
+      case "2001-above":
+        filterOption = { price: { $gte: 2001 } };
         break;
     }
 
-
-    const courses = await Course.find(filterOption)
-    res.status(200).json({success:true,courses})
+    const courses = await Course.find(filterOption);
+    res.status(200).json({ success: true, courses });
   } catch (error) {
-    res.status(500).json({error:"Internal server error"})
+    res.status(500).json({ error: "Internal server error" });
   }
-})
+});
 
 export {
   authUser,

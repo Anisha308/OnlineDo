@@ -66,6 +66,7 @@ const UserProfile = () => {
         setUsers(data.data.users);
       } catch (error) {
         console.log("error fetching:", error);
+        navigate('/login')
       }
     };
     fetchData();

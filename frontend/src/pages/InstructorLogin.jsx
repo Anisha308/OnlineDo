@@ -11,7 +11,6 @@ import { useEffect } from "react";
 
 const InstructorLogin = () => {
   const { instructorInfo } = useSelector((state) => state.instructorAuth);
-  console.log(instructorInfo, "kkkkkkkkkkkkkkkkk");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -23,10 +22,17 @@ const InstructorLogin = () => {
 
   useEffect(() => {
     if (instructorInfo) {
-      console.log('yes');
+      navigate('/instructor')
+    }
+    const instructorJwt = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("instructorjwt="));
+
+    if (instructorJwt) {
+      // Redirect to instructor page if token exists
       navigate("/instructor");
     }
-  }, [instructorInfo, navigate]);
+  }, [ navigate]);
 
   const handleInputChange = (e) => {
     setFormData((prevState) => ({
@@ -38,7 +44,7 @@ const InstructorLogin = () => {
   const [login] = useInstructorLoginMutation(); // Assuming 'mutate' is the function used for login
 
   const submitHandler = async (e) => {
-    -e.preventDefault();
+    e.preventDefault();
 
     try {
       const res = await login({

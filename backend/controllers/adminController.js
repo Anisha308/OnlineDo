@@ -27,7 +27,6 @@ const authAdmin = asyncHandler(async (req, res) => {
   }
 
   const admin = await Admin.findOne({ email: email.toLowerCase() });
-
   if (admin) {
     if (await admin.matchPassword(password)) {
       generateTokenAdmin(res, admin._id);
@@ -61,17 +60,14 @@ const getAllUsers = asyncHandler(async (req, res) => {
       {},
       { name: 1, email: 1, mobile: 1, profilephoto: 1, _id: 1 }
     );
-
     res.status(200).json({ users });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
 const blockUser = asyncHandler(async (req, res) => {
   const { userId } = req.body;
-
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -87,7 +83,7 @@ const blockUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       expires: new Date(0),
     });
-    localStorage.removeItem("userInfo");
+    // localStorage.removeItem("userInfo");
 
     res.status(200).json({
       success: true,
@@ -100,7 +96,6 @@ const blockUser = asyncHandler(async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("error", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -131,7 +126,6 @@ const blockInstructor = asyncHandler(async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error in blockInstructor:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -159,7 +153,6 @@ const verifyInstructor = asyncHandler(async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

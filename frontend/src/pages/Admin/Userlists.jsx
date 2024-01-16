@@ -10,19 +10,25 @@ import SideBar from "../../components/Header/SideBar";
 import { useGetUserListQuery } from "../../Slices/adminApiSlice";
 import { useBlockuserMutation } from "../../Slices/adminApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
 const UserLists = () => {
   const { data, error, isLoading } = useGetUserListQuery();
   const [users, setUsers] = useState([]);
   const [blockUserMutation] = useBlockuserMutation();
   const [showModal, setShowModal] = useState(false);
   const [userIdToBlock, setUserIdToBlock] = useState(null);
+const navigate=useNavigate()
+useEffect(() => {
+  if (data && data.users) {
+    setUsers(data.users);
+  } else if (error && error.status === 401) {
+   
+    navigate("/admin/Login");
+  }
+}, [data, error]);
 
-  useEffect(() => {
-    if (data && data.users) {
-      setUsers(data.users);
-    }
-  }, [data]);
+
+
 
   const handleBlockUser = async (userId) => {
     setUserIdToBlock(userId);
