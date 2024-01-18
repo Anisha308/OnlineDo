@@ -2,18 +2,27 @@ import { useState, useEffect } from "react";
 import { Avatar } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import {
-  useGetInstructProfileQuery,
+  useGetInstructProfileMutation,
   useUpdateInstructProfileMutation,
 } from "../../Slices/authInstructorSlice";
 
-const InstructorProfile = () => {
-  const instructor = JSON.parse(localStorage.getItem("instructorInfo"));
+import { useDispatch, useSelector } from "react-redux";
+import { instructorSetCredentials } from "../../Slices/instructorApiSlice";
 
-  const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
+const InstructorProfile = () => {
+  const instruct = useSelector((state) => state.instructorAuth.instructorInfo)
+  console.log(instruct,'instruct');
+  const dispatch=useDispatch()
+  // const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
+
+  const [getProfile] = useGetInstructProfileMutation()
+  
   const [instructors, setInstructors] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstructorId, setSelectedInstructorId] = useState(null); // Add this state
-
+  const [count, setCount] = useState(0);
+  const [showDocmodal, setShowDocmodal] = useState(false)
+  const [showcerificate,setShowCerticate]=useState(false)
   const [editedInstructorData, setEditedInstructorData] = useState({
     name: "",
     email: "",
@@ -22,24 +31,27 @@ const InstructorProfile = () => {
     jobrole: "",
     companyname: "",
     profilephoto: "",
+    experienceCertificateFile: "",
+    idProof: ""
   });
 const navigate=useNavigate()
   const [updateProfile, { isLoading: isUpdating }] =
     useUpdateInstructProfileMutation();
 
   useEffect(() => {
-    if (error) {
-      // Handle specific error cases
-      if (error.statusCode === 401) {
-        // Redirect to login page for unauthorized access
-        return <Redirect to="/login" />;
-      }
-
-      if (data && data.instructors) {
-        setInstructors(data.instructors);
+    const fetchData = async () => {
+      try {
+        const data = await getProfile({ instructorId: instruct?._id || null})
+        console.log(data,'datssaaaaaaaaaaaaaaaaaaaa');
+        setInstructors(data.data.instructors)
+     
+      } catch (error) {
+        console.log('error fetching', error);
+      navigate('/instructorLogin')
       }
     }
-  }, [data,error]);
+    fetchData()
+  }, [count,getProfile]);
 
   const handleEditProfile = () => {
     setEditedInstructorData({
@@ -50,12 +62,32 @@ const navigate=useNavigate()
       jobrole: instructors.jobrole || "",
       companyname: instructors.companyname || "",
       profilephoto: instructors.profilephoto || "",
+      experienceCertificateFile: instructors.experienceCertificateFile || "",
+      idProof:instructors.idProof|| "",
     });
     setSelectedInstructorId(instructors._id); // Set the selected user ID
 
     setIsModalOpen(true);
   };
-
+  const handleview = (e) => {
+    e.preventDefault()
+    try {
+       console.log('click');
+  setShowDocmodal(true)
+    } catch (error) {
+      console.error(error,'error viewing idproof');
+    }
+   
+  }
+   const handlecertificateview = (e) => {
+     e.preventDefault();
+     try {
+       console.log("clicked");
+       setShowCerticate(true);
+     } catch (error) {
+       console.error(error, "error viewing idproof");
+     }
+   };
   const handleUpdateProfile = async () => {
     try {
       const response = await updateProfile({
@@ -65,24 +97,22 @@ const navigate=useNavigate()
       if (response.error) {
         console.error("Profile update failed:", response.error.message);
       } else {
-        setEditedInstructorData((prevData) => ({
-          ...prevData,
-          name: response.name,
-          email: response.email,
-          mobile: response.mobile,
-          experience: response.experience,
-          jobrole: response.jobrole,
-          companyname: response.companyname,
-          profilephoto: response.profilephoto,
-        }));
+       dispatch(instructorSetCredentials(response));
 
-        setIsModalOpen(false);
+       setCount((prevCount) => prevCount + 1);
+
+       setIsModalOpen(false);
       }
     } catch (error) {
       console.error("An error occurred while updating profile:", error);
     }
   };
-
+  const close = () => {
+  setShowDocmodal(false)
+  }
+  const certificateclose = () => {
+    setShowCerticate(false)
+  }
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
@@ -97,7 +127,36 @@ const navigate=useNavigate()
       reader.readAsDataURL(file);
     }
   };
+  const handlecertificateFileChange = (e) => {
+    console.log("hiiiiiiiiiiiiiiii");
+    const file = e.target.files[0];
 
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditedInstructorData((prevData) => ({
+          ...prevData,
+          experienceCertificateFile: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleidFileChange = (e) => {
+     const file = e.target.files[0];
+
+     if (file) {
+       const reader = new FileReader();
+       reader.onloadend = () => {
+         setEditedInstructorData((prevData) => ({
+           ...prevData,
+           idProof: reader.result,
+         }));
+       };
+       reader.readAsDataURL(file);
+     }
+  }
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
@@ -159,7 +218,7 @@ const navigate=useNavigate()
                   className="rounded-circle mb-3"
                   style={{ width: 150, height: 150 }}
                 />
-                <h5 className="my-2">{instructor.name}</h5>
+                <h5 className="my-2">{instructors.name}</h5>
                 <p className="text-muted mb-2">{instructors.jobrole}</p>
                 <p className="text-muted mb-4">{instructors.email}</p>
                 <div className="flex justify-center mb-2">
@@ -179,7 +238,7 @@ const navigate=useNavigate()
           </div>
           <div className="lg:w-full mr-4 h-85 bg-gradient-to-r from-white via-white to-gray-200 border shadow-2xl sm:w-full px-6 ">
             <div className="card-body justify-content-center flex flex-col">
-              <div className="flex mb-7">
+              <div className="flex mb-5">
                 <div className="col-sm-3">
                   <p className="mb-2 mt-10 ">Full Name :</p>
                 </div>
@@ -189,16 +248,8 @@ const navigate=useNavigate()
               </div>
 
               <hr className="mb-0" />
-              <div className="flex mb-10">
-                <div className="col-sm-3">
-                  <p className="mb-1">Email :</p>
-                </div>
-                <div className="col-sm-9">
-                  <p className="text-muted mb-1 ml-24">{instructors.email}</p>
-                </div>
-              </div>
-              <hr className="mb-0" />
-              <div className="flex mb-10">
+
+              <div className="flex mb-5">
                 <div className="col-sm-3">
                   <p className="mb-2">Mobile : </p>
                 </div>
@@ -208,7 +259,7 @@ const navigate=useNavigate()
               </div>
               <hr className="mb-0" />
 
-              <div className="flex mb-10">
+              <div className="flex mb-8">
                 <div className="col-sm-3">
                   <p className="mb-1">Experience : </p>
                 </div>
@@ -220,9 +271,9 @@ const navigate=useNavigate()
               </div>
               <hr className="mb-0" />
 
-              <div className="flex mb-10">
+              <div className="flex mb-8">
                 <div className="col-sm-3">
-                  <p className="mb-1">Company Name : </p>
+                  <p className="mb-1 ">Company Name : </p>
                 </div>
                 <div className="col-sm-9">
                   <p className="text-muted mb-1 ml-7">
@@ -230,19 +281,65 @@ const navigate=useNavigate()
                   </p>
                 </div>
               </div>
+
+              <hr className="mb-0" />
+
+              <div className="flex mb-1">
+                <div className="col-sm-3">
+                  <p className="mb-1">Certificates : </p>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="certificate"
+                  id="certificate"
+                  className="hidden"
+                />
+                <Avatar
+                  src={instructors.experienceCertificateFile}
+                  alt="avatar"
+                  onClick={(e) => handlecertificateview(e)}
+                  className="p-0.5 w-16 mb-2 ml-12"
+                />
+              </div>
+              <hr className="mb-0" />
+
+              <div className="flex mb-1">
+                <div className="col-sm-3">
+                  <p className="mb-1">Id proof : </p>
+                </div>
+                <div className="col-sm-9">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="idproof"
+                    id="idproof"
+                    onChange={handleidFileChange}
+                    className="hidden"
+                  />
+                  <Avatar
+                    src={instructors.idProof}
+                    alt="avatar"
+                    onClick={(e) => {
+                      handleview(e);
+                    }}
+                    // withBorder={true}
+                    className="p-0.5 w-16 mb-2 ml-16"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       {/* ))} */}
-
       {isModalOpen && (
         <div className="fixed top-0 right-0 left-0  flex items-center z-50 overflow-y-auto overflow-x-hidden justify-center items-center w-full inset-0 h-modal md:h-90">
           <div className="relative p-4 w-full max-w-2xl h-full md:h-auto">
             <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-              <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+              <div className="flex justify-between items-center pb-4 mb-1 rounded-t border-b sm:mb-5 dark:border-gray-600">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Update Product
+                  Update Profile
                 </h3>
                 <button
                   type="button"
@@ -272,7 +369,7 @@ const navigate=useNavigate()
                 <div className=" mb-0 ">
                   <label
                     htmlFor="name"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Name
                   </label>
@@ -286,7 +383,7 @@ const navigate=useNavigate()
                     placeholder="Enter your name"
                   />
                 </div>
-                <div className="grid gap-2 mb-4 ">
+                <div className="grid gap-2 mb-1 ">
                   <label
                     htmlFor="Email"
                     className="block  text-sm font-medium text-gray-900 dark:text-white"
@@ -303,10 +400,10 @@ const navigate=useNavigate()
                     placeholder="Eg: email@gmail.com"
                   />
                 </div>
-                <div className="grid gap-2 mb-4 ">
+                <div className="grid gap-2 mb-1 ">
                   <label
                     htmlFor="mobile"
-                    className="block mb-2  text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-1  text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Mobile
                   </label>
@@ -320,7 +417,7 @@ const navigate=useNavigate()
                     placeholder="Enter your contact number"
                   />
                 </div>
-                <div className="grid gap-2 mb-4 ">
+                <div className="grid gap-2 mb-1 ">
                   <label
                     htmlFor="experience"
                     className="block  text-sm font-medium text-gray-900 dark:text-white"
@@ -337,10 +434,10 @@ const navigate=useNavigate()
                     placeholder="Enter your experience"
                   />
                 </div>
-                <div className="grid gap-2 mb-4 ">
+                <div className="grid gap-2 mb-1 ">
                   <label
                     htmlFor="text"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Job Role
                   </label>
@@ -354,10 +451,11 @@ const navigate=useNavigate()
                     placeholder="Enter your name"
                   />
                 </div>
-                <div className="grid gap-2 mb-4 ">
+
+                <div className="grid gap-2 mb-1 ">
                   <label
                     htmlFor="text"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Company Name :
                   </label>
@@ -371,10 +469,11 @@ const navigate=useNavigate()
                     placeholder="Enter your name"
                   />
                 </div>
+
                 <div className="sm:col-span-2">
                   <label
                     htmlFor="profilephoto"
-                    className="block mb-4 mt-4 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-1 mt-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Profile photo
                   </label>
@@ -392,7 +491,7 @@ const navigate=useNavigate()
                       src={editedInstructorData.profilephoto}
                       alt="avatar"
                       withBorder={true}
-                      className="p-0.5 w-16 mb-4"
+                      className="p-0.5 w-16 mb-1"
                     />
                   )}
                   <label
@@ -403,6 +502,73 @@ const navigate=useNavigate()
                       ? "Change profilePhoto"
                       : "Add profilePhoto"}
                   </label>
+
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="certificateFile"
+                      className="block mb-1 mt-1 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      certificate
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      name="certificateFile"
+                      id="certificateFile"
+                      onChange={handlecertificateFileChange}
+                      className="hidden"
+                    />
+
+                    {editedInstructorData.experienceCertificateFile && (
+                      <Avatar
+                        src={editedInstructorData.experienceCertificateFile}
+                        alt="avatar"
+                        withBorder={true}
+                        className="p-0.5 w-16 mb-1"
+                      />
+                    )}
+                    <label
+                      htmlFor="certificateFile"
+                      className="cursor-pointer text-blue-500 hover:underline"
+                    >
+                      {editedInstructorData.experienceCertificateFile
+                        ? "Change certificate"
+                        : "Add certificate"}
+                    </label>
+                    <div className="sm:col-span-2">
+                      <label
+                        htmlFor="idproof"
+                        className="block mb-1 mt-1 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        idproof
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        name="idproof"
+                        id="idproof"
+                        onChange={handleidFileChange}
+                        className="hidden"
+                      />
+
+                      {editedInstructorData.idProof && (
+                        <Avatar
+                          src={editedInstructorData.idProof}
+                          alt="avatar"
+                          withBorder={true}
+                          className="p-0.5 w-16 mb-1"
+                        />
+                      )}
+                      <label
+                        htmlFor="idproof"
+                        className="cursor-pointer text-blue-500 hover:underline"
+                      >
+                        {editedInstructorData.idProof
+                          ? "Change idProof"
+                          : "Add idProof"}
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-end space-x-4">
@@ -425,6 +591,66 @@ const navigate=useNavigate()
               </form>
             </div>
           </div>
+        </div>
+      )}
+      {showcerificate && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 max-w-md w-full ">
+          <button
+            onClick={() => certificateclose()}
+            type="button"
+            className="text-gray-500 hover:text-gray-900 focus:outline-none focus:ring focus:ring-gray-200 rounded-full w-8 h-8 flex items-center justify-center bg-white hover:bg-gray-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M14.35 5.64a1 1 0 0 0-1.42 0L10 8.59 6.06 4.64a1 1 0 1 0-1.42 1.42L8.59 10 4.64 13.94a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0L10 11.41l3.94 3.95a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42L11.41 10l3.94-3.94a1 1 0 0 0 0-1.42z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+
+          <p className="mb-4">ID Proof : </p>
+          <img
+            src={instructors.experienceCertificateFile}
+            onClick={() => handlecertificateview()}
+            alt="experience"
+            className="w-full max-h-400 cursor-pointer"
+          />
+        </div>
+      )}
+      {showDocmodal && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 max-w-md w-full ">
+          <button
+            onClick={() => close()}
+            type="button"
+            className="text-gray-500 hover:text-gray-900 focus:outline-none focus:ring focus:ring-gray-200 rounded-full w-8 h-8 flex items-center justify-center bg-white hover:bg-gray-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M14.35 5.64a1 1 0 0 0-1.42 0L10 8.59 6.06 4.64a1 1 0 1 0-1.42 1.42L8.59 10 4.64 13.94a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0L10 11.41l3.94 3.95a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42L11.41 10l3.94-3.94a1 1 0 0 0 0-1.42z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+
+          <p className="mb-4">ID Proof : </p>
+          <img
+            src={instructors.idProof}
+            onClick={() => handleview()}
+            alt="ID Proof"
+            className="w-full max-h-400 cursor-pointer"
+          />
         </div>
       )}
     </section>

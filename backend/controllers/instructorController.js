@@ -8,7 +8,6 @@ import Category from "../models/categoryModel.js";
 import generateTokenInstructor from "../utils/generateTokenInstructor.js";
 import generateOTP from "../utils/otp.js";
 import sendEmail from "../utils/nodemailer.js";
-import apiInstance from "../../frontend/Api.js";
 
 const authInstructor = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -18,12 +17,15 @@ const authInstructor = asyncHandler(async (req, res) => {
   }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
+
     res.status(401);
     throw new Error("Invalid email format");
   }
 
   if (password.length < 4) {
+
     res.status(401);
+
     throw new Error(
       "Invalid password. Password must be at least 6 characters long."
     );
@@ -31,16 +33,23 @@ const authInstructor = asyncHandler(async (req, res) => {
 
   const instructor = await Instructor.findOne({ email });
 
+  if (!instructor) {
+     res.status(401);
+     throw new Error("Invalid email or password");
+  }
   if (instructor.blocked) {
+
     res.status(401);
     throw new Error("You are not allowed to login ");
   }
 
   if (!instructor.verified) {
+
     res.status(401);
     throw new Error("Please wait for admin approval ");
   }
   if (await instructor.matchPassword(password)) {
+
     generateTokenInstructor(res, instructor._id);
 
     res.json({
@@ -49,6 +58,7 @@ const authInstructor = asyncHandler(async (req, res) => {
       email: instructor.email,
     });
   } else {
+
     res.status(401);
     throw new Error("Invalid email or password");
   }
@@ -172,6 +182,8 @@ const instructotpVerify = async (req, res) => {
         jobrole: jobrole,
         companyname: companyname,
         role: "instructor",
+        
+        
       });
       await newInstructor.save();
 
@@ -277,6 +289,8 @@ const getInstructorProfile = asyncHandler(async (req, res) => {
       experience: 1,
       jobrole: 1,
       companyname: 1,
+      experienceCertificateFile: 1,
+      idProof:1,
       _id: 1,
     });
     res.status(200).json({ instructors });
@@ -371,6 +385,7 @@ const showCategory = asyncHandler(async (req, res) => {
 const courseCategory = asyncHandler(async (req, res) => {
   try {
     const categoryid = req.params.categoryId;
+    console.log(categoryid,'categoryId');
     const category = await Category.findById(categoryid);
     res.status(200).json({ success: true, category });
   } catch (error) {

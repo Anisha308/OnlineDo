@@ -28,7 +28,7 @@ function InstructorRouter() {
           }
         />
         <Route
-          path="/instructor/showprofile/:instructorId"
+          path="/instructor/showprofile/:id"
           element={
               <InstructorProfile />
           }

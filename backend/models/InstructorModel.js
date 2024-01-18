@@ -46,6 +46,14 @@ const instructorSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    rejected: {
+      type: Boolean,
+      default:false,
+    },
+    rejectReason: {
+      type: String,
+      // required:true,
+    },
     role: { type: String, default: "instructor" },
 
     Blocked: {

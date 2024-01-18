@@ -5,8 +5,11 @@ import {
   useGetProfileMutation,
   useUpdateProfileMutation,
 } from "../../Slices/usersApiSlice";
+
 import { useSelector, useDispatch } from "react-redux";
 import { setCredentials } from "../../Slices/authSlice";
+
+
 const UserProfile = () => {
   const user = useSelector((state) => state.auth.userInfo);
   const dispatch = useDispatch();
@@ -61,13 +64,13 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const data = await getProfile({ userId: user._id });
+       try {
+        const data = await getProfile({ userId:user?._id || null});
         setUsers(data.data.users);
-      } catch (error) {
-        console.log("error fetching:", error);
-        navigate('/login')
-      }
+       } catch (error) {
+         console.log("error fetching:", error);
+         navigate("/login")
+       }
     };
     fetchData();
   }, [count, getProfile]);

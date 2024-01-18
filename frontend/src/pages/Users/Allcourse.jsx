@@ -52,14 +52,11 @@ const Allcourse = () => {
 
   const handlefilter = async (filterorder, e) => {
     e.preventDefault(); // Prevents the default form submission behavior
-    console.log(filterorder, "filterorder");
     try {
       const response = await apiInstance.get("api/users/getcourse/filter", {
         params: { query: filterorder },
       });
-      console.log(response, "res");
       if (response.data && response.data.courses) {
-        console.log(response.data.courses);
         setCourses(response.data.courses);
       }
       setIsSidebarOpen(false);
@@ -82,7 +79,6 @@ const Allcourse = () => {
       const response = await apiInstance.get("/api/users/getcourse/search", {
         params: { query: search },
       });
-      console.log("API Response:", response);
 
       if (response.data && response.data.courses) {
         setCourses(response.data.courses);
@@ -198,19 +194,19 @@ const Allcourse = () => {
                           aria-controls="filter-section-mobile-1"
                           aria-expanded="false"
                         >
-                          <span className="font-medium text-gray-900">
+                          {/* <span className="font-medium text-gray-900">
                             Category
-                          </span>
+                          </span> */}
                           <span className="ml-6 flex items-center">
-                            <svg
+                            {/* <svg
                               className="h-5 w-5"
                               viewBox="0 0 20 20"
                               fill="currentColor"
                               aria-hidden="true"
                             >
                               <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                            </svg>
-                            <svg
+                            </svg> */}
+                            {/* <svg
                               className="h-5 w-5"
                               viewBox="0 0 20 20"
                               fill="currentColor"
@@ -221,28 +217,28 @@ const Allcourse = () => {
                                 d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
                                 clipRule="evenodd"
                               />
-                            </svg>
+                            </svg> */}
                           </span>
                         </button>
                       </h3>
                       <div className="pt-6" id="filter-section-mobile-1">
                         <div className="space-y-6">
                           <div className="flex items-center">
-                            <input
+                            {/* <input
                               id="filter-mobile-category-3"
                               name="category[]"
                               defaultValue="organization"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            />
-                            <label
-                              htmlFor="filter-mobile-category-3"
-                              className="ml-3 min-w-0 flex-1 text-gray-500"
+                            /> */}
+                            {/* <button
+                              onClick={(e) => handlefilter("2001-above", e)}
+                              className="mr-32 min-w-0 flex-1 text-gray-500"
                             >
-                              Organization
-                            </label>
+                              ₹2001 and above
+                            </button> */}
                           </div>
-                          <div className="flex items-center">
+                          {/* <div className="flex items-center">
                             <input
                               id="filter-mobile-category-4"
                               name="category[]"
@@ -256,7 +252,7 @@ const Allcourse = () => {
                             >
                               Accessories
                             </label>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </div>
@@ -401,11 +397,14 @@ const Allcourse = () => {
                                   )
                                   .map((course, index) => (
                                     <Link
-                                      to={{ pathname: `/viewcourse/${course._id}`, state: { course } }}
+                                      to={{
+                                        pathname: `/viewcourse/${course._id}`,
+                                        state: { course },
+                                      }}
                                       key={index}
                                       className="hover:no-inderline"
                                     >
-{/* <ViewCourse course={course}/> */}
+                                      {/* <ViewCourse course={course}/> */}
                                       <Card
                                         key={index}
                                         className="w-[332px]  mb-7 p-2 flex-none"

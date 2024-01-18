@@ -21,15 +21,16 @@ const InstructorLogin = () => {
   const navigate = useNavigate(); // assuming you are using React Router
 
   useEffect(() => {
-    if (instructorInfo) {
-      navigate('/instructor')
-    }
+    // if (instructorInfo) {
+    //   navigate('/instructor')
+    // }
     const instructorJwt = document.cookie
       .split("; ")
       .find((row) => row.startsWith("instructorjwt="));
 
     if (instructorJwt) {
       // Redirect to instructor page if token exists
+      console.log('kkkkkkkkkkkk');
       navigate("/instructor");
     }
   }, [ navigate]);
@@ -51,7 +52,7 @@ const InstructorLogin = () => {
         email: formData.email,
         password: formData.password,
       }).unwrap();
-
+console.log(res,'res');
       dispatch(instructorSetCredentials(res));
 
       navigate(`/instructor`);

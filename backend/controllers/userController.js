@@ -4,7 +4,6 @@ import Course from "../models/courseModel.js";
 import generateToken from "../utils/generateToken.js";
 import generateOTP from "../utils/otp.js";
 import sendEmail from "../utils/nodemailer.js";
-import { query } from "express";
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -169,13 +168,13 @@ const getUserProfile = asyncHandler(async (req, res) => {
 const viewCourse = asyncHandler(async (req, res) => {
   try {
     const courseId = req.params.id;
+    console.log(courseId,'courseid');
     const course = await Course.findById(courseId);
     res.status(200).json({ success: true, course });
-  } catch (error) {
+  } catch (error) { 
     console.error("Error fetching course", error);
   }
 });
-
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
     const userId = req.params.id;
@@ -221,12 +220,15 @@ const getAllCourses = asyncHandler(async (req, res) => {
         courseName: 1,
         description: 1,
         price: 1,
+        category: 1,
         duration: 1,
         instructor: 1,
         thumbnail: 1,
         _id: 1,
       }
-    ).populate("instructor", "name");
+    )
+      .populate("instructor", "name")
+
     const transformedCourses = courses.map((course) => course.toJSON());
     res.status(200).json({ success: true, courses: transformedCourses });
   } catch (error) {

@@ -1,38 +1,34 @@
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
-import User from '../models/userModel.js';
 
-const protect = asyncHandler(async (req, res, next) => {
-  let token;
+const  protect = asyncHandler(async (req, res, next) => {
+  console.log("Checking for token:", req.cookies.jwt);
  
 
-  token = req.cookies.jwt;
+  let token = req.cookies.jwt;
    console.log(token, "tokennn");
  
   if (!token) {
-    return res.status(401).send("Unauthorized, token missing");
+    console.log('amm');
+   return res.status(401).json({ error: "Unauthorized, token not found" });
+
   }
 
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-console.log(decoded,'decoded ddddd  ');
-      req.user = await User.findById(decoded.userId).select('-password');
+      console.log(decoded.role, 'decoded dddddddddddddddddddd  ');
 
-      if (!req.user) {
-        res.status(401)
-        throw new Error("Not authorzied,user not found")
-      }
-
-      const { role } = req.user                     
-      if (role && role.includes('user')) {
-        next();
-      } else {
-        res.status(403);
-        throw new Error('Not authorized, insufficient privileges');
-
-      }
+    if (decoded.role !== "user") {
+      console.log("kooooooooo");
+      res.status(401).json({ error: "Not authorized, user not found" });
+      throw new Error("Not authorized, user not found");
+    } else {
+      console.log("yeah");
+      next();
     }
+    }
+  
     catch (error) {
       console.error("error",error);
   }}

@@ -6,7 +6,7 @@ import User from "../models/userModel.js";
 import Instructor from "../models/InstructorModel.js";
 import destroyToken from "../utils/destroyUserToken.js";
 import destroyTokenInstructor from "../utils/destroyTokenInstructor.js";
-
+import sendEmail from "../utils/nodemailer.js";
 const authAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -141,6 +141,7 @@ const verifyInstructor = asyncHandler(async (req, res) => {
       return;
     }
     instructor.verified = true;
+    instructor.rejected = false;
 
     await instructor.save();
 
@@ -204,6 +205,27 @@ const unblockInstructor = asyncHandler(async (req, res) => {
   }
 });
 
+
+const rejectmail = asyncHandler(async (req,res) => {
+  try {
+    const { reason, instructorId } = req.body
+    const subject = "Acess denied _ OnlineDo";
+    const text = `Your account has rejected by the admin due to ${reason}`
+    const instructor = await Instructor.findById(instructorId);
+    const { email } = instructor
+    instructor.rejected = true;
+    instructor.rejectReason = reason
+    instructor.verified=false
+    await instructor.save();
+
+    const result = await sendEmail(email, subject, text);
+    res.json({ success: true, message: "Rejection email sent successfully",instructor });
+
+  } catch (error) {
+    console.error(error,'error');
+  }
+ 
+})
 export {
   authAdmin,
   logoutAdmin,
@@ -213,4 +235,5 @@ export {
   verifyInstructor,
   unblockInstructor,
   getAllInstructors,
+  rejectmail
 };

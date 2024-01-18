@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-} from "@material-tailwind/react";
 import SideBar from "../../components/Header/SideBar";
 import {
   useBlockInstructorMutation,
@@ -14,10 +7,10 @@ import {
   useVerifyInstructorMutation,
   useUnblockInstructorMutation,
 } from "../../Slices/adminApiSlice";
-import Instructor from "../../../../backend/models/InstructorModel";
-
+import apiInstance from "../../../Api";
+import { toast } from "react-toastify";
 const InstructorLists = () => {
-const navigate=useNavigate()
+  const navigate = useNavigate();
   const { data, error, isLoading } = useGetInstructorlistQuery();
   const [instructors, setInstructors] = useState([]);
 
@@ -30,11 +23,12 @@ const navigate=useNavigate()
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [confirmVerify, setConfirmVerify] = useState(null);
-
+  const [reason, setReason] = useState("");
+  const [reject, setReject] = useState(null);
   useEffect(() => {
     if (data && data.instructors) {
       setInstructors(data.instructors);
-    } else{
+    } else {
       navigate("/admin/Login");
     }
   }, [data]);
@@ -45,7 +39,6 @@ const navigate=useNavigate()
   const closePreview = () => {
     setPreviewImage(null);
   };
-  
 
   const handleVerifyInstructor = async (instructorId) => {
     try {
@@ -107,7 +100,6 @@ const navigate=useNavigate()
     }
   };
 
-
   const cancelBlock = () => {
     setShowModal(false);
     setInstructorIdToBlock(null);
@@ -129,6 +121,34 @@ const navigate=useNavigate()
     } catch (error) {
       console.error("Error blocking/unblocking instructor:", error);
     }
+  };
+
+  const mailreason = async (reason) => {
+    console.log("uuuuuuuuuuuuuuu");
+    try {
+      console.log("oooooooooooo");
+      const res = await apiInstance.post(`api/admin/sendmail`, {
+        reason,
+        instructorId: selectedInstructor._id,
+      });
+  setInstructors((prevInstructors) =>
+    prevInstructors.map((instructor) =>
+      instructor._id === selectedInstructor._id
+        ? { ...instructor, rejected: true }
+        : instructor
+    )
+  );
+
+
+      setShowVerificationModal(false);
+      toast.success("Rejected successfully");
+    } catch (error) {
+      console.error("Error sending rejection email:", error);
+    }
+  };
+  const handleReject = () => {
+    setReason("");
+    setReject(true);
   };
   const PreviewModal = () => (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 max-w-2xl w-full">
@@ -153,6 +173,25 @@ const navigate=useNavigate()
   };
   const VerificationModal = ({ instructor, onClose }) => (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 max-w-md w-full ">
+      <button
+        onClick={onClose}
+        type="button"
+        className="text-gray-500 hover:text-gray-900 focus:outline-none focus:ring focus:ring-gray-200 rounded-full w-8 h-8 flex items-center justify-center bg-white hover:bg-gray-100"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M14.35 5.64a1 1 0 0 0-1.42 0L10 8.59 6.06 4.64a1 1 0 1 0-1.42 1.42L8.59 10 4.64 13.94a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0L10 11.41l3.94 3.95a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42L11.41 10l3.94-3.94a1 1 0 0 0 0-1.42z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </button>
+
       <p className="font-bold mb-4">Documents verification</p>
       <p className="mb-4">ID Proof : </p>
       <img
@@ -182,11 +221,11 @@ const navigate=useNavigate()
         </button>
 
         <button
-          onClick={() => setSelectedInstructor(null)}
+          onClick={() => handleReject(instructor._id)}
           type="button"
           className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
         >
-          Close
+          Reject
         </button>
       </div>
     </div>
@@ -200,29 +239,7 @@ const navigate=useNavigate()
             <h2 className="text-gray-600 font-semibold">Instructors list</h2>
             <span className="text-xs">All instructors</span>
           </div>
-          <div className="flex items-center justify-between">
-            {/* <div className="flex bg-gray-50 items-center p-2 rounded-md">
-              <svg
-                xmlns="{instructor.profilephoto}"
-                className="h-5 w-5 text-gray-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <input
-                className="bg-gray-50 outline-none ml-1 block "
-                type="text"
-                name=""
-                id=""
-                placeholder="search..."
-              />
-            </div> */}
-          </div>
+          <div className="flex items-center justify-between"></div>
         </div>
 
         <div>
@@ -297,16 +314,28 @@ const navigate=useNavigate()
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
                             {instructor.companyname}
+                            {instructor.rejected}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <div className="flex space-x-4">
                             <button
                               onClick={() => handledocs(instructor._id)}
-                              className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 bg-red-200 opacity-50 rounded-full"
+                              className={`relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 ${
+                                instructor.Verified
+                                  ? "bg-green-200"
+                                  : instructor.rejected
+                                  ? "bg-red-200"
+                                  : "bg-yellow-200"
+                              } opacity-50 rounded-full`}
                             >
-                              {instructor.Verified ? "verified" : "verify"}
+                              {instructor.Verified
+                                ? "Verified"
+                                : instructor.rejected
+                                ? "Rejected"
+                                : "Verify"}
                             </button>
+
                             <button
                               onClick={() =>
                                 handleBlockInstructor(instructor._id)
@@ -429,6 +458,103 @@ const navigate=useNavigate()
           </div>
         </div>
       )}
+      <div className="flex items-center justify-center h-screen">
+        <div x-data="{ showModal: true, email: '' }">
+          {/* Button to open the modal */}
+          <button
+            onClick={() => setReject(true)}
+            className="w-full px-4 py-2 text-sm text-white font-medium text-white bg-blue-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            You are about to reject the instructor.Are you sure??
+          </button>
+          {/* Background overlay */}
+          {reject && (
+            <div
+              className="fixed inset-0 transition-opacity"
+              aria-hidden="true"
+              onClick={() => setReject(false)}
+            >
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+          )}
+          {/* Modal */}
+          {reject && (
+            <div className="fixed z-10 inset-0 overflow-y-auto" x-cloak>
+              <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                {/* Modal panel */}
+                <div
+                  className="w-full inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="modal-headline"
+                >
+                  <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    {/* Modal content */}
+                    <div className="sm:flex sm:items-start">
+                      <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                        {/* Icon for newsletter */}
+                        <svg
+                          width="64px"
+                          height="64px"
+                          viewBox="0 0 24 24"
+                          className="h-6 w-6 text-blue-600"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          stroke="#2563eb"
+                          strokeWidth="0.36"
+                        >
+                          {/* ... */}
+                        </svg>
+                      </div>
+                      <div className="w-full mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3
+                          className="text-lg leading-6 font-medium text-gray-900"
+                          id="modal-headline"
+                        >
+                          You are about to reject the instructor.Are you sure??
+                        </h3>
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">
+                            Enter the reason before rejecting..
+                          </p>
+                          <input
+                            type="text"
+                            value={reason}
+                            onChange={(e) => setReason(e.target.value)}
+                            className="mt-2 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:border-blue-500"
+                            placeholder="Type Here..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    {/* Subscribe button */}
+                    <button
+                      onClick={() => {
+                        mailreason(reason);
+                        setReject(false);
+                      }}
+                      type="button"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    >
+                      Confirm
+                    </button>
+                    {/* Cancel button */}
+                    <button
+                      onClick={() => setReject(false)}
+                      type="button"
+                      className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

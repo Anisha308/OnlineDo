@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const generateTokenAdmin = (res, adminId) => {
-  const token = jwt.sign({ adminId }, process.env.ADMINJWT_SECRET, {
+  const token = jwt.sign({ adminId,role:'admin' }, process.env.ADMINJWT_SECRET, {
     // Change JWT_SECRET to ADMINJWT_SECRET
     expiresIn: "30d",
   });

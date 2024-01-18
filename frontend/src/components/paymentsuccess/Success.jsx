@@ -25,10 +25,10 @@ const success = () => {
             <p> Have a great day!</p>
             <div className="py-10 text-center">
               <a
-                href="#"
+                href="/"
                 className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
               >
-                GO BACK
+                Home
               </a>
             </div>
           </div>

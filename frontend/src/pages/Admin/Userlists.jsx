@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-} from "@material-tailwind/react";
+
 import SideBar from "../../components/Header/SideBar";
 import { useGetUserListQuery } from "../../Slices/adminApiSlice";
 import { useBlockuserMutation } from "../../Slices/adminApiSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const UserLists = () => {
   const { data, error, isLoading } = useGetUserListQuery();
@@ -21,7 +14,7 @@ const navigate=useNavigate()
 useEffect(() => {
   if (data && data.users) {
     setUsers(data.users);
-  } else if (error && error.status === 401) {
+  } else  {
    
     navigate("/admin/Login");
   }

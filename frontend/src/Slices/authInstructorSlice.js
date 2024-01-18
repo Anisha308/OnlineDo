@@ -26,9 +26,9 @@ export const instructApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    getInstructProfile: builder.query({
-      query: (instructorId) => ({
-        url: `${INSTRUCT_URL}/showprofile/${instructorId}`, // Assuming this endpoint returns user profile details
+    getInstructProfile: builder.mutation({
+      query: (params) => ({
+        url: `${INSTRUCT_URL}/showprofile/${params.instructorId}`, // Assuming this endpoint returns user profile details
         method: "GET",
       }),
     }),
@@ -64,7 +64,7 @@ export const instructApiSlice = apiSlice.injectEndpoints({
 export const {
   useInstructorSignUpMutation,
   useInstructorLoginMutation,
-  useGetInstructProfileQuery,
+  useGetInstructProfileMutation,
   useUpdateInstructProfileMutation,
   useAddcourseMutation,
   useGetCourseQuery,

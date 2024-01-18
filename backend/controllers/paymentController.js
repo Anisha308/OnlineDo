@@ -5,6 +5,7 @@ const stripeInstance = Stripe(process.env.STRIPE_SECRET);
 const setstripe = async (req, res) => {
   try {
     const { price } = req.params;
+    console.log('priceeeeeeeeeeeeeeeeeeeee');
     const numPrice = Number(price);
     const instructor = await Instructor.findOne({
       name: req.body.instructorName,
@@ -17,7 +18,7 @@ const setstripe = async (req, res) => {
               currency: "INR",
               product_data: {
                 name: `Dr.${instructor.name}`,
-                description: ` At lfkdsf`,
+                description: ` At `,
               },
               unit_amount: parseFloat(price) * 100, // or parseInt(price, 10) * 100
             },
