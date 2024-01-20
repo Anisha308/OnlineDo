@@ -4,6 +4,7 @@ import generateTokenAdmin from "../utils/generateTokenAdmin.js";
 import destroyAdminToken from "../utils/destroyAdminToken.js";
 import User from "../models/userModel.js";
 import Instructor from "../models/InstructorModel.js";
+import Category from "../models/categoryModel.js"
 import destroyToken from "../utils/destroyUserToken.js";
 import destroyTokenInstructor from "../utils/destroyTokenInstructor.js";
 import sendEmail from "../utils/nodemailer.js";
@@ -55,6 +56,7 @@ const logoutAdmin = (req, res) => {
 };
 
 const getAllUsers = asyncHandler(async (req, res) => {
+  console.log('fffffffffffffffff');
   try {
     const users = await User.find(
       {},
@@ -226,6 +228,35 @@ const rejectmail = asyncHandler(async (req,res) => {
   }
  
 })
+
+
+const addCategories = asyncHandler(async (req, res) => {
+  console.log('jjjjjjjjjjjjjjjjjjjjjjjjj');
+  try {
+    const { categoryName, description, liststatus } = req.body;
+console.log('kdddddddddddddddddddd');
+    const newCategory = await Category.create({
+      categoryName,
+      description,
+      liststatus,
+    });
+
+    const savedCategory = await newCategory.save();
+    res.status(200).json(savedCategory);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+const getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.status(200).json(categories);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export {
   authAdmin,
   logoutAdmin,
@@ -235,5 +266,7 @@ export {
   verifyInstructor,
   unblockInstructor,
   getAllInstructors,
-  rejectmail
+  rejectmail,
+  addCategories,
+  getCategories
 };

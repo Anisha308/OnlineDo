@@ -4,6 +4,10 @@ import Course from "../models/courseModel.js";
 import generateToken from "../utils/generateToken.js";
 import generateOTP from "../utils/otp.js";
 import sendEmail from "../utils/nodemailer.js";
+import Instructor from "../models/InstructorModel.js"
+import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
+
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -306,7 +310,71 @@ const filterCourses = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+const courseCategory = asyncHandler(async (req, res) => {
+  try {
+    const categoryid = req.params.categoryId;
+    console.log(categoryid, "categoryId");
+    const category = await Category.findById(categoryid);
+    res.status(200).json({ success: true, category });
+  } catch (error) {
+    console.error("Error fetching category", error);
+  }
+});
+const getInstructor = asyncHandler(async (req, res) => {
+  try {
+    const instructorid = req.params.instructorId;
 
+    const instructor = await Instructor.findById(instructorid);
+
+    res.status(200).json({ success: true, instructor });
+  } catch (error) {
+    console.error(error, "error fetching instructor");
+  }
+});
+
+const google = asyncHandler(async (req, res) => {
+  try {
+    console.log("Request body:", req.body);
+
+    const user = await User.findOne({ email: req.body.email })
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const { password: hashedPassword, ...rest } = user._doc;
+      const expiryDate = new Date(Date.now() + 3600000)
+           console.log("Generated Token:", token);
+
+     
+      res.cookie('access_token', token, {
+        httpOnly: true,
+        expires: expiryDate
+      }).status(200).json(rest)
+    
+    } else {
+      const generatedPassword = Math.random().toString(36).
+        slice(-8) + Math.random().toString(36).slice(-8)
+      
+      const hashedPassword = bcryptjs.hashSync
+        (generatedPassword, 10)
+      
+      const newUser = new User({
+       name: req.body.name.split(" ").join("").toLowerCase() + Math.floor(Math.random * 10000).toString(),
+        email: req.body.email,
+        password: hashedPassword,
+        profilephoto: req.body.photo
+      })
+      await newUser.save()
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET)
+      const { password: hashedPassword2, ...rest } = newUser._doc;
+      const expiryDate = new Date(Date.now() + 3600000)
+      res.cookie('access_token', token, {
+        httpOnly: true,
+        expires:expiryDate,
+      }).status(200).json(rest)
+    }
+  } catch (error) {
+    console.error("error in google auth",error);
+  }
+})
 export {
   authUser,
   registerUser,
@@ -319,4 +387,7 @@ export {
   sortCourses,
   filterCourses,
   viewCourse,
+  courseCategory,
+  getInstructor,
+google
 };

@@ -25,6 +25,7 @@ const InstructorLists = () => {
   const [confirmVerify, setConfirmVerify] = useState(null);
   const [reason, setReason] = useState("");
   const [reject, setReject] = useState(null);
+
   useEffect(() => {
     if (data && data.instructors) {
       setInstructors(data.instructors);
@@ -32,6 +33,7 @@ const InstructorLists = () => {
       navigate("/admin/Login");
     }
   }, [data]);
+  
   const openPreview = (image) => {
     setPreviewImage(image);
   };

@@ -12,6 +12,8 @@ import {
   logoutAdmin,
   unblockInstructor,
   rejectmail,
+  addCategories,
+  getCategories
 } from "../controllers/adminController.js";
 
 router.post('/auth', authAdmin)
@@ -27,6 +29,7 @@ router.post('/block-instructor/:instructorId',adminProtect,blockInstructor)
 router.put("/verify-instructor/:instructorId", adminProtect, verifyInstructor);
 router.post('/sendmail',rejectmail)
 
-
+router.post("/addcategory",  addCategories);
+router.get("/getcategory", adminProtect, getCategories);
 
 export default router;

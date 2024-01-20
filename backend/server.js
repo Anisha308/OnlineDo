@@ -1,8 +1,11 @@
 import express from "express";
+// import firebase from "@firebase/app";
+// import "@firebase/auth";
+// import "@firebase/firestore";
+
 import cors from  'cors'
 import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes.js";
-import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import adminRoutes from "./routes/adminRoutes.js";
 import instructorRoutes from "./routes/instructorRoutes.js";
@@ -14,7 +17,7 @@ import connectDB from "./config/db.js";
 dotenv.config();
 import cloudinary from "cloudinary";
 import bodyParser from "body-parser";
-
+// const apps = initializeApp();
 cloudinary.config({
   cloud_name: process.env.CLOUDNAME,
   api_key: process.env.CLOUDAPIKEY,

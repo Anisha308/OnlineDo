@@ -6,7 +6,7 @@ import { useLoginMutation } from "../../Slices/usersApiSlice";
 import { setCredentials } from "../../Slices/authSlice";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
-
+import OAuth from "../../components/OAuth";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -140,6 +140,7 @@ const Login = () => {
                   >
                     Sign in
                   </button>
+                  <OAuth/>
                 </div>
                 <p className="flex flex-col items-center justify-center mt-10 text-center text-md text-gray-500">
                   <span>Don't have an account?</span>

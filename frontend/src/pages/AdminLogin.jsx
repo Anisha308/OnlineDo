@@ -21,19 +21,19 @@ const { adminInfo } = useSelector((state) => state.authAdmin);
 
 
   useEffect(() => {
-    // if (adminInfo) {
-    //   navigate("/admin/userlist");
-    // }
-
-    const adminJwt = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("adminJwt="));
-
-    if (adminJwt) {
-      // Redirect to instructor page if token exists
+    if (adminInfo) {
       navigate("/admin/userlist");
     }
-  }, [adminInfo, navigate]);
+
+    // const adminJwt = document.cookie
+    //   .split("; ")
+    //   .find((row) => row.startsWith("adminJwt="));
+
+    // if (adminJwt) {
+    //   // Redirect to instructor page if token exists
+    //   navigate("/admin/userlist");
+    // }
+  }, []);
 
 
 const submitHandler = async (e) => {

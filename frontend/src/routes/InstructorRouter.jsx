@@ -5,7 +5,6 @@ import Courselists from "../pages/Intructors/Courselist";
 import Addcourse from "../pages/Intructors/AddCourse.jsx";
 import InstructorProfile from "../pages/Intructors/InstructorProfile";
 import Instructor from "../pages/Intructors/Instructor.jsx";
-import AddCategories from "../pages/Intructors/AddCategories";
 import InstructorHome from "../pages/InstructorHome.jsx";
 import { Routes, Route } from "react-router-dom";
 
@@ -43,7 +42,6 @@ function InstructorRouter() {
 
         <Route path="/instructorconfirm" element={<Instructor />} />
 
-        <Route path="/instructor/addcategory" element={<AddCategories />} />
       </Routes>
     </>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import InstructorSidebar from "../../components/Header/instructorSidebar";
+import SideBar from "../../components/Header/SideBar"
 import apiInstance from "../../../Api";
 import { toast } from "react-toastify";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ const AddCategories = () => {
   };
   const addCategory = async () => {
     try {
-      const response = await apiInstance.post("/api/instructor/addcategory", {
+      const response = await apiInstance.post("/api/admin/addcategory", {
         categoryName,
         description,
         liststatus: selectedOption,
@@ -40,14 +40,14 @@ const AddCategories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await apiInstance.get("/api/instructor/getcategory");
+      const response = await apiInstance.get("/api/admin/getcategory");
 
       if (response.data) {
         setCategories(response.data);
       }
     } catch (error) {
       console.error("failed to fetch categories:", error);
-      Navigate("/instructorLogin");
+      Navigate("/admin/Login");
       console.error("Unauthorized access. Redirecting to login...");
     }
   };
@@ -79,7 +79,7 @@ const AddCategories = () => {
 
   return (
     <div className="flex">
-      <InstructorSidebar />
+      <SideBar />
       <div className="flex-grow">
         <>
           <link

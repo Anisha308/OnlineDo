@@ -302,11 +302,8 @@ const AddCourse = () => {
                   </div>
                 </div>
                 <div className="relative w-full mb-3 ml-2">
-                  <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    // htmlFor={`video-${videoIndex}`}
-                  >
-                    Add Thumbnail {/* Video{videoIndex + 1} */}
+                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                    Add Thumbnail
                   </label>
                   <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
                     {loading ? (
@@ -344,19 +341,12 @@ const AddCourse = () => {
                   <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
                     modules{" "}
                   </h6>
-                  <div className="  px-2 flex items-center">
-                    <button
-                      className="btn btn-outline-success  w-19 px-5 h-10 text-white bg-blue-900 rounded-md"
-                      onClick={(e) => addModule(e)}
-                    >
-                      + Add Module
-                    </button>
-                  </div>
                 </div>
+
                 <div className="flex flex-wrap">
                   {modules.map((module, index) => (
-                    <div key={index} className="w-full lg:w-12/12 px-4">
-                      <div className="flex">
+                    <div key={index} className="w-full lg:w-12/12 px-4 ">
+                      <div className="flex items-center">
                         <div className="relative w-full mb-3">
                           <label
                             className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -371,16 +361,47 @@ const AddCourse = () => {
                             onChange={(e) =>
                               handleModuleChange(index, "title", e.target.value)
                             }
-                            className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                            className="module-input border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                           />
                         </div>
-                      </div>
 
+                        {index === modules.length - 1 && (
+                          <div className="flex items-center ml-auto px-2">
+                            <button
+                              className="module-input btn btn-outline-success w-30 px-4 pt-0 h-10 text-white bg-blue-900 rounded-md"
+                              onClick={(e) => addModule(e)}
+                            >
+                              +
+                            </button>
+                          </div>
+                        )}
+                        {/* </div>
+                          </div>  */}
+                        <div className="md:flex justify-start ml-3">
+                          <button
+                            className="btn btn-outline-danger bg-red-500 text-white p-2 rounded-full flex items-center w-10 h-10 justify-center"
+                            onClick={() => deleteModule(index)}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-16 h-16 flex items-center mx-auto"
+                              viewBox="0 0 20 20"
+                              fillRule="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
                       {module.videos &&
                         module.videos.map((video, videoIndex) => (
                           <div
                             key={videoIndex}
-                            className="relative w-full mb-3 ml-2"
+                            className="flex items-center mb-3 ml-2"
                           >
                             <label
                               className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -388,108 +409,57 @@ const AddCourse = () => {
                             >
                               Video{videoIndex + 1}
                             </label>
-                            <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
-                              {loading ? (
-                                <img
-                                  className="h-16 w-16"
-                                  src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
-                                  alt=""
-                                />
-                              ) : (
-                                <svg
-                                  className="w-8 h-8"
-                                  fill="currentColor"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 20 20"
-                                >
-                                  <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-                                </svg>
-                              )}
+                            <div className="flex items-center ml-2">
+                              <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
+                                {loading ? (
+                                  <img
+                                    className="h-16 w-16"
+                                    src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                                    alt=""
+                                  />
+                                ) : (
+                                  <svg
+                                    className="w-8 h-8"
+                                    fill="currentColor"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                  </svg>
+                                )}
 
-                              <span className="mt-2 text-base leading-normal">
-                                Select a file
-                              </span>
-                              <input
-                                type="file"
-                                className="hidden"
-                                onChange={(e) => {
-                                  handleOnUpload(
-                                    e.target.files[0],
-                                    index,
-                                    videoIndex
-                                  );
-                                }}
-                              />
-                            </label>
+                                <span className="mt-2 text-base leading-normal">
+                                  Select a file
+                                </span>
+                                <input
+                                  type="file"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    handleOnUpload(
+                                      e.target.files[0],
+                                      index,
+                                      videoIndex
+                                    );
+                                  }}
+                                />
+                              </label>
+                              {videoIndex === module.videos.length - 1 && (
+                                <button
+                                  className="btn btn-outline-success ml-5  w-19 px-5 h-10 text-white bg-blue-900 rounded-full"
+                                  onClick={(e) => addVideo(e, index)}
+                                >
+                                 +
+                                 
+                                </button>
+                              )}
+                            </div>
                           </div>
                         ))}
-
-                      <button
-                        className="btn btn-outline-success ml-96 w-19 px-5 h-10 text-white bg-blue-900 rounded-md"
-                        onClick={(e) => addVideo(e, index)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-6 h-6"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                          />
-                        </svg>
-                      </button>
-
-                      <div className="md:flex justify-start ml-3">
-                        <button
-                          className="btn btn-outline-danger bg-red-500 text-white p-2 rounded-full flex items-center w-10 h-10 justify-center"
-                          onClick={() => deleteModule(index)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-16 h-16 flex items-center mx-auto"
-                            viewBox="0 0 20 20"
-                            fillRule="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </button>
-                      </div>
                     </div>
                   ))}
                 </div>
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
-                {/* <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-                  About Me
-                </h6> */}
-                <div className="flex flex-wrap">
-                  <div className="w-full lg:w-12/12 px-4">
-                    {/* <div className="relative w-full mb-3">
-                      <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                        htmlFor="grid-password"
-                      >
-                        About me
-                      </label>
-                      <textarea
-                        type="text"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                        rows={4}
-                        defaultValue={
-                          " A beautiful UI Kit and Admin for JavaScript & Tailwind CSS. It is Freeand Open Source."
-                        }
-                      />
-                    </div> */}
-                  </div>
-                </div>
+
                 <div className="md:flex ml-60">
                   <div className="md:w-1/3"></div>
                   <div className="md:w-2/3">

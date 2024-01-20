@@ -46,7 +46,24 @@ const SideBar = () => {
                       to="/admin/instructorlist"
                       className="text-primaryColor font-medium ml-1"
                     >
-                     InstructorLists
+                      InstructorLists
+                    </Link>
+                  ),
+                },
+              ],
+            },
+            {
+              title: "Categories",
+              itemId: "/addcategory",
+              elemBefore: () => <Icon name="users" />,
+              subNav: [
+                {
+                  elemBefore: () => (
+                    <Link
+                      to="/admin/addcategory"
+                      className="text-primaryColor font-medium ml-1"
+                    >
+                      Category
                     </Link>
                   ),
                 },

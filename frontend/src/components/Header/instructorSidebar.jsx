@@ -45,23 +45,7 @@ const InstructorSidebar = ({ instructorId }) => {
               },
             ],
           },
-            {
-              title: "Categories",
-              itemId: "/addcategory",
-              elemBefore: () => <Icon name="users" />,
-              subNav: [
-                {
-                  elemBefore: () => (
-                    <Link
-                      to="/instructor/addcategory"
-                      className="text-primaryColor font-medium ml-1"
-                    >
-                      Category
-                    </Link>
-                  ),
-                },
-              ],
-            },
+           
         ]}
       />
     </div>

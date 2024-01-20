@@ -27,7 +27,7 @@ const navigate =useNavigate()
         setInstructorId(instructorId);
         // setCategoryId(categoryId);
         const instructorresponse = await apiInstance.get(
-          `/api/instructor/getInstructor/${instructorId}`
+          `/api/users/getInstructor/${instructorId}`
         );
         setInstructor(instructorresponse.data);
         // const categoryresponse = await apiInstance.get(

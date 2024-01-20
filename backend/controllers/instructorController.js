@@ -261,22 +261,6 @@ const addCourse = asyncHandler(async (req, res) => {
   }
 });
 
-const addCategories = asyncHandler(async (req, res) => {
-  try {
-    const { categoryName, description, liststatus } = req.body;
-
-    const newCategory = await Category.create({
-      categoryName,
-      description,
-      liststatus,
-    });
-
-    const savedCategory = await newCategory.save();
-    res.status(200).json(savedCategory);
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 
 const getInstructorProfile = asyncHandler(async (req, res) => {
   try {
@@ -364,14 +348,6 @@ const getInstructorCourses = asyncHandler(async (req, res) => {
   }
 });
 
-const getCategories = async (req, res) => {
-  try {
-    const categories = await Category.find();
-    res.status(200).json(categories);
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
 
 const showCategory = asyncHandler(async (req, res) => {
   try {
@@ -382,28 +358,9 @@ const showCategory = asyncHandler(async (req, res) => {
   }
 });
 
-const courseCategory = asyncHandler(async (req, res) => {
-  try {
-    const categoryid = req.params.categoryId;
-    console.log(categoryid,'categoryId');
-    const category = await Category.findById(categoryid);
-    res.status(200).json({ success: true, category });
-  } catch (error) {
-    console.error("Error fetching category", error);
-  }
-});
 
-const getInstructor = asyncHandler(async (req, res) => {
-  try {
-    const instructorid = req.params.instructorId;
 
-    const instructor = await Instructor.findById(instructorid);
 
-    res.status(200).json({ success: true, instructor });
-  } catch (error) {
-    console.error(error, "error fetching instructor");
-  }
-});
 export {
   authInstructor,
   registerInstructor,
@@ -413,9 +370,5 @@ export {
   addCourse,
   getInstructorCourses,
   instructotpVerify,
-  addCategories,
-  getCategories,
   showCategory,
-  courseCategory,
-  getInstructor,
 };

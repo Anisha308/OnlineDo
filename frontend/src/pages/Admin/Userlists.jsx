@@ -10,7 +10,8 @@ const UserLists = () => {
   const [blockUserMutation] = useBlockuserMutation();
   const [showModal, setShowModal] = useState(false);
   const [userIdToBlock, setUserIdToBlock] = useState(null);
-const navigate=useNavigate()
+  const navigate = useNavigate()
+  
 useEffect(() => {
   if (data && data.users) {
     setUsers(data.users);
