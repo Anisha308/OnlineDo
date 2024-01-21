@@ -7,6 +7,8 @@ import sendEmail from "../utils/nodemailer.js";
 import Instructor from "../models/InstructorModel.js"
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import Category from "../models/categoryModel.js"
+import Purchase from "../models/purchaseModel.js"
 
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -375,6 +377,27 @@ const google = asyncHandler(async (req, res) => {
     console.error("error in google auth",error);
   }
 })
+
+const singlecourse = asyncHandler(async (req, res) => {
+  try {
+    const purchaseid = req.params.purchaseId
+    console.log(purchaseid, 'puurchaseid');
+    const course = await Course.findById(purchaseid)
+    console.log(course,'course');
+    if (!course) {
+      console.log('dhsaj');
+   return res.status(404).json({error:'course not found'})
+
+    }console.log('djs');
+
+    res.json({ course })
+  } catch (error) {
+console.log('nuewmd');
+    res.status(500).json({ error: "Internal Server Error" });
+    
+  }
+})
+
 export {
   authUser,
   registerUser,
@@ -389,5 +412,6 @@ export {
   viewCourse,
   courseCategory,
   getInstructor,
-google
+  google,
+singlecourse
 };

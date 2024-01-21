@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import apiInstance from "../../../Api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate
+} from "react-router-dom";
+ import { useSelector } from "react-redux";
+
 
 const ViewCourse = () => {
+  const user = useSelector((state) => state.auth.userInfo);
+console.log(user,'useerrrrrrrrrr');
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [instructor, setInstructor] = useState(null);
@@ -11,16 +16,15 @@ const ViewCourse = () => {
   const [instructorId, setInstructorId] = useState(null);
   // const [category, setCategory] = useState(null);
 
-const navigate =useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
-
     const fetchCourse = async () => {
       try {
         console.log("kjsaaaaaaaahjhnmmma");
         const response = await apiInstance.get(`/api/users/getCourse/${id}`);
-        console.log('hjjjjjjjjjjj',response);
+        console.log("hjjjjjjjjjjj", response);
         setCourse(response.data);
-        console.log(response.data.course.modules,'responsedata');
+        console.log(response.data.course.modules, "responsedata");
         // Extracting instructorid from course data
         const instructorId = response.data.course.instructor;
         // const categoryId = response.data.course.category;
@@ -36,33 +40,38 @@ const navigate =useNavigate()
         // setCategory(categoryresponse.data);
       } catch (error) {
         console.error("Error fetching course", error);
-       navigate('/login')
+        navigate("/login");
       }
     };
-    console.log('fetchcourseee');
+    console.log("fetchcourseee");
     fetchCourse();
   }, [id]);
 
-
-const handleBuyClick = async(price) => {
-  try {
-        const instructorName = instructor.instructor.name;
-console.log(price,'price');
+  const handleBuyClick = async (price) => {
+    try {
+      const instructorName = instructor.instructor.name;
+      const courses = course
+      console.log(instructorName, 'inst');
+      console.log(user, 'user');
+      console.log(courses,'coursessssssss');
+      console.log(price, "price");
       const response = await apiInstance.post(
         `api/users/create-checkout-session/${price}`,
         {
           instructorName: instructorName,
+          user,
+          courses
         }
-    );    
-    console.log('yes');
-    const stripeCheckoutUrl = response.data;
+      );
+      console.log("yes");
+      const stripeCheckoutUrl = response.data;
 
-    // Navigate to the Stripe checkout page
-    window.location.href = stripeCheckoutUrl;
- } catch (error) {
-  console.error(error,'error');
- }
-};
+      // Navigate to the Stripe checkout page
+      window.location.href = stripeCheckoutUrl;
+    } catch (error) {
+      console.error(error, "error");
+    }
+  };
 
   return (
     <div>

@@ -1,12 +1,28 @@
 import Stripe from "stripe";
 import Instructor from "../models/InstructorModel.js";
+import Purchase from "../models/purchaseModel.js";
 const stripeInstance = Stripe(process.env.STRIPE_SECRET);
-
+import Course from "../models/courseModel.js";
 const setstripe = async (req, res) => {
   try {
     const { price } = req.params;
-    console.log('priceeeeeeeeeeeeeeeeeeeee');
+    console.log(req.body.courses.course,'rebkddddddddddddddddddddddddddddddddddddd');
+    console.log("priceeeeeeeeeeeeeeeeeeeee");
     const numPrice = Number(price);
+
+ const user=req.body.user
+    const course = req.body.courses.course; // Assuming you have course information in the request
+console.log("User:", user);
+console.log("Course:", course);
+    if (user && course) {
+      console.log('noooooo');
+      const newPurchase = new Purchase({
+        user: user._id,
+        courses: course._id,
+      })
+      console.log(newPurchase,'newpurchade');
+      await newPurchase.save()
+    }
     const instructor = await Instructor.findOne({
       name: req.body.instructorName,
     });
@@ -40,4 +56,29 @@ const setstripe = async (req, res) => {
   }
 };
 
-export { setstripe };
+const getPurchaseByUser = async (req, res) => {
+  try {
+    console.log(req.params,'red');
+const userId=req.params.userId
+    console.log(userId,'uerid');
+    const purchases = await Purchase.find({ user: userId }).populate('courses')
+        
+    const detailedCourses = []
+    
+    for (const purchase of purchases) {
+      const courseId = purchase.courses
+      console.log(courseId,'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj');
+      const courseDetails=await Course.findById(courseId)
+    
+    detailedCourses.push(courseDetails)
+    
+    }
+    
+    res.json({ detailedCourses });
+console.log(purchases,'purchases');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+export { setstripe ,getPurchaseByUser};

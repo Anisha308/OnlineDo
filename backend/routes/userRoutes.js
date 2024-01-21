@@ -14,9 +14,15 @@ import {
   courseCategory,
   getInstructor,
   google,
-  
+  singlecourse
 } from "../controllers/userController.js";
-import {setstripe} from "../controllers/paymentController.js"
+
+
+import {
+  setstripe,
+  getPurchaseByUser,
+} from "../controllers/paymentController.js";
+
 const router = express.Router();
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -34,5 +40,7 @@ router.get("/getCategory/:categoryId",courseCategory)
 router.get("/getInstructor/:instructorId", getInstructor);
 
 router.post("/create-checkout-session/:price",protect,setstripe);
-router.post("/google",google)
+router.post("/google", google)
+router.get("/:userId/purchaselist", getPurchaseByUser);
+router.get("/:purchaseId/course",singlecourse)
 export default router;

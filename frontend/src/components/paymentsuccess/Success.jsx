@@ -1,6 +1,11 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
+
 
 const success = () => {
+        const user = useSelector((state) => state.auth.userInfo);
+  console.log(user._id, 'jserrer');
+  const userId=user._id
   return (
     <>
       {/* component */}
@@ -25,10 +30,10 @@ const success = () => {
             <p> Have a great day!</p>
             <div className="py-10 text-center">
               <a
-                href="/"
+                href={`/${userId}/purchaselist`}
                 className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
               >
-                Home
+                My Course
               </a>
             </div>
           </div>
