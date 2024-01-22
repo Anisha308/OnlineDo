@@ -126,9 +126,7 @@ const InstructorLists = () => {
   };
 
   const mailreason = async (reason) => {
-    console.log("uuuuuuuuuuuuuuu");
     try {
-      console.log("oooooooooooo");
       const res = await apiInstance.post(`api/admin/sendmail`, {
         reason,
         instructorId: selectedInstructor._id,

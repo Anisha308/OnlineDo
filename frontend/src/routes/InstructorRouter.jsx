@@ -6,6 +6,7 @@ import Addcourse from "../pages/Intructors/AddCourse.jsx";
 import InstructorProfile from "../pages/Intructors/InstructorProfile";
 import Instructor from "../pages/Intructors/Instructor.jsx";
 import InstructorHome from "../pages/InstructorHome.jsx";
+import InstructorCourseView from "../pages/Intructors/InstructorCourseView.jsx"
 import { Routes, Route } from "react-router-dom";
 
 function InstructorRouter() {
@@ -16,32 +17,24 @@ function InstructorRouter() {
         <Route path="/instructorRegister" element={<InstructorSignup />} />
         <Route
           path="/instructor/:instructorId/courselist"
-          element={
-              <Courselists />
-          }
+          element={<Courselists />}
         />
         <Route
           path="/instructor/addcourse/:instructorId"
-          element={
-              <Addcourse />
-          }
+          element={<Addcourse />}
         />
         <Route
           path="/instructor/showprofile/:id"
-          element={
-              <InstructorProfile />
-          }
+          element={<InstructorProfile />}
         />
         <Route
           path="/instructor/showprofile/:instructorId"
-          element={
-              <InstructorProfile />
-          }
+          element={<InstructorProfile />}
         />
         <Route path="/instructor" element={<InstructorHome />} />
 
         <Route path="/instructorconfirm" element={<Instructor />} />
-
+        <Route path="/instructor/instructorcourse/:id" element={<InstructorCourseView/>} />
       </Routes>
     </>
   );

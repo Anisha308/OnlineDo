@@ -13,23 +13,24 @@ const OAuth = () => {
   const handleGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
+      console.log(provider,'provider');
       const auth = getAuth(app);
+      console.log(auth,'auth');
       const result = await signInWithPopup(auth, provider);
-
+console.log(result,'rersuklt');
       const res = await apiInstance.post(`/api/users/google`, {
         name: result.user.displayName,
         email: result.user.email,
         photo: result.user.photoURL,
       });
-      console.log("API Response:", res); // Add this line
+      console.log(res,'resujhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
      const data = res.data; // Use res.data directly
 
-     // Instead of dispatching an action, you can handle the data as needed
-      console.log("Received data:", data);
+console.log(data,'data');     
 
       if (data) {
+        console.log(data,'kkkkkkkkkkkkkkk');
                  dispatch(setCredentials(data));
-console.log('et');
         //  toast.success("Google Authentication Success");
          navigate("/home");
        }

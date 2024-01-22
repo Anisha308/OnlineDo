@@ -358,7 +358,18 @@ const showCategory = asyncHandler(async (req, res) => {
   }
 });
 
-
+const instructorviewCourse = asyncHandler(async (req, res) => {
+  try {
+    console.log('dnnnnnnnnnnnnnnnnnnnnn');
+    const courseId = req.params.id
+    console.log(courseId,'courseid');
+    const course = await Course.findById(courseId);
+    console.log(course,'coursee');
+    res.status(200).json({ success: true, course });
+  } catch (error) {
+    console.error("Error fetching course", error);
+  }
+});
 
 
 export {
@@ -371,4 +382,5 @@ export {
   getInstructorCourses,
   instructotpVerify,
   showCategory,
+  instructorviewCourse
 };

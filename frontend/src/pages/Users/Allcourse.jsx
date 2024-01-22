@@ -26,44 +26,14 @@ const Allcourse = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState(null);
+  
+const [filterOrder, setFilterOrder] = useState(null);
 
   useEffect(() => {
     if (data && data.courses) {
-      console.log(data,'dddddddddddddddddddddd');
       setCourses(data.courses);
     }
   }, [data]);
-
-  const handlesort = async (sortOrder) => {
-    try {
-      console.log(sortOrder);
-      const response = await apiInstance.get("/api/users/getcourse/sort", {
-        params: { query: sortOrder },
-      });
-      console.log(response, "res");
-      if (response.data && response.data.courses) {
-        console.log(response.data.courses, "llllllllllllllllllll");
-        setCourses(response.data.courses);
-      }
-    } catch (error) {
-      console.error("error in  sorting", error);
-    }
-  };
-
-  const handlefilter = async (filterorder, e) => {
-    e.preventDefault(); // Prevents the default form submission behavior
-    try {
-      const response = await apiInstance.get("api/users/getcourse/filter", {
-        params: { query: filterorder },
-      });
-      if (response.data && response.data.courses) {
-        setCourses(response.data.courses);
-      }
-      setIsSidebarOpen(false);
-    } catch (error) {
-      console.error("error in filter", error);
-    }
-  };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -71,17 +41,28 @@ const Allcourse = () => {
 
   const totalPages = Math.ceil((courses && courses.length) / ITEMS_PER_PAGE);
 
-  const handleSearch = async (e) => {
+  const handleSearchSortFilter = async (e) => {
     e.preventDefault();
+  e.stopPropagation();
 
     try {
-      console.log(search);
-      const response = await apiInstance.get("/api/users/getcourse/search", {
-        params: { query: search },
-      });
+      const params = {}
+      if (search) {
+        params.query = search;
+      }
+      if (sortBy) {
+        params.sortBy = sortBy;
+      }
 
+      if (filterOrder) {
+      params.filterOrder=filterOrder
+    }
+    
+      const response = await apiInstance.get("/api/users/getcourse/searchSortFilter", {
+        params,
+      });
       if (response.data && response.data.courses) {
-        setCourses(response.data.courses);
+      setCourses(response.data.courses);
       }
     } catch (error) {
       console.error("Error searching courses:", error.message);
@@ -153,7 +134,10 @@ const Allcourse = () => {
                         <div className="space-y-6">
                           <div className="flex items-center">
                             <button
-                              onClick={(e) => handlefilter("1-500", e)} // Pass the event to handlefilter
+                              onClick={(e) => {
+                                setFilterOrder("1-500");
+                                handleSearchSortFilter(e);
+                              }}
                               className="mr-44 min-w-0 flex-1 text-gray-500"
                             >
                               ₹1 - ₹500
@@ -161,7 +145,10 @@ const Allcourse = () => {
                           </div>
                           <div className="flex items-center">
                             <button
-                              onClick={(e) => handlefilter("501-1000", e)}
+                              onClick={(e) => {
+                                setFilterOrder("501-1000");
+                                handleSearchSortFilter(e);
+                              }}
                               className="mr-40 min-w-0 flex-1 text-gray-500"
                             >
                               ₹501-₹1,000
@@ -169,7 +156,10 @@ const Allcourse = () => {
                           </div>
                           <div className="flex items-center">
                             <button
-                              onClick={(e) => handlefilter("1001-2000", e)}
+                              onClick={(e) => {
+                                setFilterOrder("1001-2000");
+                                handleSearchSortFilter(e);
+                              }}
                               className="mr-36 min-w-0 flex-1 text-gray-500"
                             >
                               ₹1001-₹2,000
@@ -177,7 +167,10 @@ const Allcourse = () => {
                           </div>
                           <div className="flex items-center">
                             <button
-                              onClick={(e) => handlefilter("2001-above", e)}
+                              onClick={(e) => {
+                                setFilterOrder("2001-above");
+                                handleSearchSortFilter(e);
+                              }}
                               className="mr-32 min-w-0 flex-1 text-gray-500"
                             >
                               ₹2001 and above
@@ -185,79 +178,6 @@ const Allcourse = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="border-t border-gray-200 px-4 py-6">
-                      <h3 className="-mx-2 -my-3 flow-root">
-                        <button
-                          type="button"
-                          className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500"
-                          aria-controls="filter-section-mobile-1"
-                          aria-expanded="false"
-                        >
-                          {/* <span className="font-medium text-gray-900">
-                            Category
-                          </span> */}
-                          <span className="ml-6 flex items-center">
-                            {/* <svg
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                            </svg> */}
-                            {/* <svg
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                                clipRule="evenodd"
-                              />
-                            </svg> */}
-                          </span>
-                        </button>
-                      </h3>
-                      <div className="pt-6" id="filter-section-mobile-1">
-                        <div className="space-y-6">
-                          <div className="flex items-center">
-                            {/* <input
-                              id="filter-mobile-category-3"
-                              name="category[]"
-                              defaultValue="organization"
-                              type="checkbox"
-                              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            /> */}
-                            {/* <button
-                              onClick={(e) => handlefilter("2001-above", e)}
-                              className="mr-32 min-w-0 flex-1 text-gray-500"
-                            >
-                              ₹2001 and above
-                            </button> */}
-                          </div>
-                          {/* <div className="flex items-center">
-                            <input
-                              id="filter-mobile-category-4"
-                              name="category[]"
-                              defaultValue="accessories"
-                              type="checkbox"
-                              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            />
-                            <label
-                              htmlFor="filter-mobile-category-4"
-                              className="ml-3 min-w-0 flex-1 text-gray-500"
-                            >
-                              Accessories
-                            </label>
-                          </div> */}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="border-t border-gray-200 px-4 py-6">
-                      <div className="pt-6" id="filter-section-mobile-2"></div>
                     </div>
                   </form>
                 </div>
@@ -284,7 +204,7 @@ const Allcourse = () => {
                   className={`m-2 bg-black text-white rounded px-4 py-2 font-semibold ${
                     search ? "bg-purple-500" : "bg-black-500 cursor-not-allowed"
                   }`}
-                  onClick={handleSearch}
+                  onClick={(e) => handleSearchSortFilter(e)}
                   disabled={!search}
                 >
                   Search
@@ -327,7 +247,14 @@ const Allcourse = () => {
                     >
                       <div className="py-1" role="none">
                         <button
-                          onClick={() => handlesort("newest")}
+                          onClick={(e) => {
+                            setSortBy("newest");
+                            console.log(
+                              "Sorting by newest. Current sortBy:",
+                              sortBy
+                            );
+                            handleSearchSortFilter(e);
+                          }}
                           className="text-gray-500 block px-4 py-2 text-sm"
                           role="menuitem"
                           tabIndex={-1}
@@ -336,7 +263,10 @@ const Allcourse = () => {
                           Newest
                         </button>
                         <button
-                          onClick={() => handlesort("lowtohigh")}
+                          onClick={(e) => {
+                            setSortBy("lowtohigh");
+                            handleSearchSortFilter(e);
+                          }}
                           className="text-gray-500 block px-4 py-2 text-sm"
                           role="menuitem"
                           tabIndex={-1}
@@ -345,7 +275,10 @@ const Allcourse = () => {
                           Price: Low to High
                         </button>
                         <button
-                          onClick={() => handlesort("hightolow")}
+                          onClick={(e) => {
+                            setSortBy("hightolow");
+                            handleSearchSortFilter(e);
+                          }}
                           className="text-gray-500 block px-4 py-2 text-sm"
                           role="menuitem"
                           tabIndex={-1}
@@ -446,13 +379,7 @@ const Allcourse = () => {
                                           </Typography>
                                         </CardBody>
 
-                                        <CardFooter className="flex justify-center gap-7 pt-2">
-                                          {/* <div>
-                                          <button className="bg-blue-900 text-white px-10 mb-6 py-2 w-[200px]  rounded-md">
-                                            view
-                                          </button>
-                                        </div> */}
-                                        </CardFooter>
+                                        <CardFooter className="flex justify-center gap-7 pt-2"></CardFooter>
                                       </Card>
                                     </Link>
                                   ))}

@@ -7,9 +7,7 @@ import {
   getUserProfile,
   updateUserProfile,
   getAllCourses,
-  searchCourses,
-  sortCourses,
-  filterCourses,
+ searchSortFilterCourses,
   viewCourse,
   courseCategory,
   getInstructor,
@@ -32,9 +30,8 @@ router.post("/logout", logoutUser);
 router.route("/profile/:id").get(protect,getUserProfile).put(protect,updateUserProfile);
 router.post("/otpverify", otpVerify);
 router.get("/getcourse", getAllCourses);
-router.get("/getcourse/search", searchCourses);
-router.get("/getcourse/sort", sortCourses);
-router.get("/getcourse/filter",filterCourses);
+// router.get("/getcourse/search", searchCourses);
+router.get("/getcourse/searchSortFilter", searchSortFilterCourses);
 router.get("/getcourse/:id", protect, viewCourse)
 router.get("/getCategory/:categoryId",courseCategory)
 router.get("/getInstructor/:instructorId", getInstructor);

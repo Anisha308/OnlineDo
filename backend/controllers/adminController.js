@@ -56,7 +56,6 @@ const logoutAdmin = (req, res) => {
 };
 
 const getAllUsers = asyncHandler(async (req, res) => {
-  console.log('fffffffffffffffff');
   try {
     const users = await User.find(
       {},
@@ -231,10 +230,8 @@ const rejectmail = asyncHandler(async (req,res) => {
 
 
 const addCategories = asyncHandler(async (req, res) => {
-  console.log('jjjjjjjjjjjjjjjjjjjjjjjjj');
   try {
     const { categoryName, description, liststatus } = req.body;
-console.log('kdddddddddddddddddddd');
     const newCategory = await Category.create({
       categoryName,
       description,

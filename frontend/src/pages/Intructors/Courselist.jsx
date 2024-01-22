@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
 import { useGetCourseQuery } from "../../Slices/authInstructorSlice";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Style } from "@mui/icons-material";
 
@@ -39,8 +39,16 @@ const [instructor,setInstructor]=useState([])
         {courses &&
            instructor &&
           courses.map((course, index) => (
-            <Card key={index} className="w-[240px] mb-7 flex-none">
-              <CardHeader floated={false} className="h-25">
+            <Link to={{
+              pathname: `/instructor/instructorcourse/${course._id}`,
+              state:{course},
+            }}
+              key={index}
+              className="hover:no-underline"
+            >
+             
+            <Card key={index} className="w-[332px] mb-7 p-2  flex-none">
+              <CardHeader floated={false} className="h-44 ">
                 <img
                   src={course.thumbnail}
                   alt="profile-picture"
@@ -51,7 +59,7 @@ const [instructor,setInstructor]=useState([])
                   }}
                 />
               </CardHeader>
-              <CardBody className="">
+              <CardBody className="text-start">
                 <Typography
                   variant="h8"
                   className="font-bold"
@@ -65,14 +73,9 @@ const [instructor,setInstructor]=useState([])
                   ₹ {course.price}
                 </Typography>
               </CardBody>
-              <CardFooter className="flex justify-center gap-7 pt-2">
-                <div>
-                  <button className="bg-blue-900 text-white px-10 mb-6 py-2 w-[200px]  rounded-md">
-                    view
-                  </button>
-                </div>
-              </CardFooter>
-            </Card>
+           
+              </Card>
+          </Link>
           )
           )
         }

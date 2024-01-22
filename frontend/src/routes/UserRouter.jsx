@@ -16,7 +16,7 @@ import Fail from "../components/paymentfail/Fail.jsx";
 import Success from "../components/paymentsuccess/success.jsx";
 import PurchaseList from '../pages/Users/PurchaseList.jsx'
 import CourseView from "../pages/Users/CourseView.jsx";
-import PreviewCourse from "../pages/Users/PreviewCourse.jsx";
+// import PreviewCourse from "../pages/Users/PreviewCourse.jsx";
 function UserRouter() {
   return (
     <>
@@ -36,7 +36,7 @@ function UserRouter() {
         {/* <Route path="/payment/:price" element={<Payment/>} /> */}
         <Route path="/:userId/purchaselist" element={<PurchaseList />} />
         <Route path="/:purchaseId/courseview" element={<CourseView />} />
-        <Route path="/previewcourse/:videoId" element={<PreviewCourse />} />
+        {/* <Route path="/previewcourse/:videoId" element={<PreviewCourse />} /> */}
       </Routes>
     </>
   );

@@ -8,7 +8,6 @@ import { useNavigate
 
 const ViewCourse = () => {
   const user = useSelector((state) => state.auth.userInfo);
-console.log(user,'useerrrrrrrrrr');
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [instructor, setInstructor] = useState(null);
@@ -20,11 +19,8 @@ console.log(user,'useerrrrrrrrrr');
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        console.log("kjsaaaaaaaahjhnmmma");
         const response = await apiInstance.get(`/api/users/getCourse/${id}`);
-        console.log("hjjjjjjjjjjj", response);
         setCourse(response.data);
-        console.log(response.data.course.modules, "responsedata");
         // Extracting instructorid from course data
         const instructorId = response.data.course.instructor;
         // const categoryId = response.data.course.category;
@@ -43,7 +39,6 @@ console.log(user,'useerrrrrrrrrr');
         navigate("/login");
       }
     };
-    console.log("fetchcourseee");
     fetchCourse();
   }, [id]);
 
@@ -51,10 +46,7 @@ console.log(user,'useerrrrrrrrrr');
     try {
       const instructorName = instructor.instructor.name;
       const courses = course
-      console.log(instructorName, 'inst');
-      console.log(user, 'user');
-      console.log(courses,'coursessssssss');
-      console.log(price, "price");
+    
       const response = await apiInstance.post(
         `api/users/create-checkout-session/${price}`,
         {
@@ -63,7 +55,6 @@ console.log(user,'useerrrrrrrrrr');
           courses
         }
       );
-      console.log("yes");
       const stripeCheckoutUrl = response.data;
 
       // Navigate to the Stripe checkout page

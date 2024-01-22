@@ -10,7 +10,7 @@ import {
   getInstructorCourses,
   instructotpVerify,
   showCategory,
- 
+  instructorviewCourse,
 } from "../controllers/instructorController.js";
 import { instructorProtect } from "../middleware/instructorAuthMiddleware.js"
 
@@ -23,5 +23,6 @@ router.post("/addcourse/:instructorId",instructorProtect, addCourse);
 router.get("/:instructorId/courselist",instructorProtect,getInstructorCourses);
 router.post("/instructotpverify", instructotpVerify);
 router.get("/categories",instructorProtect, showCategory)
+router.get("/instructorcourse/:id", instructorviewCourse);
 
 export default router;

@@ -11,9 +11,7 @@ import { instructorSetCredentials } from "../../Slices/instructorApiSlice";
 
 const InstructorProfile = () => {
   const instruct = useSelector((state) => state.instructorAuth.instructorInfo)
-  console.log(instruct,'instruct');
   const dispatch=useDispatch()
-  // const { data, error, isLoading } = useGetInstructProfileQuery(instructor._id);
 
   const [getProfile] = useGetInstructProfileMutation()
   
@@ -42,7 +40,6 @@ const navigate=useNavigate()
     const fetchData = async () => {
       try {
         const data = await getProfile({ instructorId: instruct?._id || null})
-        console.log(data,'datssaaaaaaaaaaaaaaaaaaaa');
         setInstructors(data.data.instructors)
      
       } catch (error) {
@@ -72,7 +69,6 @@ const navigate=useNavigate()
   const handleview = (e) => {
     e.preventDefault()
     try {
-       console.log('click');
   setShowDocmodal(true)
     } catch (error) {
       console.error(error,'error viewing idproof');
@@ -82,7 +78,6 @@ const navigate=useNavigate()
    const handlecertificateview = (e) => {
      e.preventDefault();
      try {
-       console.log("clicked");
        setShowCerticate(true);
      } catch (error) {
        console.error(error, "error viewing idproof");
@@ -128,7 +123,6 @@ const navigate=useNavigate()
     }
   };
   const handlecertificateFileChange = (e) => {
-    console.log("hiiiiiiiiiiiiiiii");
     const file = e.target.files[0];
 
     if (file) {

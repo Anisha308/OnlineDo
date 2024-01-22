@@ -9,7 +9,6 @@ const [course,setCourse]=useState(null)
         const fetchCourse = async () => {
             try {
                 const response = await apiInstance.get(`/api/users/${purchaseId}/course`)
-                console.log(response.data.course,'resddddddddddddddddd');
 setCourse(response.data.course)
             } catch (error) {
                 console.error('Error fetching course',error);

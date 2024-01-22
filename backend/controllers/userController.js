@@ -174,7 +174,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
 const viewCourse = asyncHandler(async (req, res) => {
   try {
     const courseId = req.params.id;
-    console.log(courseId,'courseid');
     const course = await Course.findById(courseId);
     res.status(200).json({ success: true, course });
   } catch (error) { 
@@ -242,20 +241,59 @@ const getAllCourses = asyncHandler(async (req, res) => {
   }
 });
 
-const searchCourses = asyncHandler(async (req, res) => {
+const searchSortFilterCourses = asyncHandler(async (req, res) => {
   try {
-    const { query } = req.query;
-    if (!query) {
-      res.status(400).json({ error: "Query parameter is required" });
-      return;
-    }
-    const courses = await Course.find({
-      $or: [
-        { coursename: { $regex: query, $options: "i" } },
-        { description: { $regex: query, $options: "i" } },
-      ],
-    });
+    const { query,sortBy,filterOrder } = req.query;
+   
+     let queryCriteria = {};
+     let sortOption = {};
+     let filterOption = {};
 
+   
+    if (query) {
+queryCriteria = {
+    courseName: { $regex: query, $options: "i" },
+  };
+}
+    if (sortBy) {
+      switch (sortBy) {
+        case "lowtohigh":
+          sortOption = { price: 1 };
+          break;
+        case "hightolow":
+          sortOption = { price: -1 };
+          break;
+        case "newest":
+          sortOption = { createdAt: -1 };
+          break;
+        default:
+          sortOption = { createdAt: 1 };
+          break;
+      }
+    }
+
+    if (filterOrder) {
+      switch (filterOrder) {
+        case "1-500":
+          filterOption = { price: { $gt: 1, $lte: 500 } };
+          break;
+        case "501-1000":
+          filterOption = { price: { $gte: 501, $lte: 1000 } };
+          break;
+        case "1001-2000":
+          filterOption = { price: { $gte: 1001, $lte: 2000 } };
+          break;
+        case "2001-above":
+          filterOption = { price: { $gte: 2001 } };
+          break;
+      }
+    }
+
+      const finalQuery = {
+        ...queryCriteria,
+        ...filterOption,
+    };
+    const courses = await Course.find(finalQuery).sort(sortOption);
     res.status(200).json({ success: true, courses });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
@@ -287,35 +325,10 @@ const sortCourses = asyncHandler(async (req, res) => {
   }
 });
 
-const filterCourses = asyncHandler(async (req, res) => {
-  try {
-    const { query } = req.query;
-    let filterOption;
-    switch (query) {
-      case "1-500":
-        filterOption = { price: { $gt: 1, $lte: 500 } };
-        break;
-      case "501-1000":
-        filterOption = { price: { $gte: 501, $lte: 1000 } };
-        break;
-      case "1001-2000":
-        filterOption = { price: { $gte: 1001, $lte: 2000 } };
-        break;
-      case "2001-above":
-        filterOption = { price: { $gte: 2001 } };
-        break;
-    }
 
-    const courses = await Course.find(filterOption);
-    res.status(200).json({ success: true, courses });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
 const courseCategory = asyncHandler(async (req, res) => {
   try {
     const categoryid = req.params.categoryId;
-    console.log(categoryid, "categoryId");
     const category = await Category.findById(categoryid);
     res.status(200).json({ success: true, category });
   } catch (error) {
@@ -335,35 +348,39 @@ const getInstructor = asyncHandler(async (req, res) => {
 });
 
 const google = asyncHandler(async (req, res) => {
+  console.log('google');
   try {
-    console.log("Request body:", req.body);
-
+console.log('hmmm');
     const user = await User.findOne({ email: req.body.email })
+    console.log(user,'user');
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      console.log('eeee');
+    const token=generateToken(res, user._id);
+      console.log(token,'token');
       const { password: hashedPassword, ...rest } = user._doc;
       const expiryDate = new Date(Date.now() + 3600000)
-           console.log("Generated Token:", token);
-
+console.log(expiryDate);
      
-      res.cookie('access_token', token, {
+      res.cookie('jwt', token, {
         httpOnly: true,
         expires: expiryDate
       }).status(200).json(rest)
     
     } else {
+      console.log('sdd');
       const generatedPassword = Math.random().toString(36).
         slice(-8) + Math.random().toString(36).slice(-8)
-      
+      console.log(generatedPassword,'generatedpassowes');
       const hashedPassword = bcryptjs.hashSync
         (generatedPassword, 10)
-      
+      console.log(hashedPassword,'hsshedpassowerd');
       const newUser = new User({
        name: req.body.name.split(" ").join("").toLowerCase() + Math.floor(Math.random * 10000).toString(),
         email: req.body.email,
         password: hashedPassword,
         profilephoto: req.body.photo
       })
+      console.log(newUser,'newUser');
       await newUser.save()
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET)
       const { password: hashedPassword2, ...rest } = newUser._doc;
@@ -381,18 +398,15 @@ const google = asyncHandler(async (req, res) => {
 const singlecourse = asyncHandler(async (req, res) => {
   try {
     const purchaseid = req.params.purchaseId
-    console.log(purchaseid, 'puurchaseid');
     const course = await Course.findById(purchaseid)
-    console.log(course,'course');
     if (!course) {
-      console.log('dhsaj');
    return res.status(404).json({error:'course not found'})
 
-    }console.log('djs');
+    }
+    
 
     res.json({ course })
   } catch (error) {
-console.log('nuewmd');
     res.status(500).json({ error: "Internal Server Error" });
     
   }
@@ -406,9 +420,9 @@ export {
   updateUserProfile,
   otpVerify,
   getAllCourses,
-  searchCourses,
-  sortCourses,
-  filterCourses,
+ searchSortFilterCourses,
+  // sortCourses,
+  // filterCourses,
   viewCourse,
   courseCategory,
   getInstructor,

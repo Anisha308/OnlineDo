@@ -113,13 +113,15 @@ const AddCourse = () => {
     }
   };
 
-  const addModule = (e, isVideo = false) => {
+  const addModule = (e) => {
     e.preventDefault();
 
-    const newModule = isVideo
-      ? { title: "", videos: [] }
-      : { title: "", videos: [] };
-    setModules([...modules, newModule]);
+      const newModule = {
+        title: "",
+        videos: [{ url: "" }], // Add a default video when adding a module
+    };
+        setModules([...modules, newModule]);
+
   };
 
   const addVideo = (e, moduleIndex) => {
@@ -366,17 +368,16 @@ const AddCourse = () => {
                         </div>
 
                         {index === modules.length - 1 && (
-                          <div className="flex items-center ml-auto px-2">
+                          <div className="flex items-center ml-auto px-3 ">
                             <button
                               className="module-input btn btn-outline-success w-30 px-4 pt-0 h-10 text-white bg-blue-900 rounded-md"
                               onClick={(e) => addModule(e)}
                             >
-                              +
+                            +
                             </button>
                           </div>
                         )}
-                        {/* </div>
-                          </div>  */}
+                 
                         <div className="md:flex justify-start ml-3">
                           <button
                             className="btn btn-outline-danger bg-red-500 text-white p-2 rounded-full flex items-center w-10 h-10 justify-center"
@@ -404,12 +405,12 @@ const AddCourse = () => {
                             className="flex items-center mb-3 ml-2"
                           >
                             <label
-                              className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                              className="block uppercase  text-blueGray-600 text-xs font-bold mb-2"
                               htmlFor={`video-${index}-${videoIndex}`}
                             >
                               Video{videoIndex + 1}
                             </label>
-                            <div className="flex items-center ml-2">
+                            {/* <div className="flex flex-row items-center ml-2"> */}
                               <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
                                 {loading ? (
                                   <img
@@ -448,13 +449,14 @@ const AddCourse = () => {
                                   className="btn btn-outline-success ml-5  w-19 px-5 h-10 text-white bg-blue-900 rounded-full"
                                   onClick={(e) => addVideo(e, index)}
                                 >
-                                 +
+                                 +Add video
                                  
                                 </button>
                               )}
                             </div>
-                          </div>
+                          // </div>
                         ))}
+                      
                     </div>
                   ))}
                 </div>
