@@ -26,8 +26,8 @@ const Allcourse = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState(null);
-  
-const [filterOrder, setFilterOrder] = useState(null);
+
+  const [filterOrder, setFilterOrder] = useState(null);
 
   useEffect(() => {
     if (data && data.courses) {
@@ -43,10 +43,10 @@ const [filterOrder, setFilterOrder] = useState(null);
 
   const handleSearchSortFilter = async (e) => {
     e.preventDefault();
-  e.stopPropagation();
+    e.stopPropagation();
 
     try {
-      const params = {}
+      const params = {};
       if (search) {
         params.query = search;
       }
@@ -55,14 +55,17 @@ const [filterOrder, setFilterOrder] = useState(null);
       }
 
       if (filterOrder) {
-      params.filterOrder=filterOrder
-    }
-    
-      const response = await apiInstance.get("/api/users/getcourse/searchSortFilter", {
-        params,
-      });
+        params.filterOrder = filterOrder;
+      }
+
+      const response = await apiInstance.get(
+        "/api/users/getcourse/searchSortFilter",
+        {
+          params,
+        }
+      );
       if (response.data && response.data.courses) {
-      setCourses(response.data.courses);
+        setCourses(response.data.courses);
       }
     } catch (error) {
       console.error("Error searching courses:", error.message);

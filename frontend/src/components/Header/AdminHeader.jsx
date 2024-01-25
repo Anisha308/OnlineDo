@@ -11,9 +11,9 @@ import { useDispatch } from "react-redux";
 const AdminHeader = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleStickyHeader = () => {
     window.addEventListener("scroll", () => {
@@ -31,12 +31,10 @@ const AdminHeader = () => {
 
   const logoutHandler = async () => {
     try {
-      
-     const res= await logoutApiCall().unwrap();
-     
+      const res = await logoutApiCall().unwrap();
+
       dispatch(adminlogout());
       navigate("/admin/Login");
-     
     } catch (err) {
       console.error("Error during logout:", err);
     }
@@ -63,7 +61,6 @@ const AdminHeader = () => {
           </div>
           {/*-------menu-------*/}
 
-          {/* ==================nav right ==============*/}
 
           <div className="flex items-center gap-4">
             <div className="text-white">Welcome Admin!</div>

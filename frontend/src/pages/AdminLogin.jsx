@@ -101,12 +101,7 @@ const submitHandler = async (e) => {
                     >
                       Password
                     </label>
-                    <a
-                      href="#"
-                      className="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline"
-                    >
-                      Forgot password?
-                    </a>
+        
                   </div>
                   <input
                     type="password"

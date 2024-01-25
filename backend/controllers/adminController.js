@@ -4,10 +4,11 @@ import generateTokenAdmin from "../utils/generateTokenAdmin.js";
 import destroyAdminToken from "../utils/destroyAdminToken.js";
 import User from "../models/userModel.js";
 import Instructor from "../models/InstructorModel.js";
-import Category from "../models/categoryModel.js"
+import Category from "../models/categoryModel.js";
 import destroyToken from "../utils/destroyUserToken.js";
 import destroyTokenInstructor from "../utils/destroyTokenInstructor.js";
 import sendEmail from "../utils/nodemailer.js";
+
 const authAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -84,7 +85,6 @@ const blockUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       expires: new Date(0),
     });
-    // localStorage.removeItem("userInfo");
 
     res.status(200).json({
       success: true,
@@ -93,7 +93,7 @@ const blockUser = asyncHandler(async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        mobile: user.mobile, // Add other relevant properties
+        mobile: user.mobile,
       },
     });
   } catch (error) {
@@ -112,7 +112,6 @@ const blockInstructor = asyncHandler(async (req, res) => {
       return;
     }
     destroyTokenInstructor(res);
-    // Update the block status
     instructor.Blocked = true;
     await instructor.save();
 
@@ -123,7 +122,7 @@ const blockInstructor = asyncHandler(async (req, res) => {
         _id: instructor._id,
         name: instructor.name,
         email: instructor.email,
-        mobile: instructor.mobile, // Add other relevant properties
+        mobile: instructor.mobile, 
       },
     });
   } catch (error) {
@@ -186,16 +185,13 @@ const unblockInstructor = asyncHandler(async (req, res) => {
   const { instructorId } = req.params;
   const instructor = await Instructor.findById(instructorId);
   if (instructor) {
-    // Check if the instructor is already unblocked
     if (!instructor.Blocked) {
       res.status(400);
       throw new Error("Instructor is already unblocked");
     }
 
-    // Unblock the instructor
     instructor.Blocked = false;
 
-    // Save the updated instructor data
     await instructor.save();
     res.status(200).json({
       message: "Instructor unblocked successfully",
@@ -206,28 +202,28 @@ const unblockInstructor = asyncHandler(async (req, res) => {
   }
 });
 
-
-const rejectmail = asyncHandler(async (req,res) => {
+const rejectmail = asyncHandler(async (req, res) => {
   try {
-    const { reason, instructorId } = req.body
+    const { reason, instructorId } = req.body;
     const subject = "Acess denied _ OnlineDo";
-    const text = `Your account has rejected by the admin due to ${reason}`
+    const text = `Your account has rejected by the admin due to ${reason}`;
     const instructor = await Instructor.findById(instructorId);
-    const { email } = instructor
+    const { email } = instructor;
     instructor.rejected = true;
-    instructor.rejectReason = reason
-    instructor.verified=false
+    instructor.rejectReason = reason;
+    instructor.verified = false;
     await instructor.save();
 
     const result = await sendEmail(email, subject, text);
-    res.json({ success: true, message: "Rejection email sent successfully",instructor });
-
+    res.json({
+      success: true,
+      message: "Rejection email sent successfully",
+      instructor,
+    });
   } catch (error) {
-    console.error(error,'error');
+    console.error(error, "error");
   }
- 
-})
-
+});
 
 const addCategories = asyncHandler(async (req, res) => {
   try {
@@ -265,5 +261,5 @@ export {
   getAllInstructors,
   rejectmail,
   addCategories,
-  getCategories
+  getCategories,
 };

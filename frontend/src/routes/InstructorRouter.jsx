@@ -6,8 +6,9 @@ import Addcourse from "../pages/Intructors/AddCourse.jsx";
 import InstructorProfile from "../pages/Intructors/InstructorProfile";
 import Instructor from "../pages/Intructors/Instructor.jsx";
 import InstructorHome from "../pages/InstructorHome.jsx";
-import InstructorCourseView from "../pages/Intructors/InstructorCourseView.jsx"
+import InstructorCourseView from "../pages/Intructors/InstructorCourseView.jsx";
 import { Routes, Route } from "react-router-dom";
+import UpdateCourse from "../pages/Intructors/UpdateCourse.jsx";
 
 function InstructorRouter() {
   return (
@@ -34,7 +35,14 @@ function InstructorRouter() {
         <Route path="/instructor" element={<InstructorHome />} />
 
         <Route path="/instructorconfirm" element={<Instructor />} />
-        <Route path="/instructor/instructorcourse/:id" element={<InstructorCourseView/>} />
+        <Route
+          path="/instructor/instructorcourse/:id"
+          element={<InstructorCourseView />}
+        />
+        <Route
+          path="/instructor/updatecourse/:id"
+          element={<UpdateCourse />}
+        ></Route>
       </Routes>
     </>
   );

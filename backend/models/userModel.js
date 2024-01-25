@@ -32,7 +32,6 @@ const userSchema = mongoose.Schema(
       type: String,
     },
     role: { type: String, default: "user" },
-
   },
   {
     timestamps: true,
@@ -40,17 +39,17 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword,this.password)
-}
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-   return next();
+    return next();
   }
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-next();
+  next();
 });
 
 const User = mongoose.model("User", userSchema);

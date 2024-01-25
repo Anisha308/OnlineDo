@@ -360,18 +360,54 @@ const showCategory = asyncHandler(async (req, res) => {
 
 const instructorviewCourse = asyncHandler(async (req, res) => {
   try {
-    console.log('dnnnnnnnnnnnnnnnnnnnnn');
     const courseId = req.params.id
-    console.log(courseId,'courseid');
     const course = await Course.findById(courseId);
-    console.log(course,'coursee');
     res.status(200).json({ success: true, course });
   } catch (error) {
     console.error("Error fetching course", error);
   }
 });
 
+const updatecourse = asyncHandler(async (req, res) => {
+  console.log('llllllllllllll');
+  try {
+    const courseId = req.params.id;
+    const updatedCourse = req.body
+    
+    const result =await Course.findByIdAndUpdate(courseId,updatedCourse,{new:true})
+   if (!result) {
+     return res.status(404).json({ message: "Course not found" });
+   }
 
+   res
+     .status(200)
+     .json({ message: "Course updated successfully", course: result });
+  } catch (error) {
+        console.error(error);
+
+        res.status(500).json({ message: "Internallllllllll Server Error" });
+
+  }
+})
+
+const getcoursetoupdate = asyncHandler(async (req, res) => {
+  console.log('hhhhhhhhhhhhhooooooooohhh');
+  try {
+    const id = req.params.id;
+    console.log(id,'id');
+    const course = await findById(id)
+    console.log(course,'course');
+    if (!course) {
+           return res.status(404).json({ message: "Course not found" });
+
+    }res
+      .status(200)
+      .json({ message: "Course fetched successfully", course});
+  } catch (error) {
+            console.error(error);
+
+  }
+})
 export {
   authInstructor,
   registerInstructor,
@@ -382,5 +418,7 @@ export {
   getInstructorCourses,
   instructotpVerify,
   showCategory,
-  instructorviewCourse
+  instructorviewCourse,
+  updatecourse,
+  getcoursetoupdate,
 };

@@ -17,10 +17,12 @@ const courseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    category:[{
-      type: String,
-      required:true,
-    }],
+    category: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     price: {
       type: Number,
       required: true,
@@ -49,8 +51,8 @@ const courseSchema = new mongoose.Schema(
     ],
     thumbnail: {
       type: String,
-      required:true
-    }
+      required: true,
+    },
   },
   {
     timestamps: true,

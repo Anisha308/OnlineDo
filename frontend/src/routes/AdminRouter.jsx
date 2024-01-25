@@ -1,11 +1,10 @@
-import React from 'react'
-import AdminLogin from '../pages/AdminLogin'
+import React from "react";
+import AdminLogin from "../pages/AdminLogin";
 import Userlists from "../pages/Admin/Userlists.jsx";
 import Instructorlist from "../pages/Admin/Instructorlist.jsx";
 import AddCategories from "../pages/Admin/AddCategories.jsx";
 
 import { Routes, Route } from "react-router-dom";
-
 
 const AdminRouter = () => {
   return (
@@ -19,6 +18,6 @@ const AdminRouter = () => {
       </Routes>
     </div>
   );
-}
+};
 
-export default AdminRouter
+export default AdminRouter;

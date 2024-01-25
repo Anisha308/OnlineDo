@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
 import { Navigation } from "react-minimal-side-navigation";
 import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
-import Icon from './Icons';
+import Icon from "./Icons";
 import { NavLink, Link } from "react-router-dom";
-
 
 const InstructorSidebar = ({ instructorId }) => {
   return (
@@ -45,7 +44,6 @@ const InstructorSidebar = ({ instructorId }) => {
               },
             ],
           },
-           
         ]}
       />
     </div>

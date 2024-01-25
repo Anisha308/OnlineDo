@@ -32,7 +32,7 @@ const InstructorLogin = () => {
       // Redirect to instructor page if token exists
       navigate("/instructor");
     }
-  }, [ navigate]);
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     setFormData((prevState) => ({

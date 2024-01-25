@@ -1,14 +1,14 @@
-import React,{useEffect,useRef} from 'react'
-import ONLINEDO from '../../assets/images/ONLINEDO.png'
-import {NavLink,Link} from 'react-router-dom'
-import userImg from '../../assets/images/profile.png'
-import {BiMenu} from 'react-icons/bi'
-import { Navbar, Nav, Container, NavDropdown} from "react-bootstrap";
+import React, { useEffect, useRef } from "react";
+import ONLINEDO from "../../assets/images/ONLINEDO.png";
+import { NavLink, Link } from "react-router-dom";
+import userImg from "../../assets/images/profile.png";
+import { BiMenu } from "react-icons/bi";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useLogoutMutation } from "../../Slices/usersApiSlice"
-import { logout } from "../../Slices/authSlice"
+import { useLogoutMutation } from "../../Slices/usersApiSlice";
+import { logout } from "../../Slices/authSlice";
 
 const navLinks = [
   {
@@ -23,15 +23,13 @@ const navLinks = [
     path: "/contact",
     display: "Contact",
   },
-  
 ];
 
 const Header = () => {
+  const headerRef = useRef(null);
+  const menuRef = useRef(null);
 
-  const headerRef = useRef(null)
-  const menuRef = useRef(null)
-  
-    const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -48,24 +46,25 @@ const Header = () => {
   };
   const handleStickyHeader = () => {
     if (headerRef.current) {
-      window.addEventListener('scroll', () => {
-        if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-          headerRef.current.classList.add('sticky__header')
+      window.addEventListener("scroll", () => {
+        if (
+          document.body.scrollTop > 80 ||
+          document.documentElement.scrollTop > 80
+        ) {
+          headerRef.current.classList.add("sticky__header");
+        } else {
+          headerRef.current.classList.remove("sticky__header");
         }
-        else {
-          headerRef.current.classList.remove('sticky__header')
-        }
-      
-      })
+      });
     }
-  }
+  };
   useEffect(() => {
-    handleStickyHeader()
-    return () => window.removeEventListener('scroll', handleStickyHeader)
-  },[headerRef])
-  
-  const toggleMenu = () => menuRef.current.classList.toggle('show__menu')
-  
+    handleStickyHeader();
+    return () => window.removeEventListener("scroll", handleStickyHeader);
+  }, [headerRef]);
+
+  const toggleMenu = () => menuRef.current.classList.toggle("show__menu");
+
   return (
     <header className="header flex Items-center bg-blue-900" ref={headerRef}>
       <div className="container">
@@ -102,7 +101,6 @@ const Header = () => {
           <div className="flex items-center gap-4">
             {userInfo ? (
               <div className="flex items-center">
-              
                 <span className="mr-2 text-white">Welcome {userInfo.name}</span>
                 <div>
                   <Link to={`/profile/${userInfo._id}`}>
@@ -140,6 +138,6 @@ const Header = () => {
       </div>
     </header>
   );
-}
+};
 
-export default Header
+export default Header;

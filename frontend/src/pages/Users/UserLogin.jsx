@@ -127,9 +127,9 @@ const Login = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center"></div>
                   <div className="text-sm">
-                    <a href="#" className="text-indigo-400 hover:text-blue-500">
+                    {/* <a href="#" className="text-indigo-400 hover:text-blue-500">
                       Forgot your password?
-                    </a>
+                    </a> */}
                   </div>
                 </div>
                 <div>
@@ -140,7 +140,7 @@ const Login = () => {
                   >
                     Sign in
                   </button>
-                  <OAuth/>
+                  <OAuth />
                 </div>
                 <p className="flex flex-col items-center justify-center mt-10 text-center text-md text-gray-500">
                   <span>Don't have an account?</span>

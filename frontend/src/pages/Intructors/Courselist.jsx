@@ -16,11 +16,11 @@ import { Style } from "@mui/icons-material";
 
 const Courselists = () => {
   const { instructorId } = useParams();
-const Navigate=useNavigate()
+  const Navigate = useNavigate();
   const { data, error, isLoading } = useGetCourseQuery(instructorId);
 
   const [courses, setCourses] = useState([]);
-const [instructor,setInstructor]=useState([])
+  const [instructor, setInstructor] = useState([]);
   useEffect(() => {
     if (data && data.courses) {
       setCourses(data.courses);
@@ -28,7 +28,7 @@ const [instructor,setInstructor]=useState([])
     } else if (error && error.status === 401) {
       Navigate("/instructorLogin");
     }
-  }, [data,error]);
+  }, [data, error]);
 
   return (
     <div className="flex  ">
@@ -37,49 +37,42 @@ const [instructor,setInstructor]=useState([])
         {isLoading && <div>Loading...</div>}
 
         {courses &&
-           instructor &&
+          instructor &&
           courses.map((course, index) => (
-            <Link to={{
-              pathname: `/instructor/instructorcourse/${course._id}`,
-              state:{course},
-            }}
+            <Link
+              to={{
+                pathname: `/instructor/instructorcourse/${course._id}`,
+                state: { course },
+              }}
               key={index}
               className="hover:no-underline"
             >
-             
-            <Card key={index} className="w-[332px] mb-7 p-2  flex-none">
-              <CardHeader floated={false} className="h-44 ">
-                <img
-                  src={course.thumbnail}
-                  alt="profile-picture"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              </CardHeader>
-              <CardBody className="text-start">
-                <Typography
-                  variant="h8"
-                  className="font-bold"
-                >
-                  {course.courseName}
-                </Typography>
-                <Typography color="blue-gray" className="mb-2" textGradient>
-                  {instructor.name}
-                </Typography>
-                <Typography color="blue-gray" className="mb-" textGradient>
-                  ₹ {course.price}
-                </Typography>
-              </CardBody>
-           
+              <Card key={index} className="w-[332px] mb-7 p-2  flex-none">
+                <CardHeader floated={false} className="h-44 ">
+                  <img
+                    src={course.thumbnail}
+                    alt="profile-picture"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </CardHeader>
+                <CardBody className="text-start">
+                  <Typography variant="h8" className="font-bold">
+                    {course.courseName}
+                  </Typography>
+                  <Typography color="blue-gray" className="mb-2" textGradient>
+                    {instructor.name}
+                  </Typography>
+                  <Typography color="blue-gray" className="mb-" textGradient>
+                    ₹ {course.price}
+                  </Typography>
+                </CardBody>
               </Card>
-          </Link>
-          )
-          )
-        }
-          
+            </Link>
+          ))}
       </div>
     </div>
   );

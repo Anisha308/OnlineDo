@@ -4,11 +4,10 @@ import Course from "../models/courseModel.js";
 import generateToken from "../utils/generateToken.js";
 import generateOTP from "../utils/otp.js";
 import sendEmail from "../utils/nodemailer.js";
-import Instructor from "../models/InstructorModel.js"
+import Instructor from "../models/InstructorModel.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import Category from "../models/categoryModel.js"
-import Purchase from "../models/purchaseModel.js"
+import Category from "../models/categoryModel.js";
 
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -52,6 +51,8 @@ const authUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid email or password");
   }
 });
+
+
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, mobile, password } = req.body;
@@ -106,6 +107,8 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+
+
 const logoutUser = (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
@@ -113,6 +116,8 @@ const logoutUser = (req, res) => {
   });
   res.status(200).json({ message: "Logged out successfully" });
 };
+
+
 
 const otpVerify = async (req, res) => {
   try {
@@ -153,6 +158,8 @@ const otpVerify = async (req, res) => {
   }
 };
 
+
+
 const getUserProfile = asyncHandler(async (req, res) => {
   try {
     const userId = req.params.id;
@@ -171,15 +178,19 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+
+
 const viewCourse = asyncHandler(async (req, res) => {
   try {
     const courseId = req.params.id;
     const course = await Course.findById(courseId);
     res.status(200).json({ success: true, course });
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching course", error);
   }
 });
+
+
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
     const userId = req.params.id;
@@ -217,6 +228,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+
+
 const getAllCourses = asyncHandler(async (req, res) => {
   try {
     const courses = await Course.find(
@@ -231,8 +244,7 @@ const getAllCourses = asyncHandler(async (req, res) => {
         thumbnail: 1,
         _id: 1,
       }
-    )
-      .populate("instructor", "name")
+    ).populate("instructor", "name");
 
     const transformedCourses = courses.map((course) => course.toJSON());
     res.status(200).json({ success: true, courses: transformedCourses });
@@ -241,20 +253,21 @@ const getAllCourses = asyncHandler(async (req, res) => {
   }
 });
 
+
+
 const searchSortFilterCourses = asyncHandler(async (req, res) => {
   try {
-    const { query,sortBy,filterOrder } = req.query;
-   
-     let queryCriteria = {};
-     let sortOption = {};
-     let filterOption = {};
+    const { query, sortBy, filterOrder } = req.query;
 
-   
+    let queryCriteria = {};
+    let sortOption = {};
+    let filterOption = {};
+
     if (query) {
-queryCriteria = {
-    courseName: { $regex: query, $options: "i" },
-  };
-}
+      queryCriteria = {
+        courseName: { $regex: query, $options: "i" },
+      };
+    }
     if (sortBy) {
       switch (sortBy) {
         case "lowtohigh":
@@ -289,9 +302,9 @@ queryCriteria = {
       }
     }
 
-      const finalQuery = {
-        ...queryCriteria,
-        ...filterOption,
+    const finalQuery = {
+      ...queryCriteria,
+      ...filterOption,
     };
     const courses = await Course.find(finalQuery).sort(sortOption);
     res.status(200).json({ success: true, courses });
@@ -300,30 +313,7 @@ queryCriteria = {
   }
 });
 
-const sortCourses = asyncHandler(async (req, res) => {
-  try {
-    const { query } = req.query;
-    let sortOption;
-    switch (query) {
-      case "lowtohigh":
-        sortOption = { price: 1 };
-        break;
-      case "hightolow":
-        sortOption = { price: -1 };
-        break;
-      case "newest":
-        sortOption = { createdAt: -1 };
-        break;
-      default:
-        sortOption = { createdAt: 1 };
-        break;
-    }
-    const courses = await Course.find({}).sort(sortOption);
-    res.status(200).json({ success: true, courses });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+
 
 
 const courseCategory = asyncHandler(async (req, res) => {
@@ -335,6 +325,8 @@ const courseCategory = asyncHandler(async (req, res) => {
     console.error("Error fetching category", error);
   }
 });
+
+
 const getInstructor = asyncHandler(async (req, res) => {
   try {
     const instructorid = req.params.instructorId;
@@ -347,70 +339,69 @@ const getInstructor = asyncHandler(async (req, res) => {
   }
 });
 
+
+
 const google = asyncHandler(async (req, res) => {
-  console.log('google');
   try {
-console.log('hmmm');
-    const user = await User.findOne({ email: req.body.email })
-    console.log(user,'user');
+    const user = await User.findOne({ email: req.body.email });
     if (user) {
-      console.log('eeee');
-    const token=generateToken(res, user._id);
-      console.log(token,'token');
+      const token = generateToken(res, user._id);
       const { password: hashedPassword, ...rest } = user._doc;
-      const expiryDate = new Date(Date.now() + 3600000)
-console.log(expiryDate);
-     
-      res.cookie('jwt', token, {
-        httpOnly: true,
-        expires: expiryDate
-      }).status(200).json(rest)
-    
+      const expiryDate = new Date(Date.now() + 3600000);
+
+      res
+        .cookie("jwt", token, {
+          httpOnly: true,
+          expires: expiryDate,
+        })
+        .status(200)
+        .json(rest);
     } else {
-      console.log('sdd');
-      const generatedPassword = Math.random().toString(36).
-        slice(-8) + Math.random().toString(36).slice(-8)
-      console.log(generatedPassword,'generatedpassowes');
-      const hashedPassword = bcryptjs.hashSync
-        (generatedPassword, 10)
-      console.log(hashedPassword,'hsshedpassowerd');
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
       const newUser = new User({
-       name: req.body.name.split(" ").join("").toLowerCase() + Math.floor(Math.random * 10000).toString(),
+        name:
+          req.body.name.split(" ").join("").toLowerCase() +
+          Math.floor(Math.random * 10000).toString(),
         email: req.body.email,
         password: hashedPassword,
-        profilephoto: req.body.photo
-      })
-      console.log(newUser,'newUser');
-      await newUser.save()
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET)
+        profilephoto: req.body.photo,
+      });
+      await newUser.save();
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
       const { password: hashedPassword2, ...rest } = newUser._doc;
-      const expiryDate = new Date(Date.now() + 3600000)
-      res.cookie('access_token', token, {
-        httpOnly: true,
-        expires:expiryDate,
-      }).status(200).json(rest)
+      const expiryDate = new Date(Date.now() + 3600000);
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          expires: expiryDate,
+        })
+        .status(200)
+        .json(rest);
     }
   } catch (error) {
-    console.error("error in google auth",error);
+    console.error("error in google auth", error);
   }
-})
+});
+
+
 
 const singlecourse = asyncHandler(async (req, res) => {
   try {
-    const purchaseid = req.params.purchaseId
-    const course = await Course.findById(purchaseid)
+    const purchaseid = req.params.purchaseId;
+    const course = await Course.findById(purchaseid);
     if (!course) {
-   return res.status(404).json({error:'course not found'})
-
+      return res.status(404).json({ error: "course not found" });
     }
-    
 
-    res.json({ course })
+    res.json({ course });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
-    
   }
-})
+});
+
 
 export {
   authUser,
@@ -420,12 +411,10 @@ export {
   updateUserProfile,
   otpVerify,
   getAllCourses,
- searchSortFilterCourses,
-  // sortCourses,
-  // filterCourses,
+  searchSortFilterCourses,
   viewCourse,
   courseCategory,
   getInstructor,
   google,
-singlecourse
+  singlecourse,
 };

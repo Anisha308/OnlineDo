@@ -10,17 +10,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { instructorSetCredentials } from "../../Slices/instructorApiSlice";
 
 const InstructorProfile = () => {
-  const instruct = useSelector((state) => state.instructorAuth.instructorInfo)
-  const dispatch=useDispatch()
+  const instruct = useSelector((state) => state.instructorAuth.instructorInfo);
+  const dispatch = useDispatch();
 
-  const [getProfile] = useGetInstructProfileMutation()
-  
+  const [getProfile] = useGetInstructProfileMutation();
+
   const [instructors, setInstructors] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInstructorId, setSelectedInstructorId] = useState(null); // Add this state
   const [count, setCount] = useState(0);
-  const [showDocmodal, setShowDocmodal] = useState(false)
-  const [showcerificate,setShowCerticate]=useState(false)
+  const [showDocmodal, setShowDocmodal] = useState(false);
+  const [showcerificate, setShowCerticate] = useState(false);
   const [editedInstructorData, setEditedInstructorData] = useState({
     name: "",
     email: "",
@@ -30,25 +30,24 @@ const InstructorProfile = () => {
     companyname: "",
     profilephoto: "",
     experienceCertificateFile: "",
-    idProof: ""
+    idProof: "",
   });
-const navigate=useNavigate()
+  const navigate = useNavigate();
   const [updateProfile, { isLoading: isUpdating }] =
     useUpdateInstructProfileMutation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getProfile({ instructorId: instruct?._id || null})
-        setInstructors(data.data.instructors)
-     
+        const data = await getProfile({ instructorId: instruct?._id || null });
+        setInstructors(data.data.instructors);
       } catch (error) {
-        console.log('error fetching', error);
-      navigate('/instructorLogin')
+        console.log("error fetching", error);
+        navigate("/instructorLogin");
       }
-    }
-    fetchData()
-  }, [count,getProfile]);
+    };
+    fetchData();
+  }, [count, getProfile]);
 
   const handleEditProfile = () => {
     setEditedInstructorData({
@@ -60,29 +59,28 @@ const navigate=useNavigate()
       companyname: instructors.companyname || "",
       profilephoto: instructors.profilephoto || "",
       experienceCertificateFile: instructors.experienceCertificateFile || "",
-      idProof:instructors.idProof|| "",
+      idProof: instructors.idProof || "",
     });
     setSelectedInstructorId(instructors._id); // Set the selected user ID
 
     setIsModalOpen(true);
   };
   const handleview = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-  setShowDocmodal(true)
+      setShowDocmodal(true);
     } catch (error) {
-      console.error(error,'error viewing idproof');
+      console.error(error, "error viewing idproof");
     }
-   
-  }
-   const handlecertificateview = (e) => {
-     e.preventDefault();
-     try {
-       setShowCerticate(true);
-     } catch (error) {
-       console.error(error, "error viewing idproof");
-     }
-   };
+  };
+  const handlecertificateview = (e) => {
+    e.preventDefault();
+    try {
+      setShowCerticate(true);
+    } catch (error) {
+      console.error(error, "error viewing idproof");
+    }
+  };
   const handleUpdateProfile = async () => {
     try {
       const response = await updateProfile({
@@ -92,22 +90,22 @@ const navigate=useNavigate()
       if (response.error) {
         console.error("Profile update failed:", response.error.message);
       } else {
-       dispatch(instructorSetCredentials(response));
+        dispatch(instructorSetCredentials(response));
 
-       setCount((prevCount) => prevCount + 1);
+        setCount((prevCount) => prevCount + 1);
 
-       setIsModalOpen(false);
+        setIsModalOpen(false);
       }
     } catch (error) {
       console.error("An error occurred while updating profile:", error);
     }
   };
   const close = () => {
-  setShowDocmodal(false)
-  }
+    setShowDocmodal(false);
+  };
   const certificateclose = () => {
-    setShowCerticate(false)
-  }
+    setShowCerticate(false);
+  };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
@@ -138,19 +136,19 @@ const navigate=useNavigate()
   };
 
   const handleidFileChange = (e) => {
-     const file = e.target.files[0];
+    const file = e.target.files[0];
 
-     if (file) {
-       const reader = new FileReader();
-       reader.onloadend = () => {
-         setEditedInstructorData((prevData) => ({
-           ...prevData,
-           idProof: reader.result,
-         }));
-       };
-       reader.readAsDataURL(file);
-     }
-  }
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditedInstructorData((prevData) => ({
+          ...prevData,
+          idProof: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };

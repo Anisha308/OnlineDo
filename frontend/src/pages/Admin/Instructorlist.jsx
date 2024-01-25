@@ -33,7 +33,7 @@ const InstructorLists = () => {
       navigate("/admin/Login");
     }
   }, [data]);
-  
+
   const openPreview = (image) => {
     setPreviewImage(image);
   };
@@ -131,14 +131,13 @@ const InstructorLists = () => {
         reason,
         instructorId: selectedInstructor._id,
       });
-  setInstructors((prevInstructors) =>
-    prevInstructors.map((instructor) =>
-      instructor._id === selectedInstructor._id
-        ? { ...instructor, rejected: true }
-        : instructor
-    )
-  );
-
+      setInstructors((prevInstructors) =>
+        prevInstructors.map((instructor) =>
+          instructor._id === selectedInstructor._id
+            ? { ...instructor, rejected: true }
+            : instructor
+        )
+      );
 
       setShowVerificationModal(false);
       toast.success("Rejected successfully");
@@ -460,14 +459,6 @@ const InstructorLists = () => {
       )}
       <div className="flex items-center justify-center h-screen">
         <div x-data="{ showModal: true, email: '' }">
-          {/* Button to open the modal */}
-          <button
-            onClick={() => setReject(true)}
-            className="w-full px-4 py-2 text-sm text-white font-medium text-white bg-blue-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            You are about to reject the instructor.Are you sure??
-          </button>
-          {/* Background overlay */}
           {reject && (
             <div
               className="fixed inset-0 transition-opacity"

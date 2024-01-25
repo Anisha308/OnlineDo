@@ -67,5 +67,5 @@ export const {
   useVerifyInstructorMutation,
   useGetInstructorlistQuery,
   useBlockInstructorMutation,
-  useUnblockInstructorMutation
+  useUnblockInstructorMutation,
 } = adminApiSlice;

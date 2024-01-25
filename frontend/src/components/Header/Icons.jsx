@@ -2,7 +2,6 @@ import React from "react";
 import { FaInbox, FaUsers } from "react-icons/fa";
 import { FaUserGraduate } from "react-icons/fa";
 
-
 const Icon = ({ name }) => {
   switch (name) {
     case "inbox":

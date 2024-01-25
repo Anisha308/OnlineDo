@@ -36,7 +36,6 @@ const InstructorSignup = () => {
   const [verifyOtp] = useInstructverifyOtpMutation();
   const { instructorInfo } = useSelector((state) => state.authInstructor) || {};
 
-
   const handleInputChange = (e) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -51,7 +50,7 @@ const InstructorSignup = () => {
   };
 
   const handleModalSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const {
         name,
@@ -82,7 +81,6 @@ const InstructorSignup = () => {
       setIsModalOpen(false);
       setEmailverify(true);
       toast.success("otp send successful");
-
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -125,14 +123,11 @@ const InstructorSignup = () => {
           setIsModalOpen(false); // Open the Email Verification Modal
 
           toast.success("Registration successfull");
-navigate("/instructorLogin");
+          navigate("/instructorLogin");
         } else {
           console.error("OTP verification failed:", data.message);
           // Handle OTP verification failure
         }
-
-      
-
       }
     } catch (error) {
       console.error("Error triggering OTP verification:", error.message);
@@ -393,7 +388,7 @@ navigate("/instructorLogin");
                       onChange={handleExperienceCertificateUpload}
                     />
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <button
                       type="button"

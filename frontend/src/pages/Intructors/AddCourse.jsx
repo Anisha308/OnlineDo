@@ -116,12 +116,11 @@ const AddCourse = () => {
   const addModule = (e) => {
     e.preventDefault();
 
-      const newModule = {
-        title: "",
-        videos: [{ url: "" }], // Add a default video when adding a module
+    const newModule = {
+      title: "",
+      videos: [{ url: "" }], // Add a default video when adding a module
     };
-        setModules([...modules, newModule]);
-
+    setModules([...modules, newModule]);
   };
 
   const addVideo = (e, moduleIndex) => {
@@ -373,11 +372,11 @@ const AddCourse = () => {
                               className="module-input btn btn-outline-success w-30 px-4 pt-0 h-10 text-white bg-blue-900 rounded-md"
                               onClick={(e) => addModule(e)}
                             >
-                            +
+                              +
                             </button>
                           </div>
                         )}
-                 
+
                         <div className="md:flex justify-start ml-3">
                           <button
                             className="btn btn-outline-danger bg-red-500 text-white p-2 rounded-full flex items-center w-10 h-10 justify-center"
@@ -411,52 +410,50 @@ const AddCourse = () => {
                               Video{videoIndex + 1}
                             </label>
                             {/* <div className="flex flex-row items-center ml-2"> */}
-                              <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
-                                {loading ? (
-                                  <img
-                                    className="h-16 w-16"
-                                    src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
-                                    alt=""
-                                  />
-                                ) : (
-                                  <svg
-                                    className="w-8 h-8"
-                                    fill="currentColor"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-                                  </svg>
-                                )}
-
-                                <span className="mt-2 text-base leading-normal">
-                                  Select a file
-                                </span>
-                                <input
-                                  type="file"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    handleOnUpload(
-                                      e.target.files[0],
-                                      index,
-                                      videoIndex
-                                    );
-                                  }}
+                            <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
+                              {loading ? (
+                                <img
+                                  className="h-16 w-16"
+                                  src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                                  alt=""
                                 />
-                              </label>
-                              {videoIndex === module.videos.length - 1 && (
-                                <button
-                                  className="btn btn-outline-success ml-5  w-19 px-5 h-10 text-white bg-blue-900 rounded-full"
-                                  onClick={(e) => addVideo(e, index)}
+                              ) : (
+                                <svg
+                                  className="w-8 h-8"
+                                  fill="currentColor"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 20 20"
                                 >
-                                 +Add video
-                                 
-                                </button>
+                                  <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
                               )}
-                            </div>
+
+                              <span className="mt-2 text-base leading-normal">
+                                Select a file
+                              </span>
+                              <input
+                                type="file"
+                                className="hidden"
+                                onChange={(e) => {
+                                  handleOnUpload(
+                                    e.target.files[0],
+                                    index,
+                                    videoIndex
+                                  );
+                                }}
+                              />
+                            </label>
+                            {videoIndex === module.videos.length - 1 && (
+                              <button
+                                className="btn btn-outline-success ml-5  w-19 px-5 h-10 text-white bg-blue-900 rounded-full"
+                                onClick={(e) => addVideo(e, index)}
+                              >
+                                +Add video
+                              </button>
+                            )}
+                          </div>
                           // </div>
                         ))}
-                      
                     </div>
                   ))}
                 </div>

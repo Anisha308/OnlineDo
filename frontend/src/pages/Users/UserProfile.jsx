@@ -9,7 +9,6 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { setCredentials } from "../../Slices/authSlice";
 
-
 const UserProfile = () => {
   const user = useSelector((state) => state.auth.userInfo);
   const dispatch = useDispatch();
@@ -64,13 +63,13 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-       try {
-        const data = await getProfile({ userId:user?._id || null});
+      try {
+        const data = await getProfile({ userId: user?._id || null });
         setUsers(data.data.users);
-       } catch (error) {
-         console.log("error fetching:", error);
-         navigate("/login")
-       }
+      } catch (error) {
+        console.log("error fetching:", error);
+        navigate("/login");
+      }
     };
     fetchData();
   }, [count, getProfile]);
@@ -205,7 +204,10 @@ const UserProfile = () => {
                   <p className="mb-2 ">courses :</p>
                 </div>
                 <div className="col-sm-9">
-                  <button className="text-muted mb-2 ml-16">
+                  <button
+                    className="text-muted mb-2 ml-16"
+                    onClick={() => navigate(`/${user._id}/purchaselist`)}
+                  >
                     Enrolled Courses
                   </button>
                 </div>

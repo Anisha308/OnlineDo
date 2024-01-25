@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-
 const adminSchema = mongoose.Schema(
   {
     name: {
@@ -23,7 +22,6 @@ const adminSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    
   },
   {
     timestamps: true,

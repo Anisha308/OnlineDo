@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SideBar from "../../components/Header/SideBar"
+import SideBar from "../../components/Header/SideBar";
 import apiInstance from "../../../Api";
 import { toast } from "react-toastify";
 import { Navigate, useNavigate } from "react-router-dom";

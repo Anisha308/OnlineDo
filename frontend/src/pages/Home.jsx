@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
 import { MdOutlineVideoLibrary } from "react-icons/md";
 import { PiUsersBold } from "react-icons/pi";
 import { LuClock } from "react-icons/lu";
-import { useSelector } from 'react-redux';
-
+import { useSelector } from "react-redux";
 
 function Home() {
   return (
@@ -84,4 +83,4 @@ function Home() {
   );
 }
 
-export default Home
+export default Home;

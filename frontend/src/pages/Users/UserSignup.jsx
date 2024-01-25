@@ -39,7 +39,7 @@ const SignUp = () => {
   useEffect(() => {
     if (userInfo) {
       setIsEmailVerificationModalOpen(true); // Open the email verification modal
-      navigate('/')
+      navigate("/");
     }
   }, [userInfo]);
   const onRequestClose = () => {
@@ -90,7 +90,6 @@ const SignUp = () => {
         toast.error("Invalid otp");
 
         console.error("OTP verification failed:", response.error);
-        // Handle OTP verification failure
       } else {
         const data = response.data;
 

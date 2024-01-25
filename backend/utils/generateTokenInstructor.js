@@ -1,9 +1,13 @@
 import jwt from "jsonwebtoken";
 
 const generateTokenInstructor = (res, instructorId) => {
-  const token = jwt.sign({ instructorId,role:'instructor' }, process.env.INSTRUCTOR_SECRET, {
-    expiresIn: "30d",
-  });
+  const token = jwt.sign(
+    { instructorId, role: "instructor" },
+    process.env.INSTRUCTOR_SECRET,
+    {
+      expiresIn: "30d",
+    }
+  );
 
   res.cookie("instructorjwt", token, {
     httpOnly: true,

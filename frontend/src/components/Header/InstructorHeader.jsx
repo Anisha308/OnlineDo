@@ -15,7 +15,7 @@ const InstructorHeader = () => {
   const menuRef = useRef(null);
 
   const { instructorInfo } = useSelector((state) => state.instructorAuth);
- 
+
   const instructorId = instructorInfo ? instructorInfo._id : null; // Assuming _id is the instructor's unique identifier
 
   const dispatch = useDispatch();
@@ -35,22 +35,21 @@ const InstructorHeader = () => {
     });
   };
 
-   const navLinks = [
-     {
-       path: "/home",
-       display: "Home",
-     },
-     {
-       path: `/instructor/${instructorId}/courselist`,
-       display: "Courses",
-     },
-   ];
+  const navLinks = [
+    {
+      path: "/home",
+      display: "Home",
+    },
+    {
+      path: `/instructor/${instructorId}/courselist`,
+      display: "Courses",
+    },
+  ];
 
   const [logoutApiCall] = useInstructorlogoutMutation();
 
   const logoutHandler = async () => {
     try {
-      
       await logoutApiCall().unwrap();
       dispatch(instructlogout());
 
@@ -140,6 +139,6 @@ const InstructorHeader = () => {
       </div>
     </header>
   );
-}
+};
 
 export default InstructorHeader;
