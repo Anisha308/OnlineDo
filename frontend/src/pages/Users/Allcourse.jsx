@@ -13,18 +13,22 @@ import { useGetAllCourseQuery } from "../../Slices/usersApiSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ViewCourse from "./ViewCourse";
-const ITEMS_PER_PAGE = 6;
+
+const ITEMS_PER_PAGE = 2;
 
 const Allcourse = () => {
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useGetAllCourseQuery();
+  const { data, error, isLoading } = useGetAllCourseQuery(ITEMS_PER_PAGE);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1); // Assuming a default value of 1
+
+  const [totalPages, setTotalPages] = useState(1); // Assuming a default value of 1
+
   const [sortBy, setSortBy] = useState(null);
 
   const [filterOrder, setFilterOrder] = useState(null);
@@ -32,14 +36,20 @@ const Allcourse = () => {
   useEffect(() => {
     if (data && data.courses) {
       setCourses(data.courses);
+      // Calculate total pages
+      const totalPagesCount = Math.ceil(data.courses.length / ITEMS_PER_PAGE);
+      setTotalPages(totalPagesCount);
     }
   }, [data]);
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
+  const indexOfLastCourse = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstCourse = indexOfLastCourse - ITEMS_PER_PAGE;
+  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
+const isLastPage = currentPage === totalPages;
 
-  const totalPages = Math.ceil((courses && courses.length) / ITEMS_PER_PAGE);
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleSearchSortFilter = async (e) => {
     e.preventDefault();
@@ -70,6 +80,10 @@ const Allcourse = () => {
     } catch (error) {
       console.error("Error searching courses:", error.message);
     }
+  };
+  // Allcourse component
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -392,11 +406,80 @@ const Allcourse = () => {
                             </div>
                           </div>
 
-                          <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            handlePageChange={handlePageChange}
-                          />
+                          <div className="mt-auto mb-4">
+                            <nav>
+                              <ul className="flex ">
+                                <li>
+                                  <a
+                                    className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                                      isLastPage ? "disabled" : ""
+                                    }`}
+                                    href="#"
+                                    onClick={() =>
+                                      handlePageChange(
+                                        currentPage > 1 ? currentPage - 1 : 1
+                                      )
+                                    }
+                                    aria-label="Previous"
+                                    disabled={currentPage === 1}
+                                  >
+                                    <span className="material-icons text-sm">
+                                      keyboard_arrow_left
+                                    </span>
+                                  </a>
+                                </li>
+                                {[...Array(totalPages)].map((page, index) => (
+                                  <li key={index}>
+                                    <a
+                                      className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-300 p-0 text-sm text-black shadow-md transition duration-150 ease-in-out ${
+                                        currentPage === index + 1
+                                          ? "bg-gray-500"
+                                          : ""
+                                      }`}
+                                      href="#"
+                                      onClick={() =>
+                                        handlePageChange(index + 1)
+                                      }
+                                    >
+                                      {index + 1}
+                                    </a>
+                                  </li>
+                                ))}
+                                <li>
+                                  <a
+                                    className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                                      currentPage === totalPages
+                                        ? "disabled"
+                                        : ""
+                                    }`}
+                                    href="#"
+                                    onClick={() =>
+                                      handlePageChange(
+                                        currentPage < totalPages
+                                          ? currentPage + 1
+                                          : totalPages
+                                      )
+                                    }
+                                    aria-label="Next"
+                                    disabled={isLastPage}
+                                  >
+                                    <span className="material-icons text-sm">
+                                      keyboard_arrow_right
+                                    </span>
+                                  </a>
+                                </li>
+                              </ul>
+                            </nav>
+
+                            <link
+                              rel="stylesheet"
+                              href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
+                            />
+                            <link
+                              href="https://fonts.googleapis.com/icon?family=Material+Icons"
+                              rel="stylesheet"
+                            />
+                          </div>
                         </div>
                       }
                     </div>

@@ -12,10 +12,10 @@ import {
   logoutAdmin,
   unblockInstructor,
   rejectmail,
-  addCategories,
-  getCategories,
+ 
 } from "../controllers/adminController.js";
-
+import { addCategories,
+  getCategories} from "../controllers/categoryController.js"
 router.post("/auth", authAdmin);
 router.post("/logout", logoutAdmin);
 

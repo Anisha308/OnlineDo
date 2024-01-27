@@ -52,8 +52,6 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, mobile, password } = req.body;
   if (!email || !password || !name || !mobile) {
@@ -107,8 +105,6 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 const logoutUser = (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
@@ -116,8 +112,6 @@ const logoutUser = (req, res) => {
   });
   res.status(200).json({ message: "Logged out successfully" });
 };
-
-
 
 const otpVerify = async (req, res) => {
   try {
@@ -158,8 +152,6 @@ const otpVerify = async (req, res) => {
   }
 };
 
-
-
 const getUserProfile = asyncHandler(async (req, res) => {
   try {
     const userId = req.params.id;
@@ -178,8 +170,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 const viewCourse = asyncHandler(async (req, res) => {
   try {
     const courseId = req.params.id;
@@ -189,7 +179,6 @@ const viewCourse = asyncHandler(async (req, res) => {
     console.error("Error fetching course", error);
   }
 });
-
 
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
@@ -228,31 +217,34 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 const getAllCourses = asyncHandler(async (req, res) => {
   try {
-    const courses = await Course.find(
-      {},
-      {
-        courseName: 1,
-        description: 1,
-        price: 1,
-        category: 1,
-        duration: 1,
-        instructor: 1,
-        thumbnail: 1,
-        _id: 1,
-      }
-    ).populate("instructor", "name");
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.ITEMS_PER_PAGE); // Set the number of items per page
+    const skip = (page - 1) * pageSize
+
+    const courses = await Course.find({})
+      .populate("instructor", "name")
+      .skip((page - 1) * pageSize)
+      .limit(pageSize); // Limit the number of courses per page
+
+    const totalCourses = await Course.countDocuments({});
+    const totalPages = Math.ceil(totalCourses / pageSize);
 
     const transformedCourses = courses.map((course) => course.toJSON());
-    res.status(200).json({ success: true, courses: transformedCourses });
+
+    res.status(200).json({
+      success: true,
+      courses: transformedCourses,
+      pagination: {
+        currentPage: page,
+        totalPages,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 
 const searchSortFilterCourses = asyncHandler(async (req, res) => {
@@ -313,9 +305,6 @@ const searchSortFilterCourses = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-
 const courseCategory = asyncHandler(async (req, res) => {
   try {
     const categoryid = req.params.categoryId;
@@ -325,7 +314,6 @@ const courseCategory = asyncHandler(async (req, res) => {
     console.error("Error fetching category", error);
   }
 });
-
 
 const getInstructor = asyncHandler(async (req, res) => {
   try {
@@ -339,9 +327,7 @@ const getInstructor = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-const google = asyncHandler(async (req, res) => {
+const googleAuth = asyncHandler(async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
@@ -386,9 +372,7 @@ const google = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-const singlecourse = asyncHandler(async (req, res) => {
+const getSingleCourseById = asyncHandler(async (req, res) => {
   try {
     const purchaseid = req.params.purchaseId;
     const course = await Course.findById(purchaseid);
@@ -402,7 +386,6 @@ const singlecourse = asyncHandler(async (req, res) => {
   }
 });
 
-
 export {
   authUser,
   registerUser,
@@ -415,6 +398,6 @@ export {
   viewCourse,
   courseCategory,
   getInstructor,
-  google,
-  singlecourse,
+  googleAuth,
+  getSingleCourseById,
 };

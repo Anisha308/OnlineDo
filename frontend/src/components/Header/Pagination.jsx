@@ -26,10 +26,12 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }) => {
                 </span>
               </a>
             </li>
-            {[...Array(Math.ceil(totalPages))].map((page, index) => (
+            {[...Array(totalPages)].map((page, index) => (
               <li key={index}>
                 <a
-                  className="mx-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-300 p-0 text-sm text-black shadow-md transition duration-150 ease-in-out"
+                  className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-300 p-0 text-sm text-black shadow-md transition duration-150 ease-in-out ${
+                    currentPage === index + 1 ? "bg-gray-500" : ""
+                  }`}
                   href="#"
                   onClick={() => handlePageChange(index + 1)}
                 >

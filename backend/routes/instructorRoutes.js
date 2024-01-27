@@ -6,14 +6,14 @@ import {
   logoutInstructor,
   getInstructorProfile,
   updateInstructProfile,
-  addCourse,
   getInstructorCourses,
   instructotpVerify,
   showCategory,
   instructorviewCourse,
-  updatecourse,
-  getcoursetoupdate,
+
 } from "../controllers/instructorController.js";
+
+import { addCourse,getcoursetoupdate,updatecourse } from "../controllers/courseController.js";
 import { instructorProtect } from "../middleware/instructorAuthMiddleware.js";
 
 router.post("/", registerInstructor);

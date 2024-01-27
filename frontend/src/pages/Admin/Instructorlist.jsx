@@ -9,10 +9,14 @@ import {
 } from "../../Slices/adminApiSlice";
 import apiInstance from "../../../Api";
 import { toast } from "react-toastify";
+
 const InstructorLists = () => {
   const navigate = useNavigate();
-  const { data, error, isLoading } = useGetInstructorlistQuery();
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { data, error, isLoading } = useGetInstructorlistQuery(currentPage);
   const [instructors, setInstructors] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [blockInstructorMutation] = useBlockInstructorMutation();
   const [verifyInstructor] = useVerifyInstructorMutation();
@@ -25,14 +29,19 @@ const InstructorLists = () => {
   const [confirmVerify, setConfirmVerify] = useState(null);
   const [reason, setReason] = useState("");
   const [reject, setReject] = useState(null);
+  const isLastPage = currentPage === totalPages;
 
   useEffect(() => {
-    if (data && data.instructors) {
-      setInstructors(data.instructors);
+    if (data && data.data && data.data.instructors) {
+      setInstructors(data.data.instructors);
+      setTotalPages(data.data.pagination.totalPages);
     } else {
-      navigate("/admin/Login");
+      if (error) {
+        console.error("Error fetching instructors:", error);
+      }
+      // Handle error or redirect if needed
     }
-  }, [data]);
+  }, [currentPage,data]); // Add instructors as a dependency
 
   const openPreview = (image) => {
     setPreviewImage(image);
@@ -167,9 +176,45 @@ const InstructorLists = () => {
     setConfirmVerify(true);
   };
 
+ const paginate = async (pageNumber) => {
+   try {
+console.log("Current page before pagination:", currentPage);
+console.log("Total pages before pagination:", totalPages);     const response = await fetch(
+       `/api/admin/instructorlist?page=${pageNumber}`,
+       {
+         headers: {
+           Accept: "application/json",
+           // Add other headers if needed
+         },
+       }
+     );
+
+     console.log(response, "ress");
+
+     if (!response.ok) {
+       throw new Error("Failed to fetch data");
+     }
+
+     const responseData = await response.json();
+     console.log(responseData, "responseData");
+     console.log(responseData.data.instructors);
+     setInstructors(responseData.data.instructors);
+     setCurrentPage(pageNumber);
+     setTotalPages(responseData.data.pagination.totalPages);
+    console.log("Current page after pagination:", currentPage);
+    console.log("Total pages after pagination:", totalPages);
+   
+   } catch (error) {
+     console.error("Error fetching data:", error);
+     // Handle error (e.g., display error message)
+   }
+ };
+
+
   const cancelInstructor = (instructorId) => {
     setConfirmVerify(false);
   };
+
   const VerificationModal = ({ instructor, onClose }) => (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 max-w-md w-full ">
       <button
@@ -343,34 +388,12 @@ const InstructorLists = () => {
                             >
                               {instructor.Blocked ? "Unblock" : "Block"}
                             </button>
-                            {/* <button
-                              onClick={() =>
-                                handleUnblockInstructor(instructor._id)
-                              }
-                              className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 bg-red-200 opacity-50 rounded-full"
-                            >
-                              Unblock
-                            </button> */}
                           </div>
                         </td>
                       </tr>
                     ))}
                 </tbody>
               </table>
-              {/* <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
-                <span className="text-xs xs:text-sm text-gray-900">
-                  Showing 1 to 4 of 50 Entries
-                </span>
-                <div className="inline-flex mt-2 xs:mt-0">
-                  <button className="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-l">
-                    Prev
-                  </button>
-                  &nbsp; &nbsp;
-                  <button className="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-r">
-                    Next
-                  </button>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
@@ -546,6 +569,69 @@ const InstructorLists = () => {
           )}
         </div>
       </div>
+      <div className="flex justify-center mt-4">
+        <nav>
+          <ul className="flex ">
+            <li>
+              <button
+                className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                  currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
+                }`}
+                onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)}
+                disabled={currentPage === 1}
+                aria-label="Previous"
+              >
+                <span className="material-icons text-sm">
+                  keyboard_arrow_left
+                </span>
+              </button>
+            </li>
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+              (pageNumber) => (
+                <li key={pageNumber}>
+                  <button
+                    className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-300 p-0 text-sm text-black shadow-md transition duration-150 ease-in-out ${
+                      currentPage === pageNumber ? "bg-gray-500" : ""
+                    }`}
+                    onClick={() => paginate(pageNumber)}
+                    disabled={isLoading} // Disable button while loading
+                  >
+                    {pageNumber}
+                  </button>
+                </li>
+              )
+            )}
+            <li>
+              <button
+                className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                  currentPage === totalPages
+                    ? "cursor-not-allowed opacity-50"
+                    : ""
+                }`}
+                onClick={() =>
+                  paginate(
+                    currentPage < totalPages ? currentPage + 1 : totalPages
+                  )
+                }
+                disabled={isLastPage}
+                aria-label="Next"
+              >
+                <span className="material-icons text-sm">
+                  keyboard_arrow_right
+                </span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
+      />
+      <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"
+      />
     </div>
   );
 };

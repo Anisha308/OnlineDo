@@ -11,12 +11,12 @@ import {
   viewCourse,
   courseCategory,
   getInstructor,
-  google,
-  singlecourse,
+  googleAuth,
+  getSingleCourseById,
 } from "../controllers/userController.js";
 
 import {
-  setstripe,
+  setStripeSession,
   getPurchaseByUser,
 } from "../controllers/paymentController.js";
 
@@ -38,8 +38,8 @@ router.get("/getcourse/:id", protect, viewCourse);
 router.get("/getCategory/:categoryId", courseCategory);
 router.get("/getInstructor/:instructorId", getInstructor);
 
-router.post("/create-checkout-session/:price", protect, setstripe);
-router.post("/google", google);
+router.post("/create-checkout-session/:price", protect, setStripeSession);
+router.post("/google", googleAuth);
 router.get("/:userId/purchaselist", getPurchaseByUser);
-router.get("/:purchaseId/course", protect, singlecourse);
+router.get("/:purchaseId/course", protect, getSingleCourseById);
 export default router;

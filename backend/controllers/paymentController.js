@@ -3,21 +3,23 @@ import Instructor from "../models/InstructorModel.js";
 import Purchase from "../models/purchaseModel.js";
 const stripeInstance = Stripe(process.env.STRIPE_SECRET);
 import Course from "../models/courseModel.js";
-const setstripe = async (req, res) => {
+
+
+const setStripeSession = async (req, res) => {
   try {
     const { price } = req.params;
 
     const numPrice = Number(price);
 
- const user=req.body.user
+    const user = req.body.user;
     const course = req.body.courses.course; // Assuming you have course information in the request
 
     if (user && course) {
       const newPurchase = new Purchase({
         user: user._id,
         courses: course._id,
-      })
-      await newPurchase.save()
+      });
+      await newPurchase.save();
     }
     const instructor = await Instructor.findOne({
       name: req.body.instructorName,
@@ -30,7 +32,7 @@ const setstripe = async (req, res) => {
               currency: "INR",
               product_data: {
                 name: `Dr.${instructor.name}`,
-                description: ` At `,
+                description: ` OnlineDo `,
               },
               unit_amount: parseFloat(price) * 100, // or parseInt(price, 10) * 100
             },
@@ -73,4 +75,4 @@ const userId=req.params.userId
     res.status(500).send("Internal Server Error");
   }
 }
-export { setstripe ,getPurchaseByUser};
+export { setStripeSession, getPurchaseByUser };

@@ -3,11 +3,15 @@ import SideBar from "../../components/Header/SideBar";
 import apiInstance from "../../../Api";
 import { toast } from "react-toastify";
 import { Navigate, useNavigate } from "react-router-dom";
+
 const AddCategories = () => {
   const [categoryName, setCategoryName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedOption, setSelectedOption] = useState("List");
   const [categories, setCategories] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const Navigate = useNavigate();
 
   const handleSelectChange = (e) => {
@@ -30,6 +34,8 @@ const AddCategories = () => {
 
       if (response.data) {
         toast.success("Category added successfullyy");
+              fetchCategories(currentPage); // Fetch categories after adding
+
       } else {
         toast.error("failed to add course");
       }
@@ -38,13 +44,22 @@ const AddCategories = () => {
     }
   };
 
-  const fetchCategories = async () => {
+  const fetchCategories = async (page) => {
     try {
-      const response = await apiInstance.get("/api/admin/getcategory");
+     const response = await apiInstance.get("/api/admin/getcategory", {
+       params: { page }, // Pass the page number as a query parameter
+     });
 
-      if (response.data) {
-        setCategories(response.data);
-      }
+    if (response.data) {
+      setCategories(response.data.categories);
+       setCurrentPage(response.data.pagination.currentPage);
+       setTotalPages(response.data.pagination.totalPages);
+    } else {
+      console.error(
+        "Invalid response or categories data not an array:",
+        response.data
+      );
+    }
     } catch (error) {
       console.error("failed to fetch categories:", error);
       Navigate("/admin/Login");
@@ -73,9 +88,14 @@ const AddCategories = () => {
       console.error("Failed to update list status:", error);
     }
   };
+
+ const handlePagination = (page) => {
+   setCurrentPage(page);
+   fetchCategories(page);
+ };
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    fetchCategories(currentPage);
+  }, [currentPage]);
 
   return (
     <div className="flex">
@@ -281,6 +301,68 @@ const AddCategories = () => {
             </div>
           </section>
         </>
+        <div className="flex justify-center mt-4">
+          <nav>
+            <ul className="flex ">
+              <li>
+                <button
+                  className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                    currentPage === 1 ? "disabled" : ""
+                  }`}
+                  onClick={() => handlePagination(currentPage - 1)}
+                  aria-label="Previous"
+                  disabled={currentPage === 1}
+                >
+                  <span className="material-icons text-sm">
+                    keyboard_arrow_left
+                  </span>
+                </button>
+              </li>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (pageNumber) => (
+                  <li key={pageNumber}>
+                    <button
+                      className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-300 p-0 text-sm text-black shadow-md transition duration-150 ease-in-out ${
+                        currentPage === pageNumber ? "bg-gray-500" : ""
+                      }`}
+                      onClick={() => handlePagination(pageNumber)}
+                    >
+                      {pageNumber}
+                    </button>
+                    {console.log(
+                      "currentPage:",
+                      currentPage,
+                      "pageNumber:",
+                      pageNumber
+                    )}
+                  </li>
+                )
+              )}
+              <li>
+                <button
+                  className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                    currentPage === totalPages ? "disabled" : ""
+                  }`}
+                  onClick={() => handlePagination(currentPage + 1)}
+                  aria-label="Next"
+                  disabled={currentPage === totalPages}
+                >
+                  <span className="material-icons text-sm">
+                    keyboard_arrow_right
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
+        />
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet"
+        />
       </div>
     </div>
   );

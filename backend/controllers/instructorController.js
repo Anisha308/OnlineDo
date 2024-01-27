@@ -1,7 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Instructor from "../models/InstructorModel.js";
 import Course from "../models/courseModel.js";
-import mongoose from "mongoose";
 import cloudinary from "cloudinary";
 import Category from "../models/categoryModel.js";
 
@@ -17,13 +16,11 @@ const authInstructor = asyncHandler(async (req, res) => {
   }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-
     res.status(401);
     throw new Error("Invalid email format");
   }
 
   if (password.length < 4) {
-
     res.status(401);
 
     throw new Error(
@@ -34,22 +31,19 @@ const authInstructor = asyncHandler(async (req, res) => {
   const instructor = await Instructor.findOne({ email });
 
   if (!instructor) {
-     res.status(401);
-     throw new Error("Invalid email or password");
+    res.status(401);
+    throw new Error("Invalid email or password");
   }
   if (instructor.blocked) {
-
     res.status(401);
     throw new Error("You are not allowed to login ");
   }
 
   if (!instructor.verified) {
-
     res.status(401);
     throw new Error("Please wait for admin approval ");
   }
   if (await instructor.matchPassword(password)) {
-
     generateTokenInstructor(res, instructor._id);
 
     res.json({
@@ -58,7 +52,6 @@ const authInstructor = asyncHandler(async (req, res) => {
       email: instructor.email,
     });
   } else {
-
     res.status(401);
     throw new Error("Invalid email or password");
   }
@@ -182,8 +175,6 @@ const instructotpVerify = async (req, res) => {
         jobrole: jobrole,
         companyname: companyname,
         role: "instructor",
-        
-        
       });
       await newInstructor.save();
 
@@ -205,63 +196,6 @@ const logoutInstructor = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-const addCourse = asyncHandler(async (req, res) => {
-  const instructorId = req.params.instructorId;
-  const {
-    courseName,
-    paid,
-    description,
-    duration,
-    price,
-    modules,
-    categories,
-    image,
-  } = req.body;
-  try {
-    // Check if the instructor exists
-    const instructor = await Instructor.findById(instructorId);
-    if (!instructor) {
-      res.status(404);
-      throw new Error("Instructor not found");
-    }
-
-    // Create a new course
-    const course = new Course({
-      instructor: instructorId,
-      courseName,
-      paid,
-      description,
-      category: categories,
-      thumbnail: image,
-      duration,
-      price,
-      modules, // Corrected to use the modules state
-    });
-    if (req.file) {
-      // Assuming you want to add the file to the first module's videos
-      if (
-        modules.length > 0 &&
-        modules[0].videos &&
-        modules[0].videos.length > 0
-      ) {
-        modules[0].videos[0].video.data = req.file.buffer;
-        modules[0].videos[0].video.contentType = req.file.mimetype;
-      }
-    }
-
-    // Save the course
-    const savedCourse = await course.save();
-    // Add the course to the instructor's courses array
-    instructor.courses.push(savedCourse._id);
-    await instructor.save();
-
-    res.status(200).json(savedCourse);
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-
 const getInstructorProfile = asyncHandler(async (req, res) => {
   try {
     const instructorId = req.params.id;
@@ -274,7 +208,7 @@ const getInstructorProfile = asyncHandler(async (req, res) => {
       jobrole: 1,
       companyname: 1,
       experienceCertificateFile: 1,
-      idProof:1,
+      idProof: 1,
       _id: 1,
     });
     res.status(200).json({ instructors });
@@ -327,22 +261,37 @@ const updateInstructProfile = asyncHandler(async (req, res) => {
 const getInstructorCourses = asyncHandler(async (req, res) => {
   try {
     const instructorId = req.params.instructorId;
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 6
 
-    // Find the instructor by ID
-
-    const instructor = await Instructor.findById(instructorId).populate(
-      "courses"
-    );
+    const instructor = await Instructor.findById(instructorId).populate({
+      path: "courses",
+      options: {
+        skip: (page - 1) * pageSize,
+        limit: pageSize,
+      },
+    });
 
     if (!instructor) {
       res.status(401);
       throw new Error("Instructor not found");
     }
 
-    // Return the list of courses for the instructor
-    res
-      .status(200)
-      .json({ success: true, courses: instructor.courses, instructor });
+    const totalCourses = await Course.countDocuments({
+      instructor: instructorId,
+    });
+
+    const totalPages = Math.ceil(totalCourses / pageSize);
+
+    res.status(200).json({
+      success: true,
+      courses: instructor.courses,
+      instructor,
+      pagination: {
+        currentPage: page,
+        totalPages,
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -360,7 +309,7 @@ const showCategory = asyncHandler(async (req, res) => {
 
 const instructorviewCourse = asyncHandler(async (req, res) => {
   try {
-    const courseId = req.params.id
+    const courseId = req.params.id;
     const course = await Course.findById(courseId);
     res.status(200).json({ success: true, course });
   } catch (error) {
@@ -368,57 +317,14 @@ const instructorviewCourse = asyncHandler(async (req, res) => {
   }
 });
 
-const updatecourse = asyncHandler(async (req, res) => {
-  console.log('llllllllllllll');
-  try {
-    const courseId = req.params.id;
-    const updatedCourse = req.body
-    
-    const result =await Course.findByIdAndUpdate(courseId,updatedCourse,{new:true})
-   if (!result) {
-     return res.status(404).json({ message: "Course not found" });
-   }
-
-   res
-     .status(200)
-     .json({ message: "Course updated successfully", course: result });
-  } catch (error) {
-        console.error(error);
-
-        res.status(500).json({ message: "Internallllllllll Server Error" });
-
-  }
-})
-
-const getcoursetoupdate = asyncHandler(async (req, res) => {
-  console.log('hhhhhhhhhhhhhooooooooohhh');
-  try {
-    const id = req.params.id;
-    console.log(id,'id');
-    const course = await findById(id)
-    console.log(course,'course');
-    if (!course) {
-           return res.status(404).json({ message: "Course not found" });
-
-    }res
-      .status(200)
-      .json({ message: "Course fetched successfully", course});
-  } catch (error) {
-            console.error(error);
-
-  }
-})
 export {
   authInstructor,
   registerInstructor,
   logoutInstructor,
   getInstructorProfile,
   updateInstructProfile,
-  addCourse,
   getInstructorCourses,
   instructotpVerify,
   showCategory,
   instructorviewCourse,
-  updatecourse,
-  getcoursetoupdate,
 };

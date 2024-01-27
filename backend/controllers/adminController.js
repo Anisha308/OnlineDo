@@ -58,12 +58,27 @@ const logoutAdmin = (req, res) => {
 
 const getAllUsers = asyncHandler(async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; // Default page is 1
+    const pageSize = 1
     const users = await User.find(
       {},
       { name: 1, email: 1, mobile: 1, profilephoto: 1, _id: 1 }
-    );
-    res.status(200).json({ users });
-  } catch (error) {
+    )
+      .skip((page - 1) * pageSize) // Corrected syntax: use parentheses instead of colons
+      .limit(pageSize); // Corrected syntax: use parentheses instead of colons
+    
+    const totalUsers = await User.countDocuments(); // Count total users
+    const totalPages = Math.ceil(totalUsers / pageSize);
+
+    res.status(200).json({
+      users,
+      pagination: {
+        currentPage: page,
+        totalPages,
+      }
+    });
+  }
+  catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -122,7 +137,7 @@ const blockInstructor = asyncHandler(async (req, res) => {
         _id: instructor._id,
         name: instructor.name,
         email: instructor.email,
-        mobile: instructor.mobile, 
+        mobile: instructor.mobile,
       },
     });
   } catch (error) {
@@ -160,6 +175,11 @@ const verifyInstructor = asyncHandler(async (req, res) => {
 
 const getAllInstructors = asyncHandler(async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; // Default page is 1
+    console.log(page, "pyrfu");
+
+    const pageSize = 2;
+
     const instructors = await Instructor.find(
       {},
       {
@@ -174,8 +194,26 @@ const getAllInstructors = asyncHandler(async (req, res) => {
         experienceCertificateFile: 1,
         _id: 1,
       }
-    );
-    res.status(200).json({ instructors });
+    )
+      .skip((page - 1) * pageSize) // Corrected syntax: use parentheses instead of colons
+      .limit(pageSize)
+      .lean(); // Convert Mongoose documents to plain JavaScript objects // Corrected syntax: use parentheses instead of colons
+    console.log(instructors, "intructor");
+    const totalInstructors = await Instructor.countDocuments(); // Count total users
+
+    console.log(totalInstructors, "pppp");
+    const totalPages = Math.ceil(totalInstructors / pageSize);
+    console.log(totalPages, "yoylpge");
+    res.status(200).json({
+      success: true,
+      data: {
+        instructors,
+        pagination: {
+          currentPage: page,
+          totalPages,
+        },
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -225,31 +263,6 @@ const rejectmail = asyncHandler(async (req, res) => {
   }
 });
 
-const addCategories = asyncHandler(async (req, res) => {
-  try {
-    const { categoryName, description, liststatus } = req.body;
-    const newCategory = await Category.create({
-      categoryName,
-      description,
-      liststatus,
-    });
-
-    const savedCategory = await newCategory.save();
-    res.status(200).json(savedCategory);
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-const getCategories = async (req, res) => {
-  try {
-    const categories = await Category.find();
-    res.status(200).json(categories);
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
 export {
   authAdmin,
   logoutAdmin,
@@ -260,6 +273,4 @@ export {
   unblockInstructor,
   getAllInstructors,
   rejectmail,
-  addCategories,
-  getCategories,
 };

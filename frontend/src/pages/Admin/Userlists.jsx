@@ -4,17 +4,36 @@ import SideBar from "../../components/Header/SideBar";
 import { useGetUserListQuery } from "../../Slices/adminApiSlice";
 import { useBlockuserMutation } from "../../Slices/adminApiSlice";
 import { useNavigate } from "react-router-dom";
+import apiInstance from "../../../Api";
+
 const UserLists = () => {
-  const { data, error, isLoading } = useGetUserListQuery();
+  const [page, setPage] = useState(1); // Initialize page state variable with 1
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLastPage, setIsLastPage] = useState(false); // Added state for last page
+
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+  });
+  const { data, error, isLoading } = useGetUserListQuery({
+    page: currentPage, // Pass the current page to fetch data
+  });
   const [users, setUsers] = useState([]);
   const [blockUserMutation] = useBlockuserMutation();
   const [showModal, setShowModal] = useState(false);
   const [userIdToBlock, setUserIdToBlock] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (data && data.users) {
       setUsers(data.users);
+      // setPagination(data.pagination);
+      setCurrentPage(data.pagination.currentPage);
+      setTotalPages(data.pagination.totalPages);
+      setIsLastPage(data.pagination.currentPage === data.pagination.totalPages); // Update isLastPage state
     }
   }, [data, error]);
 
@@ -51,7 +70,44 @@ const UserLists = () => {
     setShowModal(false);
     setUserIdToBlock(null);
   };
-  return (
+
+  const fetchUsers = async (pageNumber) => {
+    console.log('jigyft');
+    try {
+      console.log('kjkghjpppppppppppppp');
+      const response = await fetch(`/api/admin/userlist?page=${pageNumber}`);
+      console.log(response,'rre');
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      throw error;
+    }
+  };
+
+  const paginate = async (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      try {
+        setCurrentPage(pageNumber);
+        console.log('jigyt');
+        const newData = await fetchUsers(pageNumber); // Fetch data for the selected page
+        if (newData && newData.users) {
+          setUsers(newData.users); // Update state with the new data
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        // Handle error
+      }
+    }
+ 
+
+
+  
+
+  };  return (
     <div className="flex flex-wrap   bg-white p-8 rounded-md ">
       <SideBar />
       <div className=" w-[1000px]   ">
@@ -132,7 +188,79 @@ const UserLists = () => {
             </div>
           </div>
         </div>
+        <div className="flex justify-center mt-4">
+          <nav>
+            <ul className="flex ">
+              <li>
+                <a
+                  className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                    isLastPage ? "disabled" : ""
+                  }`}
+                  href="#"
+                  onClick={() =>
+                    paginate(currentPage > 1 ? currentPage - 1 : 1)
+                  }
+                  aria-label="Previous"
+                  disabled={currentPage === 1}
+                >
+                  <span className="material-icons text-sm">
+                    keyboard_arrow_left
+                  </span>
+                </a>
+              </li>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (pageNumber) => (
+                  <li key={pageNumber}>
+                    <a
+                      className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-300 p-0 text-sm text-black shadow-md transition duration-150 ease-in-out 
+        ${currentPage === pageNumber ? "bg-gray-500" : ""}
+      `}
+                      href="#"
+                      onClick={() => paginate(pageNumber)}
+                    >
+                      {pageNumber}
+                    </a>
+                    {console.log(
+                      "currentPage:",
+                      currentPage,
+                      "pageNumber:",
+                      pageNumber
+                    )}
+                  </li>
+                )
+              )}
+              <li>
+                <a
+                  className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                    currentPage === totalPages ? "disabled" : ""
+                  }`}
+                  href="#"
+                  onClick={() =>
+                    paginate(
+                      currentPage < totalPages ? currentPage + 1 : totalPages
+                    )
+                  }
+                  aria-label="Next"
+                  disabled={isLastPage}
+                >
+                  <span className="material-icons text-sm">
+                    keyboard_arrow_right
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
+        />
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet"
+        />
       </div>
+
       {showModal && (
         <div
           id="popup-modal"
