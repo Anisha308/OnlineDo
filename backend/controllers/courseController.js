@@ -12,7 +12,9 @@ const addCourse = asyncHandler(async (req, res) => {
     modules,
     categories,
     image,
+    previewVideo,
   } = req.body;
+console.log(previewVideo, "previewVideo");
   try {
     // Check if the instructor exists
     const instructor = await Instructor.findById(instructorId);
@@ -32,7 +34,10 @@ const addCourse = asyncHandler(async (req, res) => {
       duration,
       price,
       modules, // Corrected to use the modules state
+      previewVideo,
     });
+
+    console.log(course,'course');
     if (req.file) {
       // Assuming you want to add the file to the first module's videos
       if (

@@ -7,6 +7,7 @@ import uploadToCloudinary from "../../../../backend/utils/uploadCloudinary";
 import apiInstance from "../../../Api";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
+
 const AddCourse = () => {
   const { instructorId } = useParams();
   const [loading, setLoading] = useState(false);
@@ -18,10 +19,15 @@ const AddCourse = () => {
   const [modules, setModules] = useState([
     { title: "", videos: [{ url: "" }] },
   ]);
+
+  const [previewVideo, setPreviewVideo] = useState(null);
+  const [chapterQueue, setChapterQueue] = useState([]); // Step 1: Define Queue State
+
   const [categories, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [image, setImage] = useState("");
   const Navigate = useNavigate();
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     try {
@@ -53,9 +59,22 @@ const AddCourse = () => {
 
   const [addCourseMutation] = useAddcourseMutation();
 
+  const enqueueChapter = (chapter) => {
+    setChapterQueue([...chapterQueue, chapter]);
+  };
+  useEffect(() => {
+    processChapterQueue(); // Trigger processing of queued modules
+  }, [chapterQueue]); // Ensure this effect runs whenever the queue changes
+
+  const dequeueChapter = () => {
+    const [firstChapter, ...restChapters] = chapterQueue;
+    setChapterQueue(restChapters);
+    return firstChapter;
+  };
+
   const addCourse = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-
+    console.log(previewVideo, "previewVideo");
     try {
       const { data } = await addCourseMutation({
         courseName,
@@ -67,6 +86,7 @@ const AddCourse = () => {
         image: image.secure_url, // Extract the secure URL from the Cloudinary response
         modules,
         instructorId,
+        previewVideo,
       });
 
       if (data) {
@@ -91,7 +111,14 @@ const AddCourse = () => {
     updatedModules.splice(index, 1);
     setModules(updatedModules);
   };
-
+  const processChapterQueue = async () => {
+    for (const chapter of chapterQueue) {
+      // Process each chapter/module
+      console.log("Processing chapter:", chapter);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      dequeueChapter(); // Dequeue the processed module
+    }
+  };
   const handleOnUpload = async (file, moduleIndex, videoIndex) => {
     try {
       const isVideo = file.type.startsWith("video"); // Corrected variable name
@@ -121,6 +148,8 @@ const AddCourse = () => {
       videos: [{ url: "" }], // Add a default video when adding a module
     };
     setModules([...modules, newModule]);
+
+    enqueueChapter(newModule);
   };
 
   const addVideo = (e, moduleIndex) => {
@@ -152,6 +181,23 @@ const AddCourse = () => {
   useEffect(() => {
     getCategories();
   }, []);
+
+  const handlePreviewVideoUpload = async (e) => {
+    console.log("im here");
+    const file = e.target.files[0];
+    try {
+      console.log("dpone");
+      setLoading(true);
+      const response = await uploadToCloudinary(file);
+
+      console.log(response, "response");
+      setPreviewVideo(response.secure_url);
+    } catch (error) {
+      console.error("Error uploading preview video:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex ">
@@ -267,8 +313,8 @@ const AddCourse = () => {
                       </select>
                     </div>
                   </div>
-                  <div className="w-full lg:w-6/12 px-4">
-                    <div className="relative w-full mb-3">
+                  <div className=" flex flex-wrap w-full   lg:w-6/12 px-4">
+                    <div className=" relative w-full mb-3">
                       <label
                         className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                         htmlFor="grid-password"
@@ -302,41 +348,83 @@ const AddCourse = () => {
                     </div>
                   </div>
                 </div>
-                <div className="relative w-full mb-3 ml-2">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                    Add Thumbnail
-                  </label>
-                  <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
-                    {loading ? (
-                      <img
-                        className="h-16 w-16"
-                        src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
-                        alt=""
+                <div className=" flex flex-wrap w-full lg:w-6/12 px-4">
+                  <div className="relative w-full mb-3">
+                    <label
+                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password"
+                    >
+                      {" "}
+                      Add Thumbnail
+                    </label>
+
+                    <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
+                      {loading ? (
+                        <img
+                          className="h-16 w-16"
+                          src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                          alt=""
+                        />
+                      ) : (
+                        <svg
+                          className="w-8 h-8"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                        </svg>
+                      )}
+
+                      <span className="mt-2 text-base leading-normal">
+                        Select a file
+                      </span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => {
+                          handleImageUpload(e);
+                        }}
                       />
-                    ) : (
-                      <svg
-                        className="w-8 h-8"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-                      </svg>
-                    )}
-
-                    <span className="mt-2 text-base leading-normal">
-                      Select a file
-                    </span>
-                    <input
-                      type="file"
-                      className="hidden"
-                      onChange={(e) => {
-                        handleImageUpload(e);
-                      }}
-                    />
-                  </label>
+                    </label>
+                  </div>
                 </div>
+                <div className="w-full lg:w-6/12 px-4">
+                  <div className="relative w-full mb-3">
+                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                      Add Preview Video
+                    </label>
+                    <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
+                      {loading ? (
+                        <img
+                          className="h-16 w-16"
+                          src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                          alt=""
+                        />
+                      ) : (
+                        <svg
+                          className="w-8 h-8"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                        </svg>
+                      )}
 
+                      <span className="mt-2 text-base leading-normal">
+                        Select a file
+                      </span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => {
+                          handlePreviewVideoUpload(e);
+                        }}
+                      />
+                    </label>
+                  </div>
+                </div>
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
                 <div className="flex flex-wrap items-center ml-17">
                   <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">

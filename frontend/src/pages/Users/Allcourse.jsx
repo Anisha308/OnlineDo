@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ViewCourse from "./ViewCourse";
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 6;
 
 const Allcourse = () => {
   const navigate = useNavigate();
@@ -35,12 +35,20 @@ const Allcourse = () => {
 
   useEffect(() => {
     if (data && data.courses) {
-      setCourses(data.courses);
-      // Calculate total pages
-      const totalPagesCount = Math.ceil(data.courses.length / ITEMS_PER_PAGE);
+      // Filter the courses based on the search query
+      const filteredCourses = data.courses.filter((course) =>
+        course.courseName.toLowerCase().includes(search.toLowerCase())
+      );
+      // Set the filtered courses
+      setCourses(filteredCourses);
+      // Calculate total pages based on the filtered courses
+      const totalPagesCount = Math.ceil(
+        filteredCourses.length / ITEMS_PER_PAGE
+      );
       setTotalPages(totalPagesCount);
     }
-  }, [data]);
+  }, [data, search]);
+
 
   const indexOfLastCourse = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstCourse = indexOfLastCourse - ITEMS_PER_PAGE;

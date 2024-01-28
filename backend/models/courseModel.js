@@ -53,6 +53,10 @@ const courseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    previewVideo: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

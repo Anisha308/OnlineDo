@@ -21,6 +21,7 @@ const ViewCourse = () => {
       try {
         const response = await apiInstance.get(`/api/users/getCourse/${id}`);
         setCourse(response.data);
+        console.log(response.data,'resdata');
         // Extracting instructorid from course data
         const instructorId = response.data.course.instructor;
         // const categoryId = response.data.course.category;
@@ -124,11 +125,13 @@ const ViewCourse = () => {
                     className=" cursor-pointer rounded-lg bg-white p-2 shadow duration-150 hover:scale-105 hover:shadow-md"
                     style={{ fontSize: "18px" }}
                   >
-                    <img
+                    <video
                       className="w-full rounded-lg object-cover object-center"
-                      src={course.course.thumbnail}
-                      alt="product"
-                    />
+                      controls
+                    >
+                      <source src={course.course.previewVideo} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
                     <div>
                       <div className="md:w-2/3 p-6">
                         <p className="font-bold text-gray-500">
