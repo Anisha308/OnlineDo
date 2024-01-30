@@ -31,7 +31,7 @@ const setStripeSession = async (req, res) => {
             price_data: {
               currency: "INR",
               product_data: {
-                name: `Dr.${instructor.name}`,
+                name: `${instructor.name}`,
                 description: ` OnlineDo `,
               },
               unit_amount: parseFloat(price) * 100, // or parseInt(price, 10) * 100

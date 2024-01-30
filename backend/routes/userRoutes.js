@@ -14,7 +14,7 @@ import {
   googleAuth,
   getSingleCourseById,
 } from "../controllers/userController.js";
-
+import { createChat, userChats } from "../controllers/chatController.js";
 import {
   setStripeSession,
   getPurchaseByUser,
@@ -42,4 +42,5 @@ router.post("/create-checkout-session/:price", protect, setStripeSession);
 router.post("/google", googleAuth);
 router.get("/:userId/purchaselist", getPurchaseByUser);
 router.get("/:purchaseId/course", protect, getSingleCourseById);
+router.get("/chat/getChats",userChats)
 export default router;

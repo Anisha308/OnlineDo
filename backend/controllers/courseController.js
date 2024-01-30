@@ -1,6 +1,8 @@
 import asyncHandler from "express-async-handler";
 import Instructor from "../models/InstructorModel.js";
 import Course from "../models/courseModel.js";
+import { toast } from "react-toastify";
+
 const addCourse = asyncHandler(async (req, res) => {
   const instructorId = req.params.instructorId;
   const {
@@ -14,14 +16,50 @@ const addCourse = asyncHandler(async (req, res) => {
     image,
     previewVideo,
   } = req.body;
-console.log(previewVideo, "previewVideo");
+  console.log(previewVideo, "previewVideo");
+
+  if (
+    !courseName ||
+    !description ||
+    !modules ||
+    modules.length === 0 ||
+    !categories ||
+    !image ||
+    !previewVideo
+  ) {
+    toast.error("All fields must be filled");
+    res.status(400).json({ error: "All fields must be filled" });
+    return;
+  }
+   const emptyModuleIndex = modules.findIndex((module) => !module.title.trim());
+   if (emptyModuleIndex !== -1) {
+     toast.error("Please enter a title for all modules");
+     return res
+       .status(400)
+       .json({ error: "Please enter a title for all modules" });
+     
+   }
+
   try {
     // Check if the instructor exists
+    console.log("ayyuo");
     const instructor = await Instructor.findById(instructorId);
+    console.log(instructor, "hjhk");
     if (!instructor) {
       res.status(404);
       throw new Error("Instructor not found");
     }
+
+const existingCourse = await Course.findOne({
+  instructor: instructorId,
+  courseName,
+});
+    console.log(existingCourse, 'exists');
+    
+if (existingCourse) {
+  res.status(400).json({ error: "dup" });
+  return;
+}
 
     // Create a new course
     const course = new Course({
@@ -37,7 +75,7 @@ console.log(previewVideo, "previewVideo");
       previewVideo,
     });
 
-    console.log(course,'course');
+    console.log(course, "course");
     if (req.file) {
       // Assuming you want to add the file to the first module's videos
       if (
@@ -49,9 +87,10 @@ console.log(previewVideo, "previewVideo");
         modules[0].videos[0].video.contentType = req.file.mimetype;
       }
     }
-
+  
     // Save the course
     const savedCourse = await course.save();
+    console.log(savedCourse,'saved course');
     // Add the course to the instructor's courses array
     instructor.courses.push(savedCourse._id);
     await instructor.save();
