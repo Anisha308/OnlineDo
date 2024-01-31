@@ -146,8 +146,11 @@ const UserProfile = () => {
             <div className="card mb-4 bg-gradient-to-r from-white via-white to-gray-200 border shadow-2xl">
               <div className="card-body text-center bg-white p-4 flex flex-col items-center">
                 <img
-                  src={users.profilephoto}
-                  alt={`Profile Photo of ${users.name}`}
+                  src={
+                    users.profilephoto ||
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/768px-Windows_10_Default_Profile_Picture.svg.png"
+                  }
+                  alt={`${users.name}`}
                   className="rounded-circle mb-3"
                   style={{ width: 150, height: 150 }}
                 />

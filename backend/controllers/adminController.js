@@ -176,7 +176,6 @@ const verifyInstructor = asyncHandler(async (req, res) => {
 const getAllInstructors = asyncHandler(async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; // Default page is 1
-    console.log(page, "pyrfu");
 
     const pageSize = 2;
 
@@ -198,12 +197,9 @@ const getAllInstructors = asyncHandler(async (req, res) => {
       .skip((page - 1) * pageSize) // Corrected syntax: use parentheses instead of colons
       .limit(pageSize)
       .lean(); // Convert Mongoose documents to plain JavaScript objects // Corrected syntax: use parentheses instead of colons
-    console.log(instructors, "intructor");
     const totalInstructors = await Instructor.countDocuments(); // Count total users
 
-    console.log(totalInstructors, "pppp");
     const totalPages = Math.ceil(totalInstructors / pageSize);
-    console.log(totalPages, "yoylpge");
     res.status(200).json({
       success: true,
       data: {

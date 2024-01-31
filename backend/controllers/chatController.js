@@ -4,11 +4,11 @@ import Instructor from "../models/InstructorModel.js";
 import User from "../models/userModel.js";
 
 export const createChat = async (req, res) => {
+  console.log("reachinggg")
   // Check if there is an existing chat with the same members
   const existingChat = await Chat.findOne({
     members: { $all: [req.body.senderId, req.body.receiverId] },
   });
-console.log(req.body.recieverId,'lllas');
   if (existingChat) {
     // If there's an existing chat, update its timestamp and return it
 
@@ -22,7 +22,6 @@ console.log(req.body.recieverId,'lllas');
     const newChat = new Chat({
       members: [req.body.senderId, req.body.receiverId],
     });
-console.log(newChat,'newwwwwwwwwwww');
     try {
       const result = await newChat.save();
       res.status(200).json(result);
@@ -33,12 +32,11 @@ console.log(newChat,'newwwwwwwwwwww');
 };
 
 export const userChats = async (req, res) => {
-    try {
-      console.log('usercatt');
+  try {
+      
     const chat = await Chat.find({
       members: { $in: [req.params.userId] },
     });
-        console.log(chat);
     res.status(200).json(chat);
   } catch (error) {
     res.status(500).json(error);

@@ -57,8 +57,13 @@ const setStripeSession = async (req, res) => {
 const getPurchaseByUser = async (req, res) => {
   try {
 const userId=req.params.userId
-    const purchases = await Purchase.find({ user: userId }).populate('courses')
-        
+    const purchases = await Purchase.find({ user: userId }).populate({
+      path: "courses",
+      populate: {
+        path: "instructor",
+      },
+    });
+    
     const detailedCourses = []
     
     for (const purchase of purchases) {

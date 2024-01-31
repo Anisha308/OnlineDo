@@ -16,7 +16,6 @@ const addCourse = asyncHandler(async (req, res) => {
     image,
     previewVideo,
   } = req.body;
-  console.log(previewVideo, "previewVideo");
 
   if (
     !courseName ||
@@ -42,9 +41,7 @@ const addCourse = asyncHandler(async (req, res) => {
 
   try {
     // Check if the instructor exists
-    console.log("ayyuo");
     const instructor = await Instructor.findById(instructorId);
-    console.log(instructor, "hjhk");
     if (!instructor) {
       res.status(404);
       throw new Error("Instructor not found");
@@ -54,7 +51,6 @@ const existingCourse = await Course.findOne({
   instructor: instructorId,
   courseName,
 });
-    console.log(existingCourse, 'exists');
     
 if (existingCourse) {
   res.status(400).json({ error: "dup" });
@@ -75,7 +71,6 @@ if (existingCourse) {
       previewVideo,
     });
 
-    console.log(course, "course");
     if (req.file) {
       // Assuming you want to add the file to the first module's videos
       if (
@@ -90,7 +85,6 @@ if (existingCourse) {
   
     // Save the course
     const savedCourse = await course.save();
-    console.log(savedCourse,'saved course');
     // Add the course to the instructor's courses array
     instructor.courses.push(savedCourse._id);
     await instructor.save();
@@ -125,9 +119,7 @@ const updatecourse = asyncHandler(async (req, res) => {
 const getcoursetoupdate = asyncHandler(async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id, "id");
     const course = await findById(id);
-    console.log(course, "course");
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }

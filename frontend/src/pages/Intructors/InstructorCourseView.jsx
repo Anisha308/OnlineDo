@@ -41,10 +41,15 @@ const InstructCourseView = () => {
     };
     fetchCourse();
   }, [id]);
-  const handleEditClick = () => {
-    // Navigate to the 'instructor/updatecourse' route
-    navigate(`/instructor/updatecourse/${id}`);
-  };
+
+
+
+  const toggleVideos = (moduleId) => {
+     const videosElement = document.getElementById(`videos-${moduleId}`);
+    if (videosElement) {
+      videosElement.classList.toggle("hidden");
+     }
+   };
   return (
     <div className="flex ">
       <InstructorSidebar instructorId={instructorId} />
@@ -130,10 +135,18 @@ const InstructCourseView = () => {
                         <h3 className="text-xl font-bold mt-4">Modules</h3>
                         {course.course.modules.map((module) => (
                           <div key={module._id} className="mb-4">
-                            <h4 className="text-lg pb-6 font-medium">
+                            <h4
+                              className="text-lg pb-6 font-medium cursor-pointer"
+                              onClick={() => toggleVideos(module._id)}
+                            >
                               {module.title}
                             </h4>
-
+                            <div
+                              id={`videos-${module._id}`}
+                              className=
+                                   "hidden"
+                          
+                            >
                             {module.videos && module.videos.length > 0 && (
                               <div className="mt-2">
                                 <h5 className="text-md font-semibold mb-2">
@@ -159,6 +172,7 @@ const InstructCourseView = () => {
                                 ))}
                               </div>
                             )}
+                            </div>
                           </div>
                         ))}
                       </>

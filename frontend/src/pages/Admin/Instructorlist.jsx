@@ -38,6 +38,7 @@ const InstructorLists = () => {
     } else {
       if (error) {
         console.error("Error fetching instructors:", error);
+        // navigate('admin/Login')
       }
       // Handle error or redirect if needed
     }
@@ -178,8 +179,7 @@ const InstructorLists = () => {
 
  const paginate = async (pageNumber) => {
    try {
-console.log("Current page before pagination:", currentPage);
-console.log("Total pages before pagination:", totalPages);     const response = await fetch(
+     const response = await fetch(
        `/api/admin/instructorlist?page=${pageNumber}`,
        {
          headers: {
@@ -189,20 +189,17 @@ console.log("Total pages before pagination:", totalPages);     const response = 
        }
      );
 
-     console.log(response, "ress");
 
      if (!response.ok) {
        throw new Error("Failed to fetch data");
      }
 
      const responseData = await response.json();
-     console.log(responseData, "responseData");
-     console.log(responseData.data.instructors);
+   
      setInstructors(responseData.data.instructors);
      setCurrentPage(pageNumber);
      setTotalPages(responseData.data.pagination.totalPages);
-    console.log("Current page after pagination:", currentPage);
-    console.log("Total pages after pagination:", totalPages);
+
    
    } catch (error) {
      console.error("Error fetching data:", error);

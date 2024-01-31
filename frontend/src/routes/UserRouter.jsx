@@ -15,6 +15,8 @@ import Fail from "../components/paymentfail/Fail.jsx";
 import Success from "../components/paymentsuccess/Success.jsx";
 import PurchaseList from "../pages/Users/PurchaseList.jsx";
 import CourseView from "../pages/Users/CourseView.jsx";
+import Chat1 from "../pages/Users/ChatMain.jsx";
+
 function UserRouter() {
   return (
     <>
@@ -31,6 +33,7 @@ function UserRouter() {
         <Route path="/fail" element={<Fail />} />
         <Route path="/:userId/purchaselist" element={<PurchaseList />} />
         <Route path="/:purchaseId/courseview" element={<CourseView />} />
+        <Route path="/chat" element={<Chat1 />} />
       </Routes>
     </>
   );

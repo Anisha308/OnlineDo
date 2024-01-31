@@ -74,7 +74,48 @@ const AddCourse = () => {
 
   const addCourse = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-    console.log(previewVideo, "previewVideo");
+    if (
+      !courseName ||
+      !description ||
+      !price ||
+      !duration ||
+      !selectedCategory
+    ) {
+      toast.error("All fields must be filled");
+      return;
+    }
+
+    if (!image) {
+      toast.error("thumbnail must be filled");
+    }
+
+    if (!previewVideo) {
+      toast.error("preview video must be filled");
+      return
+    }
+    if (isNaN(parseFloat(price)) || !isFinite(price)) {
+      toast.error("Invalid Price");
+      return;
+    }
+
+
+  
+    if (
+      courseName.length < 2 ||
+      description.length < 5 ||
+      price.length < 1 ||
+      duration.length < 1
+    ) {
+      toast.error("All fields must have more than 1 character");
+      return;
+    }
+
+    const lastModule = modules[modules.length - 1];
+    if (!lastModule.title.trim()) {
+      toast.error("Please enter a title for the module.");
+      return;
+    }
+
     try {
       const { data } = await addCourseMutation({
         courseName,
@@ -83,19 +124,31 @@ const AddCourse = () => {
         duration,
         paid,
         categories,
-        image: image.secure_url, // Extract the secure URL from the Cloudinary response
+        image: image.secure_url,
         modules,
         instructorId,
         previewVideo,
       });
 
       if (data) {
+        Navigate(`/instructor/${instructorId}/courselist`);
         toast.success("Course added successfully:", data);
+      
       } else {
-        console.error("Failed to add course. Response data is undefined.");
+        toast.error("Course already exists")
+
       }
-    } catch (error) {
-      console.error("Error adding course:", error);
+    } 
+   
+    
+     catch (error) {
+      console.error("Error adding courses:", error);
+      if (error.response && error.response.status === 400) {
+        const errorMessage = error.response.data.error;
+        toast.error(`Error: ${errorMessage}`);
+      } else {
+        toast.error("Failed to add courses. Please try again later.");
+      }
     }
   };
 
@@ -114,7 +167,6 @@ const AddCourse = () => {
   const processChapterQueue = async () => {
     for (const chapter of chapterQueue) {
       // Process each chapter/module
-      console.log("Processing chapter:", chapter);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       dequeueChapter(); // Dequeue the processed module
     }
@@ -183,14 +235,12 @@ const AddCourse = () => {
   }, []);
 
   const handlePreviewVideoUpload = async (e) => {
-    console.log("im here");
+  
     const file = e.target.files[0];
     try {
-      console.log("dpone");
       setLoading(true);
       const response = await uploadToCloudinary(file);
 
-      console.log(response, "response");
       setPreviewVideo(response.secure_url);
     } catch (error) {
       console.error("Error uploading preview video:", error);

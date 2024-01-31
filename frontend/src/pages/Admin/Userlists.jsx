@@ -34,6 +34,8 @@ const UserLists = () => {
       setCurrentPage(data.pagination.currentPage);
       setTotalPages(data.pagination.totalPages);
       setIsLastPage(data.pagination.currentPage === data.pagination.totalPages); // Update isLastPage state
+    } else {
+      navigate('/admin/Login')
     }
   }, [data, error]);
 
@@ -72,11 +74,8 @@ const UserLists = () => {
   };
 
   const fetchUsers = async (pageNumber) => {
-    console.log('jigyft');
     try {
-      console.log('kjkghjpppppppppppppp');
       const response = await fetch(`/api/admin/userlist?page=${pageNumber}`);
-      console.log(response,'rre');
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }
@@ -92,7 +91,6 @@ const UserLists = () => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       try {
         setCurrentPage(pageNumber);
-        console.log('jigyt');
         const newData = await fetchUsers(pageNumber); // Fetch data for the selected page
         if (newData && newData.users) {
           setUsers(newData.users); // Update state with the new data
@@ -220,12 +218,7 @@ const UserLists = () => {
                     >
                       {pageNumber}
                     </a>
-                    {console.log(
-                      "currentPage:",
-                      currentPage,
-                      "pageNumber:",
-                      pageNumber
-                    )}
+                  
                   </li>
                 )
               )}

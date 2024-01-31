@@ -11,7 +11,6 @@ import Category from "../models/categoryModel.js";
 
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log(email,password);
   if (!email || !password) {
     res.status(401);
     throw new Error("All fields must be filled!");
@@ -29,7 +28,6 @@ const authUser = asyncHandler(async (req, res) => {
     );
   }
   const user = await User.findOne({ email });
-  console.log(user,'user');
   if (!user) {
     res.status(401);
     throw new Error("Invalid email or password");
@@ -41,7 +39,6 @@ const authUser = asyncHandler(async (req, res) => {
   }
 
   if (user && (await user.matchPassword(password))) {
-    console.log('not reached hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
     generateToken(res, user._id);
 
     res.status(200).json({
@@ -224,7 +221,7 @@ const getAllCourses = asyncHandler(async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.ITEMS_PER_PAGE); // Set the number of items per page
-    const skip = (page - 1) * pageSize
+    const skip = (page - 1) * pageSize;
 
     const courses = await Course.find({})
       .populate("instructor", "name")
@@ -248,7 +245,6 @@ const getAllCourses = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 const searchSortFilterCourses = asyncHandler(async (req, res) => {
   try {
@@ -333,13 +329,12 @@ const getInstructor = asyncHandler(async (req, res) => {
 const googleAuth = asyncHandler(async (req, res) => {
   try {
     const { email, name, photo } = req.body;
-
     const user = await User.findOne({ email });
     if (user) {
       const token = generateToken(res, user._id);
       const { password: hashedPassword, ...rest } = user._doc;
-      const expiryDate = new Date(Date.now() + 3600000);
 
+      const expiryDate = new Date(Date.now() + 3600000);
       res
         .cookie("jwt", token, {
           httpOnly: true,
@@ -351,23 +346,17 @@ const googleAuth = asyncHandler(async (req, res) => {
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
-      
-      console.log(generatedPassword, 'generatedpassewprd');
-      
-      // Hash the generated password
-      const hashedPassword3 = bcrypt.hashSync(generatedPassword, 10);
 
-      console.log(hashedPassword3, 'hashedpassword3');
-     
+      // Hash the generated password
+
       const newUser = new User({
         name:
           name.replace(/\s+/g, "").toLowerCase() +
           Math.floor(Math.random() * 10000).toString(),
         email,
-        password: hashedPassword3, // Store the hashed password in the database
+        password: generatedPassword, // Store the hashed password in the database
         profilephoto: photo,
       });
-console.log(newUser,'newUsee');
       await newUser.save();
 
       const token = generateToken(res, newUser._id);

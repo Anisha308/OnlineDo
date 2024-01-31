@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 
 const success = () => {
   const user = useSelector((state) => state.auth.userInfo);
-  console.log(user._id, "jserrer");
   const userId = user._id;
   return (
     <>

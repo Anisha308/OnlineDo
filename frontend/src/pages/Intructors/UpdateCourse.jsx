@@ -15,16 +15,13 @@ const UpdateCourse = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        console.log("kkkjkkkkkkkkkkkkkkkkkhij");
-        console.log(id, "iddddddd");
         const response = await apiInstance.get(
           `api/instructor/${id}/courselist`
         );
 
-        console.log(response, "ressssssssssss");
         setCourse(response.data.course);
       } catch (error) {
-        console.error(error, "yyyyyyyyyyyyyyyyyy");
+        console.error(error, "error");
       }
     };
     fetchCourse();

@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useAdminLoginMutation } from "../Slices/adminApiSlice";  // Updated import
+import { useAdminLoginMutation } from "../Slices/adminApiSlice"; // Updated import
 import { adminSetCredentials } from "../Slices/authAdminSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
@@ -16,35 +16,28 @@ const Login = () => {
 
   const [login, { isLoading }] = useAdminLoginMutation(); // Updated hook
 
-const { adminInfo } = useSelector((state) => state.authAdmin);
-
-
+  const { adminInfo } = useSelector((state) => state.authAdmin);
 
   useEffect(() => {
     if (adminInfo) {
       navigate("/admin/userlist");
     }
-
-  
   }, []);
 
-
-const submitHandler = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await login({ email, password }).unwrap();
-    dispatch(adminSetCredentials(res));
-    navigate("/admin/userlist");
-  } catch (err) {
-    console.error("Login error:", err);
-    toast.error(err?.data?.message || err.error);
-  }
-};
-
-
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await login({ email, password }).unwrap();
+      dispatch(adminSetCredentials(res));
+      navigate("/admin/userlist");
+    } catch (err) {
+      console.error("Login error:", err);
+      toast.error(err?.data?.message || err.error);
+    }
+  };
 
   return (
-     <div className="bg-white dark:bg-gray-900">
+    <div className="bg-white dark:bg-gray-900">
       <div className="flex justify-center h-screen">
         <div
           className="hidden bg-cover lg:block lg:w-2/3"
@@ -88,7 +81,7 @@ const submitHandler = async (e) => {
                     name="email"
                     id="email"
                     value={email}
-                    onChange={(e)=>setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="example@example.com"
                     className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                   />
@@ -101,25 +94,26 @@ const submitHandler = async (e) => {
                     >
                       Password
                     </label>
-        
                   </div>
                   <input
                     type="password"
                     name="password"
                     id="password"
                     value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Your Password"
                     className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                   />
                 </div>
                 <div className="mt-6">
-                  <button  type="submit"className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                  <button
+                    type="submit"
+                    className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  >
                     Sign in
                   </button>
                 </div>
               </form>
-             
             </div>
           </div>
         </div>

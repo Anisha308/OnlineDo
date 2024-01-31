@@ -5,6 +5,15 @@ import asyncHandler from "express-async-handler";
 const addCategories = asyncHandler(async (req, res) => {
   try {
     const { categoryName, description, liststatus } = req.body;
+     const existingCategory = await Category.findOne({ categoryName });
+
+     if (existingCategory) {
+       // If the category already exists, return an error response
+       return res.status(400).json({ error: "Category already exists" });
+     }  if (!categoryName.trim() || !description.trim() || !selectedOption) {
+       return res.status(401).json({ error: "All fields must be filled" });
+       
+     }
     const newCategory = await Category.create({
       categoryName,
       description,

@@ -38,7 +38,6 @@ const [activePage, setActivePage] = useState(1);
       setCourses(data.courses);
       setInstructor(data.instructor); // Assuming data has a property named 'instructor'
       setPagination(data.pagination);
-      console.log(data.pagination);
       setCurrentPage(data.pagination.currentPage);
     setTotalPages(data.pagination.totalPages);
 
@@ -78,7 +77,6 @@ const [activePage, setActivePage] = useState(1);
       const response = await apiInstance.get(
         `api/instructor/${instructorId}/courselist?page=${page}`
       );
-      console.log(response.data); // Log the entire response for debugging
 
       const { courses, instructor, pagination } = response.data;
 

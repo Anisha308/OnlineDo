@@ -4,8 +4,10 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { Link } from "react-router-dom";
+import { useCreateChatMutation } from "../../Slices/chatApiSlice";
 const YourCourse = () => {
   const [purchases, setPurchases] = useState([]);
+  const [createChat] = useCreateChatMutation()
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.userInfo);
   useEffect(() => {
@@ -17,7 +19,7 @@ const YourCourse = () => {
             user: user._id,
           }
         );
-
+console.log(response,'responsess');
         setPurchases(response.data.detailedCourses);
       } catch (error) {
         console.error("Error fetching purchases", error);
@@ -26,6 +28,21 @@ const YourCourse = () => {
 
     fetchPurchases();
   }, [user._id]);
+
+   const handleChatWith = async (instructorId) => {
+     try {
+       let senderId = user._id;    
+       let receiverId = instructorId;
+       const result = await createChat({ senderId, receiverId }).unwrap();
+       if (result) {
+         navigate("/chat");
+       } else {
+         console.error("Error creating chat. No data returned:", result);
+       }
+     } catch (error) {
+       console.error("Error creating chat:", error);
+     }
+   };
 
   return (
     <div>
@@ -56,7 +73,7 @@ const YourCourse = () => {
                   {purchase.description}
                 </p>
                 <p className="block mb-8 font-sans text-base antialiased font-bold leading-relaxed text-gray-400">
-                  {purchase.duration}
+                  {purchase.duration} Months
                 </p>
                 <Link
                   to={`/${purchase._id}/courseview`}
@@ -83,13 +100,14 @@ const YourCourse = () => {
                       />
                     </svg>
                   </button>
-                  <button
-                    className="flex bg-blue-900 text-white items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-red-500 uppercase align-middle transition-all rounded-lg select-none hover:bg-blue-900/60 active:bg-pink-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button"
-                  >
-                    Chat Now
-                  </button>
                 </Link>
+                <button
+                  className="flex bg-blue-900 text-white items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-red-500 uppercase align-middle transition-all rounded-lg select-none hover:bg-blue-900/60 active:bg-pink-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                  type="button"
+                  onClick={()=>handleChatWith(purchase.instructor)}
+                >
+                  Chat Now
+                </button>
               </div>
             </div>
           ))}

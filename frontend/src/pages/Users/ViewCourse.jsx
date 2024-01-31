@@ -99,6 +99,7 @@ const ViewCourse = () => {
                       </div>
                     </div>
                   </div>
+                  <div>
                   <div className="mt-4 text-gray-500 dark:text-gray-300">
                     <h2 className="font-bold text-xl pb-5 text-black">
                       Modules
@@ -119,7 +120,7 @@ const ViewCourse = () => {
                     )}
                   </div>
                 </div>
-
+</div>
                 <div className="w-full md:w-1/3 md:ml-4">
                   <div
                     className=" cursor-pointer rounded-lg bg-white p-2 shadow duration-150 hover:scale-105 hover:shadow-md"

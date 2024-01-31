@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import apiInstance from "../../../Api";
 import { useParams } from "react-router-dom";
 import { Link } from "@mui/material";
+
 const CourseView = () => {
   const { purchaseId } = useParams();
   const [course, setCourse] = useState(null);
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -18,6 +20,13 @@ const CourseView = () => {
     };
     fetchCourse();
   }, [purchaseId]);
+
+  const toggleVideos = (moduleId) => {
+    const videosElement = document.getElementById(`videos-${moduleId}`);
+    if (videosElement) {
+      videosElement.classList.toggle("hidden");
+    }
+  };
 
   return (
     <>
@@ -42,30 +51,47 @@ const CourseView = () => {
                   </h3>
                   {course.modules.map((module) => (
                     <div key={module._id} className="mb-4">
-                      <h4 className="text-lg pb-6 font-medium">
+                      <h4
+                        className="text-lg pb-6 font-medium cursor-pointer"
+                        onClick={() => toggleVideos(module._id)}
+                      >
                         {module.title}
                       </h4>
-
-                      {module.videos && module.videos.length > 0 && (
-                        <div className="mt-2">
-                          <h5 className="text-md font-semibold mb-2">Videos</h5>
-                          {module.videos.map((video) => (
-                            <div key={video._id} className="mb-2">
-                              <p className="text-gray-600 dark:text-gray-300">
-                                {video.title}
-                              </p>
-                              <div className="max-w-3xl ml-3 pt-8 mx-auto rounded-lg overflow-hidden">
-                                <video
-                                  className="w-full h-full rounded-lg"
-                                  controls
-                                >
-                                  <source src={video.url} type="video/mp4" />
-                                </video>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      <div
+                        id={`videos-${module._id}`}
+                        className={`hidden ${
+                          course.modules[0]._id === module._id ? "" : "hidden"
+                        }`}
+                      >
+                        {" "}
+                        {module.videos && module.videos.length > 0 && (
+                          <div className="mt-2">
+                            <h5 className="text-md font-semibold mb-2">
+                              Videos
+                            </h5>
+                            {module.videos.map((video) => (
+                              <div key={video._id} className="mb-2">
+                               
+                               
+                              
+                                  <div className="pl-8 pr-8 pb-5 text-grey-darkest">
+                                    <div className="max-w-3xl ml-3 pt-8 mx-auto rounded-lg overflow-hidden">
+                                      <video
+                                        className="w-full h-full rounded-lg"
+                                        controls
+                                      >
+                                        <source
+                                          src={video.url}
+                                          type="video/mp4"
+                                        />
+                                      </video>
+                                    </div>
+                                  </div>
+                                </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </>

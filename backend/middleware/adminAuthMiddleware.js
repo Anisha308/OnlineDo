@@ -4,7 +4,6 @@ import asyncHandler from "express-async-handler";
 
 const adminProtect = asyncHandler(async (req, res, next) => {
   let token = req.cookies.adminJwt;
-
   if (!token) {
     return res
       .status(401)

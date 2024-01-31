@@ -33,16 +33,23 @@ const AddCategories = () => {
       });
 
       if (response.data) {
-        toast.success("Category added successfullyy");
-              fetchCategories(currentPage); // Fetch categories after adding
-
+        toast.success("Category added successfully");
+        fetchCategories(currentPage); // Fetch categories after adding
       } else {
-        toast.error("failed to add course");
+        toast.error("Failed to add category");
       }
     } catch (error) {
-      console.error("Failed to add category,Response data is undefined");
+      if (error.response && error.response.status === 400) {
+       return toast.error("Category already exists");
+      } else if(error) {
+        if (error.response && error.response.status === 401) {
+        return  toast.error("All fields must be filled");
+        }
+      }
+      console.error("Failed to add category:", error);
+      toast.error("Failed to add category. Please try again later.");
     }
-  };
+  }
 
   const fetchCategories = async (page) => {
     try {
@@ -329,12 +336,7 @@ const AddCategories = () => {
                     >
                       {pageNumber}
                     </button>
-                    {console.log(
-                      "currentPage:",
-                      currentPage,
-                      "pageNumber:",
-                      pageNumber
-                    )}
+                    
                   </li>
                 )
               )}
