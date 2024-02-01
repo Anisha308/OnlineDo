@@ -274,10 +274,7 @@ const isLastPage = currentPage === totalPages;
                         <button
                           onClick={(e) => {
                             setSortBy("newest");
-                            console.log(
-                              "Sorting by newest. Current sortBy:",
-                              sortBy
-                            );
+                           
                             handleSearchSortFilter(e);
                           }}
                           className="text-gray-500 block px-4 py-2 text-sm"

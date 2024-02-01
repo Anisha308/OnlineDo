@@ -21,7 +21,6 @@ const ViewCourse = () => {
       try {
         const response = await apiInstance.get(`/api/users/getCourse/${id}`);
         setCourse(response.data);
-        console.log(response.data,'resdata');
         // Extracting instructorid from course data
         const instructorId = response.data.course.instructor;
         // const categoryId = response.data.course.category;

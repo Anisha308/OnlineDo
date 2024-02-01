@@ -39,7 +39,7 @@ router.get("/getCategory/:categoryId", courseCategory);
 router.get("/getInstructor/:instructorId", getInstructor);
 
 router.post("/create-checkout-session/:price", protect, setStripeSession);
-router.post("/google", googleAuth);
+router.post("/google",googleAuth);
 router.get("/:userId/purchaselist", getPurchaseByUser);
 router.get("/:purchaseId/course", protect, getSingleCourseById);
 router.get("/chat/getChats",userChats)

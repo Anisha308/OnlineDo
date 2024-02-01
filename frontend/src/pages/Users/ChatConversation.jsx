@@ -21,7 +21,7 @@ const Conversation = ({ data, currentUser, online }) => {
     };
     getUserData();
   }, [data.members, currentUser, dispatch, getUser]);
-  console.log(userData, "userDATA");
+
   return (
     <>
       <div className="flex items-center gap-4 hover:bg-gray-100 cursor-pointer rounded p-2 md:p-4">

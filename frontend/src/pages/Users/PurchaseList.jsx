@@ -19,7 +19,6 @@ const YourCourse = () => {
             user: user._id,
           }
         );
-console.log(response,'responsess');
         setPurchases(response.data.detailedCourses);
       } catch (error) {
         console.error("Error fetching purchases", error);

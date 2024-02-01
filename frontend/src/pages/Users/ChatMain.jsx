@@ -14,8 +14,7 @@ const Chat = () => {
   const socket = useRef();
   const { instructorInfo } = useSelector((state) => state.instructorAuth);
   const { userInfo } = useSelector((state) => state.auth);
-  console.log(userInfo, "userInfo");
-  console.log(instructorInfo, "instructorInfo");
+
   const [chats, setChats] = useState([]);
   const [user, setUser] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -33,7 +32,6 @@ const Chat = () => {
         if (idToFetch) {
           const { data } = await getUser(idToFetch);
 
-          console.log(data, "data");
           setUser(data);
         }
       } catch (error) {
@@ -51,7 +49,6 @@ const Chat = () => {
         if (userId) {
           // Add condition to fetch chats only when currentChat is not null
           const { data } = await userChats(userId);
-          console.log(data, "this is data");
           // Convert updatedAt strings to Date objects and then sort in descending order
           const sortedChats = data
             .map((chat) => ({ ...chat, updatedAt: new Date(chat.updatedAt) }))
@@ -128,8 +125,7 @@ const Chat = () => {
               {chats.map((chat) => (
                 <div
                   onClick={() => {
-                    console.log("Clicked chat:", chat);
-
+                  
                     setCurrentChat(chat);
                   }}
                 >

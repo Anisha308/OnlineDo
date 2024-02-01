@@ -4,7 +4,6 @@ import Instructor from "../models/InstructorModel.js";
 import User from "../models/userModel.js";
 
 export const createChat = async (req, res) => {
-  console.log("reachinggg")
   // Check if there is an existing chat with the same members
   const existingChat = await Chat.findOne({
     members: { $all: [req.body.senderId, req.body.receiverId] },
