@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { useSelector, useDispatch } from "react-redux";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { instructlogout } from "../../Slices/instructorApiSlice";
+import ONLINEDO from "../../assets/images/ONLINEDO.png";
 
 const InstructorHeader = () => {
   const headerRef = useRef(null);
@@ -71,10 +72,10 @@ const InstructorHeader = () => {
           {/*-------- logo ------- */}
           <div>
             <img
-              src={logo}
+              src={ONLINEDO}
               alt=""
               style={{ maxWidth: "90px" }}
-              className="pr-[20px] "
+              className="pr-[20px] w-300 h-25 "
             />
           </div>
           {/*-------menu-------*/}

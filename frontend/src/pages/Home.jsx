@@ -3,8 +3,12 @@ import { MdOutlineVideoLibrary } from "react-icons/md";
 import { PiUsersBold } from "react-icons/pi";
 import { LuClock } from "react-icons/lu";
 import { useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
 function Home() {
+ const navigate=useNavigate()
+  const getcourse=() => {
+    navigate('/getcourse')
+  }
   return (
     <>
       <div className="py-[3px]"></div>
@@ -25,7 +29,7 @@ function Home() {
                     build on one another,reinforcing lessons. Available in a
                     range of experience levels from beginner to advanced.
                   </p>
-                  <button className="btn">Explore Courses</button>
+                  <button onClick={getcourse}   className="btn">Explore Courses</button>
                 </div>
               </div>
             </div>

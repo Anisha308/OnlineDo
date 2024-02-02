@@ -1,17 +1,17 @@
 import { useEffect, useRef } from "react";
-import logo from "../../assets/images/yes.png";
+import ONLINEDO from "../../assets/images/ONLINEDO.png";
 import { NavLink, Link } from "react-router-dom";
 import userImg from "../../assets/images/profile.png";
 import { BiMenu } from "react-icons/bi";
 import { useAdminlogoutMutation } from "../../Slices/adminApiSlice";
 import { adminlogout } from "../../Slices/authAdminSlice";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { useDispatch } from "react-redux";
-
+import { useDispatch,useSelector} from "react-redux";
 const AdminHeader = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
   const dispatch = useDispatch();
+  const { adminInfo } = useSelector((state) => state.authAdmin);
 
   const navigate = useNavigate();
 
@@ -53,28 +53,31 @@ const AdminHeader = () => {
           {/*-------- logo ------- */}
           <div>
             <img
-              src={logo}
+              src={ONLINEDO}
               alt=""
               style={{ maxWidth: "90px" }}
-              className="pr-[20px] "
+              className="pr-[20px] w-300 h-25 "
             />
           </div>
           {/*-------menu-------*/}
 
-
           <div className="flex items-center gap-4">
+
             <div className="text-white">Welcome Admin!</div>
+            {adminInfo ? (
+
             <button
               onClick={logoutHandler}
               className="bg-black py-2 px-5 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]"
             >
               Logout
             </button>
-
+                        ):(
             <span className="md:hidden" onClick={toggleMenu}>
               <BiMenu className=" text-[white] w-6 h-6 cursor-pointer" />
-            </span>
+            </span>)}
           </div>
+                        
         </div>
       </div>
     </header>

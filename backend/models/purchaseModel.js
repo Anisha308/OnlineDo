@@ -11,6 +11,12 @@ const purchaseSchema = new mongoose.Schema({
     ref: "Course",
     required: true,
   },
+  instructor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Instructor",
+    required: true,
+  },
+
   purchaseDate: {
     type: Date,
     default: Date.now,

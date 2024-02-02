@@ -23,7 +23,6 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const [editedUserData, setEditedUserData] = useState({
     name: "",
-    email: "",
     mobile: "",
     profilephoto: "",
   });
@@ -125,14 +124,8 @@ const UserProfile = () => {
                 <li className="breadcrumb-item">
                   <span className="text-gray-500">/</span>
                 </li>
-                <li className="breadcrumb-item">
-                  <a href="#" className="text-blue-500">
-                    User
-                  </a>
-                </li>
-                <li className="breadcrumb-item">
-                  <span className="text-gray-500">/</span>
-                </li>
+               
+               
                 <li className="breadcrumb-item active" aria-current="page">
                   User Profile
                 </li>
@@ -158,9 +151,7 @@ const UserProfile = () => {
                 <p className="text-muted mb-2">Student</p>
                 <p className="text-muted mb-4">{users.email}</p>
                 <div className="flex justify-center mb-2">
-                  {/* <button type="button" className="btn btn-blue me-1">
-                    Edit profile
-                  </button> */}
+                  
                   <button
                     type="button"
                     className="btn btn-outline-success"
@@ -215,17 +206,7 @@ const UserProfile = () => {
                   </button>
                 </div>
               </div>
-              {/* <hr className="mb-5" /> */}
-              {/* <div className="flex mb-6">
-                  <div className="col-sm-3">
-                    <p className="mb-4">Address :</p>
-                  </div>
-                  <div className="col-sm-9">
-                    <p className="text-muted ml-14 ">
-                      Bay Area, San Francisco, CA
-                    </p>
-                  </div>
-                </div> */}
+            
             </div>
           </div>
         </div>
@@ -291,7 +272,7 @@ const UserProfile = () => {
                     name="email"
                     id="email"
                     value={editedUserData.email}
-                    onChange={handleInputChange}
+                    
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Eg: email@gmail.com"
                   />

@@ -9,7 +9,7 @@ import InstructorHome from "../pages/InstructorHome.jsx";
 import InstructorCourseView from "../pages/Intructors/InstructorCourseView.jsx";
 import { Routes, Route } from "react-router-dom";
 import UpdateCourse from "../pages/Intructors/UpdateCourse.jsx";
-
+import PurchaseCourse from "../pages/Intructors/purchasedCourse.jsx";
 function InstructorRouter() {
   return (
     <>
@@ -42,6 +42,10 @@ function InstructorRouter() {
         <Route
           path="/instructor/updatecourse/:id"
           element={<UpdateCourse />}
+        ></Route>
+        <Route
+          path="/instructor/coursepurchase"
+          element={<PurchaseCourse />}
         ></Route>
       </Routes>
     </>

@@ -134,12 +134,12 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
             </div>
             {/* chat-sender */}
             <div className="flex justify-between items-center bg-white rounded p-2">
-              <div
+              {/* <div
                 onClick={() => imageRef.current.click()}
                 className="bg-gray-200 rounded-full flex items-center justify-center font-bold cursor-pointer text-gray-800"
               >
                 +
-              </div>
+              </div> */}
               <InputEmoji
                 value={newMessage}
                 onChange={handleChange}

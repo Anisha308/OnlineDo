@@ -13,7 +13,12 @@ import {
 
 } from "../controllers/instructorController.js";
 
-import { addCourse,getcoursetoupdate,updatecourse } from "../controllers/courseController.js";
+import {
+  addCourse,
+  getcoursetoupdate,
+  updatecourse,
+  getchpurchase,
+} from "../controllers/courseController.js";
 import { instructorProtect } from "../middleware/instructorAuthMiddleware.js";
 
 router.post("/", registerInstructor);
@@ -34,4 +39,5 @@ router.get("/categories", instructorProtect, showCategory);
 router.get("/instructorcourse/:id", instructorProtect, instructorviewCourse);
 router.put("/updatecourse/:id", instructorProtect, updatecourse);
 router.get("/:id/courselist", instructorProtect, getcoursetoupdate);
+router.get("/purchaselist",getchpurchase)
 export default router;

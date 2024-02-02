@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import Instructor from "../models/InstructorModel.js";
 import Course from "../models/courseModel.js";
 import { toast } from "react-toastify";
+import Purchase from "../models/purchaseModel.js";
 
 const addCourse = asyncHandler(async (req, res) => {
   const instructorId = req.params.instructorId;
@@ -93,7 +94,26 @@ if (existingCourse) {
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
+}); 
+
+
+
+const getchpurchase = asyncHandler(async (req, res) => {
+  try {
+     const instructorId = req.query.instructorId
+  console.log(instructorId, 'instructoruid');
+  
+    const result = await Purchase.find({ instructor: instructorId })
+      .populate("user")
+      .populate("courses");;
+  console.log(result);
+      res.status(200).json(result);
+
+  } catch (error) {
+    console.log(error,'error');
+  }
+ 
+})
 const updatecourse = asyncHandler(async (req, res) => {
   try {
     const courseId = req.params.id;
@@ -128,4 +148,4 @@ const getcoursetoupdate = asyncHandler(async (req, res) => {
     console.error(error);
   }
 });
-export { addCourse, updatecourse, getcoursetoupdate };
+export { addCourse, updatecourse, getcoursetoupdate, getchpurchase };

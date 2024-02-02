@@ -101,21 +101,24 @@ const Header = () => {
           <div className="flex items-center gap-4">
             {userInfo ? (
               <div className="flex items-center">
-                <span className="mr-2 text-white">Welcome {userInfo.name}</span>
+                <span className="mr-2 text-white">
+                  Welcome {userInfo.name} !
+                </span>
                 <div>
                   <Link to={`/profile/${userInfo._id}`}>
-                    <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
+                    <figure class="w-[35px] h-[35px] rounded-full overflow-hidden ml-5 cursor-pointer">
                       <img
-                        src={userImg}
-                        className="w-full rounded full"
+                        src={userInfo.profilephoto}
+                        class="w-full h-full object-cover"
                         alt=""
                       />
                     </figure>
                   </Link>
                 </div>
+
                 <button
                   onClick={logoutHandler}
-                  className="bg-black py-2 px-5 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]"
+                  className="bg-black ml-5 pr-4  py-2 px-5 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]"
                 >
                   Logout
                 </button>

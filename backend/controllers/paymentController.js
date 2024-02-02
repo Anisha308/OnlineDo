@@ -13,17 +13,20 @@ const setStripeSession = async (req, res) => {
 
     const user = req.body.user;
     const course = req.body.courses.course; // Assuming you have course information in the request
-
-    if (user && course) {
+  
+    const instructor = await Instructor.findOne({
+    name: req.body.instructorName,
+    });
+    
+    if (instructor && user && course) {
       const newPurchase = new Purchase({
         user: user._id,
         courses: course._id,
+        instructor:instructor._id,
       });
       await newPurchase.save();
     }
-    const instructor = await Instructor.findOne({
-      name: req.body.instructorName,
-    });
+  
     if (instructor) {
       const session = await stripeInstance.checkout.sessions.create({
         line_items: [
