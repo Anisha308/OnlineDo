@@ -3,63 +3,63 @@ import { useParams } from "react-router-dom";
 import apiInstance from "../../../Api";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import InstructorSidebar from "../../components/Header/instructorSidebar";
-import IconChat from "../../components/iconchat";
-const InstructCourseView = () => {
+import SideBar from "../../components/Header/SideBar"
+const DetailedCourse = () => {
   const user = useSelector((state) => state.auth.userInfo);
-  const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [instructor, setInstructor] = useState(null);
   //   // const [categoryId, setCategoryId] = useState(null);
   const [instructorId, setInstructorId] = useState(null);
   //   // const [category, setCategory] = useState(null);
-
+  const instructid=useParams()
   const navigate = useNavigate();
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        console.log(id,'id');
+        console.log(instructid.instructorId, 'iddddddddddddd');
+        const id=instructid.instructorId
+        
         const response = await apiInstance.get(
-          
-          `/api/instructor/instructorcourse/${id}`
-        );
-        setCourse(response.data);
+          `/api/admin/courselist/${id}`
+          );
+       console.log(
+         response.data.courses,
+         "responseeeeeeeeeeee"
+       );
         // Extracting instructorid from course data
-        const instructorId = response.data.course.instructor;
-        console.log(instructorId,'instructoirifd');
+   
         // const categoryId = response.data.course.category;
-        setInstructorId(instructorId);
         // setCategoryId(categoryId);
-        const instructorresponse = await apiInstance.get(
-          `/api/users/getInstructor/${instructorId}`
-        );
-        setInstructor(instructorresponse.data);
-        // const categoryresponse = await apiInstance.get(
+       
+        setCourse(response.data.courses);
+const instructors = response.data.courses.map((course) => course.instructor);
+// Assuming each course has the same instructor, you can get the first one
+// You might want to handle cases where there are multiple instructors differently
+const instructor = instructors.length > 0 ? instructors[0] : null;
+        setInstructor(instructor);
+
+        console.log(instructor,'l');        // const categoryresponse = await apiInstance.get(
         //   `api/instructor/getCategory/${categoryId}`
         // );
         // setCategory(categoryresponse.data);
       } catch (error) {
         console.error("Error fetching course", error);
-        navigate("/login");
       }
     };
     fetchCourse();
-  }, [id]);
-
-
+  },[instructid]);
 
   const toggleVideos = (moduleId) => {
-     const videosElement = document.getElementById(`videos-${moduleId}`);
+    const videosElement = document.getElementById(`videos-${moduleId}`);
     if (videosElement) {
       videosElement.classList.toggle("hidden");
-     }
-   };
+    }
+  };
   return (
     <div className="flex ">
-      <InstructorSidebar instructorId={instructorId} />
-      <IconChat />
+      <SideBar instructorId={instructorId} />
 
-      {course && (
+      {course && course.map((course) => (
         <>
           <section
             className="max-w-9xl px-6 py-8 mx-auto  bg-white dark:bg-gray-900 mr-52"
@@ -70,7 +70,7 @@ const InstructCourseView = () => {
                 <div className="mx-auto space-y-12 max-w-8xl">
                   <div>
                     <h1 className="text-3xl font-semibold text-gray-800 capitalize lg:text-4xl dark:text-white">
-                      <p>{course.course.courseName}</p>
+                      <p>{course.courseName}</p>
                     </h1>
                     <div className="mt-2">
                       <span className="inline-block w-40 h-1 rounded-full bg-blue-500" />
@@ -87,7 +87,7 @@ const InstructCourseView = () => {
                         width: "80%",
                       }}
                     >
-                      {course.course.description}
+                      {course.description}
                     </p>
                     <div
                       className="w-full pl-8 md:w-1/3 md:ml-4"
@@ -100,25 +100,25 @@ const InstructCourseView = () => {
                         {" "}
                         <img
                           className="w-full rounded-lg object-cover object-center"
-                          src={course.course.thumbnail}
+                          src={course.thumbnail}
                           alt="product"
                         />
                         <div>
                           <div className="md:w-2/3 ">
                             <p className="font-bold text-gray-500">
-                              {course.course.courseName}
+                              {course.courseName}
                             </p>
                             <p className="rounded-full  bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
-                              {course.course.duration} course
+                              {course.duration} course
                             </p>
                           </div>
 
                           <div className="my-6 flex items-center justify-between px-4">
                             <p className="font-bold text-gray-500">
-                              ₹ {course.course.price}
+                              ₹ {course.price}
                             </p>
                             <p className="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
-                              {course.course.paid}
+                              {course.paid}
                             </p>
                           </div>
                           <div className="my-4 flex items-center justify-between px-4">
@@ -134,11 +134,11 @@ const InstructCourseView = () => {
                     </div>
                   </div>
 
-                  {course.course.modules &&
-                    course.course.modules.length > 0 && (
+                  {course.modules &&
+                    course.modules.length > 0 && (
                       <>
                         <h3 className="text-xl font-bold mt-4">Modules</h3>
-                        {course.course.modules.map((module) => (
+                        {course.modules.map((module) => (
                           <div key={module._id} className="mb-4">
                             <h4
                               className="text-lg pb-6 font-medium cursor-pointer"
@@ -184,9 +184,9 @@ const InstructCourseView = () => {
             </div>
           </section>
         </>
-      )}
+      ))}
     </div>
   );
 };
 
-export default InstructCourseView;
+export default DetailedCourse;

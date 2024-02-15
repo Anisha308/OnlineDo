@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiInstance from "../../../Api";
 import { useSelector } from "react-redux";
-
+import IconChat from "../../components/iconchat";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -34,6 +34,8 @@ console.log(instructor._id);
   return (
     <div className="flex flex-wrap   bg-white p-8 rounded-md ">
       <InstructorSidebar />
+      <IconChat />
+
       <div className=" w-[1000px]   ">
         <div className=" flex items-center justify-between pb-6">
           <div className="float-left">

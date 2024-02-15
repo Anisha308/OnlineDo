@@ -170,15 +170,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-const viewCourse = asyncHandler(async (req, res) => {
-  try {
-    const courseId = req.params.id;
-    const course = await Course.findById(courseId);
-    res.status(200).json({ success: true, course });
-  } catch (error) {
-    console.error("Error fetching course", error);
-  }
-});
+
 
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
@@ -404,7 +396,6 @@ export {
   otpVerify,
   getAllCourses,
   searchSortFilterCourses,
-  viewCourse,
   courseCategory,
   getInstructor,
   googleAuth,

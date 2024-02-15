@@ -10,10 +10,12 @@ const Conversation = ({ data, currentUser, online }) => {
 
   useEffect(() => {
     const userId = data.members.find((id) => id !== currentUser);
+    console.log(userId,'userid');
     const getUserData = async () => {
       try {
         const { data } = await getUser(userId);
         setUserData(data);
+        console.log(userData,'ooo');
         dispatch({ type: "SAVE_USER", data: data });
       } catch (error) {
         console.log(error);
@@ -30,7 +32,7 @@ const Conversation = ({ data, currentUser, online }) => {
         )}
         <img
           src={
-            userData?.userDetails?.profilephoto ||
+            userData?.userDetails?.profilephoto ||userData?.instructorDetails?.profilephoto ||
             "https://cdn1.iconfinder.com/data/icons/instagram-ui-colored/48/JD-17-512.png"
           }
           alt="Profile"

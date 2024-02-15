@@ -190,6 +190,7 @@ const getAllInstructors = asyncHandler(async (req, res) => {
         companyname: 1,
         profilephoto: 1,
         idProof: 1,
+        courses:1,
         experienceCertificateFile: 1,
         _id: 1,
       }
@@ -198,7 +199,7 @@ const getAllInstructors = asyncHandler(async (req, res) => {
       .limit(pageSize)
       .lean(); // Convert Mongoose documents to plain JavaScript objects // Corrected syntax: use parentheses instead of colons
     const totalInstructors = await Instructor.countDocuments(); // Count total users
-
+console.log(instructors,'instructors');
     const totalPages = Math.ceil(totalInstructors / pageSize);
     res.status(200).json({
       success: true,

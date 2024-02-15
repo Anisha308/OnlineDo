@@ -44,6 +44,23 @@ const InstructorSidebar = ({ instructorId }) => {
               },
             ],
           },
+          {
+            title: "Purchases",
+            itemId: "/purchases",
+            elemBefore: () => <Icon name="instructor" />,
+            subNav: [
+              {
+                elemBefore: () => (
+                  <Link
+                    to={`/instructor/coursepurchase`}
+                    className="text-primaryColor font-medium ml-1"
+                  >
+                    PurchaseList
+                  </Link>
+                ),
+              },
+            ],
+          },
         ]}
       />
     </div>

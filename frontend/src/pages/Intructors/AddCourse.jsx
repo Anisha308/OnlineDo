@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAddcourseMutation } from "../../Slices/authInstructorSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
+import IconChat from "../../components/iconchat";
 import { toast } from "react-toastify";
 import uploadToCloudinary from "../../../../backend/utils/uploadCloudinary";
 import apiInstance from "../../../Api";
@@ -117,6 +118,16 @@ const AddCourse = () => {
     }
 
     try {
+      console.log( courseName,
+        description,
+        price,
+        duration,
+        paid,
+        categories,
+         image.secure_url,
+        modules,
+        instructorId,
+        previewVideo);
       const { data } = await addCourseMutation({
         courseName,
         description,
@@ -129,7 +140,7 @@ const AddCourse = () => {
         instructorId,
         previewVideo,
       });
-
+console.log(data);
       if (data) {
         Navigate(`/instructor/${instructorId}/courselist`);
         toast.success("Course added successfully:", data);
@@ -252,7 +263,7 @@ const AddCourse = () => {
   return (
     <div className="flex ">
       <InstructorSidebar instructorId={instructorId} />
-
+<IconChat/>
       <link
         rel="stylesheet"
         href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"

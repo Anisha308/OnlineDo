@@ -111,7 +111,9 @@ const InstructorLists = () => {
       }
     }
   };
-
+  const handleview = (instructorId) => {
+    navigate(`/admin/course/${instructorId}`)
+  }
   const cancelBlock = () => {
     setShowModal(false);
     setInstructorIdToBlock(null);
@@ -359,6 +361,11 @@ const InstructorLists = () => {
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <div className="flex space-x-4">
+                            <button onClick={()=>handleview(instructor._id) } className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 bg-red-200 opacity-50 rounded-full">
+                               view
+                            </button>
+                          </div>
                           <div className="flex space-x-4">
                             <button
                               onClick={() => handledocs(instructor._id)}

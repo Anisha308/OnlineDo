@@ -4,8 +4,36 @@ import Course from "../models/courseModel.js";
 import { toast } from "react-toastify";
 import Purchase from "../models/purchaseModel.js";
 
+
+const viewCourse = asyncHandler(async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    console.log(courseId,'ppp');
+    const course = await Course.findById(courseId);
+    res.status(200).json({ success: true, course });
+  } catch (error) {
+    console.error("Error fetching course", error);
+  }
+});
+const instructorcourse = asyncHandler(async (req, res) => {
+  try {
+    const instructorId = req.params.id;
+    console.log(instructorId, 'instructorid');
+
+    // Fetch courses for the given instructorId
+    const courses = await Course.find({ instructor: instructorId });
+    res.status(200).json({ success: true, courses });
+  } catch (error) {
+    console.error("Error fetching courses for instructor", error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+});
+
+
+
 const addCourse = asyncHandler(async (req, res) => {
   const instructorId = req.params.instructorId;
+  console.log(instructorId,'pp');
   const {
     courseName,
     paid,
@@ -17,7 +45,7 @@ const addCourse = asyncHandler(async (req, res) => {
     image,
     previewVideo,
   } = req.body;
-
+console.log(req.body,'req.body');
   if (
     !courseName ||
     !description ||
@@ -43,6 +71,7 @@ const addCourse = asyncHandler(async (req, res) => {
   try {
     // Check if the instructor exists
     const instructor = await Instructor.findById(instructorId);
+    console.log(instructor,'instructor');
     if (!instructor) {
       res.status(404);
       throw new Error("Instructor not found");
@@ -52,8 +81,9 @@ const existingCourse = await Course.findOne({
   instructor: instructorId,
   courseName,
 });
-    
-if (existingCourse) {
+    console.log(existingCourse,'existssss');
+    if (existingCourse) {
+  console.log('dups');
   res.status(400).json({ error: "dup" });
   return;
 }
@@ -71,7 +101,7 @@ if (existingCourse) {
       modules, // Corrected to use the modules state
       previewVideo,
     });
-
+console.log(course,'course');
     if (req.file) {
       // Assuming you want to add the file to the first module's videos
       if (
@@ -86,6 +116,7 @@ if (existingCourse) {
   
     // Save the course
     const savedCourse = await course.save();
+    console.log(savedCourse,'saves');
     // Add the course to the instructor's courses array
     instructor.courses.push(savedCourse._id);
     await instructor.save();
@@ -101,12 +132,10 @@ if (existingCourse) {
 const getchpurchase = asyncHandler(async (req, res) => {
   try {
      const instructorId = req.query.instructorId
-  console.log(instructorId, 'instructoruid');
   
     const result = await Purchase.find({ instructor: instructorId })
       .populate("user")
       .populate("courses");;
-  console.log(result);
       res.status(200).json(result);
 
   } catch (error) {
@@ -148,4 +177,4 @@ const getcoursetoupdate = asyncHandler(async (req, res) => {
     console.error(error);
   }
 });
-export { addCourse, updatecourse, getcoursetoupdate, getchpurchase };
+export {instructorcourse,viewCourse, addCourse, updatecourse, getcoursetoupdate, getchpurchase };

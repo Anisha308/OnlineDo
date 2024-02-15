@@ -69,50 +69,51 @@ const Chat = () => {
   }, [userInfo?._id, instructorInfo?._id]);
 
   // Connect to Socket.io
-  //   useEffect(() => {
-  //     socket.current = io("http://localhost:3002");
-  // console.log(socket.current,'connc');
-  //     const userId = userInfo?._id || instructorInfo?._id;
+    useEffect(() => {
+      socket.current = io("http://localhost:3002");
+  console.log(socket.current,'connc');
+      const userId = userInfo?._id || instructorInfo?._id;
+console.log(userId);
+      if (userId) {
+        socket.current.emit("new-user-add", userId);
+      }
 
-  //     if (userId) {
-  //       socket.current.emit("new-user-add", userId);
-  //     }
-
-  //     socket.current.on("get-users", (users) => {
-  //       setOnlineUsers(users);
-  //     });
-  //   }, [userInfo?._id, instructorInfo?._id]);
+      socket.current.on("get-users", (users) => {
+        console.log(users,'usressssssssss');
+        setOnlineUsers(users);
+      });
+    }, [userInfo?._id, instructorInfo?._id]);
 
   // Send Message to socket server
-  // useEffect(() => {
-  //     if (sendMessage !== null) {
-  //       console.log('sendmedd',sendMessage);
-  //     socket.current.emit("send-message", sendMessage);
-  //   }
-  // }, [sendMessage]);
+  useEffect(() => {
+      if (sendMessage !== null) {
+        console.log('sendmedd',sendMessage);
+      socket.current.emit("send-message", sendMessage);
+    }
+  }, [sendMessage]);
 
   // Get the message from socket server
-  // useEffect(() => {
-  //   socket.current.on("recieve-message", (data) => {
-  //     console.log(data);
-  //     setReceivedMessage(data);
-  //   });
-  // }, []);
+  useEffect(() => {
+    socket.current.on("recieve-message", (data) => {
+      console.log(data);
+      setReceivedMessage(data);
+    });
+  }, []);
 
-  //   const checkOnlineStatus = (chat) => {
-  //     console.log(userId,'onlineuserid');
-  //   const userId = userInfo?._id || instructorInfo?._id;
+    const checkOnlineStatus = (chat) => {
+    const userId = userInfo?._id || instructorInfo?._id;
+      console.log(userId,'onlineuserid');
 
-  //   if (userId) {
-  //       const chatMember = chat.members.find((member) => member !== userId);
-  //       console.log(chatMember,'chhatmemberrrrr');
-  //       const online = onlineUsers.find((user) => user.userId === chatMember);
-  //       console.log(online,'onlilne');
-  //     return online ? true : false;
-  //   }
+    if (userId) {
+        const chatMember = chat.members.find((member) => member !== userId);
+        console.log(chatMember,'chhatmemberrrrr');
+        const online = onlineUsers.find((user) => user.userId === chatMember);
+        console.log(onlineUsers,'onlilne');
+      return online ? true : false;
+    }
 
-  //   return false; // Default to false if userId is not available
-  // };
+    return false; // Default to false if userId is not available
+  };
 
   return (
     <div className="grid grid-cols-1  sm:grid-cols-5 mr-2 gap-2">
@@ -132,7 +133,7 @@ const Chat = () => {
                   <Conversation
                     data={chat}
                     currentUser={userInfo?._id}
-                    // online={checkOnlineStatus(chat)}
+                    online={checkOnlineStatus(chat)}
                   />
                 </div>
               ))}

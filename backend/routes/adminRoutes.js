@@ -14,8 +14,11 @@ import {
   rejectmail,
  
 } from "../controllers/adminController.js";
+
 import { addCategories,
-  getCategories} from "../controllers/categoryController.js"
+  getCategories
+} from "../controllers/categoryController.js"
+  import { viewCourse,instructorcourse } from "../controllers/courseController.js";
 router.post("/auth", authAdmin);
 router.post("/logout", logoutAdmin);
 
@@ -34,5 +37,6 @@ router.post("/sendmail", rejectmail);
 
 router.post("/addcategory", adminProtect, addCategories);
 router.get("/getcategory", adminProtect, getCategories);
-
+router.get("/getCourse/:id", viewCourse);
+router.get("/courselist/:id",instructorcourse)
 export default router;

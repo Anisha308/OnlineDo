@@ -8,18 +8,18 @@ import {
   updateUserProfile,
   getAllCourses,
   searchSortFilterCourses,
-  viewCourse,
   courseCategory,
   getInstructor,
   googleAuth,
   getSingleCourseById,
 } from "../controllers/userController.js";
 import { createChat, userChats } from "../controllers/chatController.js";
+import { viewCourse } from "../controllers/courseController.js";
+
 import {
   setStripeSession,
   getPurchaseByUser,
 } from "../controllers/paymentController.js";
-
 const router = express.Router();
 import { protect } from "../middleware/authMiddleware.js";
 

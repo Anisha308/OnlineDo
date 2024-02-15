@@ -5,7 +5,7 @@ import {
   useGetInstructProfileMutation,
   useUpdateInstructProfileMutation,
 } from "../../Slices/authInstructorSlice";
-
+import IconChat from "../../components/iconchat";
 import { useDispatch, useSelector } from "react-redux";
 import { instructorSetCredentials } from "../../Slices/instructorApiSlice";
 
@@ -168,6 +168,8 @@ const InstructorProfile = () => {
 
   return (
     <section className="bg-gray-100 ">
+      <IconChat />
+
       <div key="#key" className="container mx-auto ">
         <div className="row">
           <div className=" lg:flex lg:items-center lg:justify-between flex-wrap">

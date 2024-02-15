@@ -9,16 +9,15 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
-import IconChat from "../../components/iconchat";
 import { useGetCourseQuery } from "../../Slices/authInstructorSlice";
 import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Style } from "@mui/icons-material";
 import apiInstance from "../../../Api";
 
-
-const Courselists = () => {
-  const { instructorId } = useParams();
+const Course = () => {
+    const { instructorId } = useParams();
+    console.log(instructorId,'ins');
   const Navigate = useNavigate();
   const { data, error, isLoading } = useGetCourseQuery(instructorId);
 
@@ -27,7 +26,7 @@ const Courselists = () => {
   const [isLastPage, setIsLastPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // Assuming a default value of 1
   const [totalPages, setTotalPages] = useState(1); // Assuming a default value of 1
-const [activePage, setActivePage] = useState(1);
+  const [activePage, setActivePage] = useState(1);
 
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -40,7 +39,7 @@ const [activePage, setActivePage] = useState(1);
       setInstructor(data.instructor); // Assuming data has a property named 'instructor'
       setPagination(data.pagination);
       setCurrentPage(data.pagination.currentPage);
-    setTotalPages(data.pagination.totalPages);
+      setTotalPages(data.pagination.totalPages);
 
       setIsLastPage(data.pagination.currentPage === data.pagination.totalPages);
     } else if (error && error.status === 401) {
@@ -50,7 +49,6 @@ const [activePage, setActivePage] = useState(1);
 
   const paginate = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
-
       const fetchData = async () => {
         // Update the pagination state
         setActivePage(pageNumber);
@@ -71,12 +69,12 @@ const [activePage, setActivePage] = useState(1);
       };
 
       fetchData();
-    };
-  }
+    }
+  };
   const fetchInstructorCourses = async (instructorId, page) => {
     try {
       const response = await apiInstance.get(
-        `api/instructor/${instructorId}/courselist?page=${page}`
+        `api/admin/getCourse/${instructorId}?page=${page}`
       );
 
       const { courses, instructor, pagination } = response.data;
@@ -102,7 +100,6 @@ const [activePage, setActivePage] = useState(1);
   return (
     <div className="flex  ">
       <InstructorSidebar instructorId={instructorId} />
-      <IconChat/>
       <div className="ml-5 flex flex-wrap  gap-5">
         {isLoading && <div>Loading...</div>}
 
@@ -111,7 +108,7 @@ const [activePage, setActivePage] = useState(1);
           courses.map((course, index) => (
             <Link
               to={{
-                pathname: `/instructor/instructorcourse/${course._id}`,
+                pathname: `/admin/getcourse/${instructor._id}`,
                 state: { course },
               }}
               key={index}
@@ -172,8 +169,7 @@ const [activePage, setActivePage] = useState(1);
                   <li key={index}>
                     <a
                       className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-300 p-0 text-sm text-black shadow-md transition duration-150 ease-in-out 
-                      ${
-activePage === index + 1 ? "bg-gray-500" : ""}
+                      ${activePage === index + 1 ? "bg-gray-500" : ""}
                       }`}
                       href="#"
                       onClick={() => paginate(index + 1)}
@@ -219,6 +215,4 @@ activePage === index + 1 ? "bg-gray-500" : ""}
   );
 };
 
-export default Courselists;
-
-
+export default Course;

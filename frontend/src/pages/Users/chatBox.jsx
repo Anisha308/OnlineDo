@@ -97,7 +97,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
                 <div className="flex-shrink-0">
                   <img
                     src={
-                      userData?.userDetails?.profilephoto ||
+                      userData?.userDetails?.profilephoto ||userData?.instructorDetails?.profilephoto||
                       "https://cdn1.iconfinder.com/data/icons/instagram-ui-colored/48/JD-17-512.png"
                     }
                     alt="Profile"
@@ -146,7 +146,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
                 className="flex-1 h-70% bg-gray-300 rounded px-4"
               />
               <div
-                className="button p-2 cursor-pointer bg-blue-500 text-white"
+                className="button p-2 cursor-pointer bg-blue-900 text-white"
                 onClick={handleSend}
               >
                 Send
