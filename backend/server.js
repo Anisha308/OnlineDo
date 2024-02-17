@@ -29,44 +29,10 @@ const corsOptions = {
 const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
+
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3002",
-  },
-});
-// Socket.IO logic
-let activeUsers = [];
 
-io.on("connection", (socket) => {
-  // add new User
-  console.log('socketid');
-  socket.on("new-user-add", (newUserId) => {
-    if (!activeUsers.some((user) => user.userId === newUserId)) {
-      activeUsers.push({ userId: newUserId, socketId: socket.id });
-      console.log("New User Connected", activeUsers);
-    }
-    io.emit("get-users", activeUsers);
-  }); 
 
- 
-
-  socket.on("disconnect", () => {
-    activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
-    console.log("User Disconnected", activeUsers);
-    io.emit("get-users", activeUsers);
-  });
-
-  socket.on("send-message", (data) => {
-    const { receiverId } = data;
-    const user = activeUsers.find((user) => user.userId === receiverId);
-    console.log("Sending from socket to :", receiverId)
-    console.log("Data: ", data)
-    if (user) {
-      io.to(user.socketId).emit("recieve-message", data);
-    }
-  });
-});
 
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -87,4 +53,36 @@ app.get("/", (req, res) => res.send("Server is ready"));
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
+let socketport=app.listen(port, () => console.log(`Server started on port ${port}`));
+const io = new Server(socketport, {
+  cors: {
+    origin: "http://localhost:3002",
+  },
+});
+// Socket.IO logic
+let activeUsers = [];
+
+io.on("connection", (socket) => {
+  // add new User
+  socket.on("new-user-add", (newUserId) => {
+    if (!activeUsers.some((user) => user.userId === newUserId)) {
+      activeUsers.push({ userId: newUserId, socketId: socket.id });
+    }
+    io.emit("get-users", activeUsers);
+  }); 
+
+ 
+
+  socket.on("disconnect", () => {
+    activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
+    io.emit("get-users", activeUsers);
+  });
+
+  socket.on("send-message", (data) => {
+    const { receiverId } = data;
+    const user = activeUsers.find((user) => user.userId === receiverId);
+    if (user) {
+      io.to(user.socketId).emit("recieve-message", data);
+    }
+  });
+});

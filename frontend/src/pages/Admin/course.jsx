@@ -14,6 +14,7 @@ import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Style } from "@mui/icons-material";
 import apiInstance from "../../../Api";
+import SideBar from "../../components/Header/SideBar";
 
 const Course = () => {
     const { instructorId } = useParams();
@@ -99,7 +100,7 @@ const Course = () => {
 
   return (
     <div className="flex  ">
-      <InstructorSidebar instructorId={instructorId} />
+      <SideBar instructorId={instructorId} />
       <div className="ml-5 flex flex-wrap  gap-5">
         {isLoading && <div>Loading...</div>}
 

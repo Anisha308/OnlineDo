@@ -10,6 +10,7 @@ import InstructorCourseView from "../pages/Intructors/InstructorCourseView.jsx";
 import { Routes, Route } from "react-router-dom";
 import UpdateCourse from "../pages/Intructors/UpdateCourse.jsx";
 import PurchaseCourse from "../pages/Intructors/purchasedCourse.jsx";
+import Chat from "../pages/Users/ChatMain.jsx";
 function InstructorRouter() {
   return (
     <>
@@ -47,6 +48,7 @@ function InstructorRouter() {
           path="/instructor/coursepurchase"
           element={<PurchaseCourse />}
         ></Route>
+        <Route path="/instructor/chat" element={<Chat />} />
       </Routes>
     </>
   );

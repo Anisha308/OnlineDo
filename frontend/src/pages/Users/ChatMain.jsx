@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 import {
   useGetUserMutation,
   useUserChatsMutation,
-} from "../../Slices/chatApiSlice"
+} from "../../Slices/chatApiSlice";
 
 const Chat = () => {
   const socket = useRef();
@@ -69,25 +69,20 @@ const Chat = () => {
   }, [userInfo?._id, instructorInfo?._id]);
 
   // Connect to Socket.io
-    useEffect(() => {
-      socket.current = io("http://localhost:3002");
-  console.log(socket.current,'connc');
-      const userId = userInfo?._id || instructorInfo?._id;
-console.log(userId);
-      if (userId) {
-        socket.current.emit("new-user-add", userId);
-      }
-
-      socket.current.on("get-users", (users) => {
-        console.log(users,'usressssssssss');
-        setOnlineUsers(users);
-      });
-    }, [userInfo?._id, instructorInfo?._id]);
+  useEffect(() => {
+    socket.current = io("http://localhost:5002");
+    const userId = userInfo?._id || instructorInfo?._id;
+    if (userId) {
+      socket.current.emit("new-user-add", userId);
+    }
+    socket.current.on("get-users", (users) => {
+      setOnlineUsers(users);
+    });
+  }, [userInfo?._id, instructorInfo?._id]);
 
   // Send Message to socket server
   useEffect(() => {
-      if (sendMessage !== null) {
-        console.log('sendmedd',sendMessage);
+    if (sendMessage !== null) {
       socket.current.emit("send-message", sendMessage);
     }
   }, [sendMessage]);
@@ -95,20 +90,16 @@ console.log(userId);
   // Get the message from socket server
   useEffect(() => {
     socket.current.on("recieve-message", (data) => {
-      console.log(data);
       setReceivedMessage(data);
     });
   }, []);
 
-    const checkOnlineStatus = (chat) => {
+  const checkOnlineStatus = (chat) => {
     const userId = userInfo?._id || instructorInfo?._id;
-      console.log(userId,'onlineuserid');
 
     if (userId) {
-        const chatMember = chat.members.find((member) => member !== userId);
-        console.log(chatMember,'chhatmemberrrrr');
-        const online = onlineUsers.find((user) => user.userId === chatMember);
-        console.log(onlineUsers,'onlilne');
+      const chatMember = chat.members.find((member) => member !== userId);
+      const online = onlineUsers.find((user) => user.userId === chatMember);
       return online ? true : false;
     }
 
@@ -126,7 +117,6 @@ console.log(userId);
               {chats.map((chat) => (
                 <div
                   onClick={() => {
-                  
                     setCurrentChat(chat);
                   }}
                 >
