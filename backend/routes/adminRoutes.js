@@ -12,7 +12,11 @@ import {
   logoutAdmin,
   unblockInstructor,
   rejectmail,
- 
+  countInstructor,
+  countUser,
+  CountCourse,
+  YearlyRevenue,
+  MonthlyRevenue,
 } from "../controllers/adminController.js";
 
 import { addCategories,
@@ -38,5 +42,10 @@ router.post("/sendmail", rejectmail);
 router.post("/addcategory", adminProtect, addCategories);
 router.get("/getcategory", adminProtect, getCategories);
 router.get("/getCourse/:id", viewCourse);
-router.get("/courselist/:id",instructorcourse)
+router.get("/courselist/:id", instructorcourse)
+router.get('/countuser', countUser)
+router.get("/countinstructor", countInstructor);
+router.get("/countcourse", CountCourse)
+router.get("/yearlyrevenue", YearlyRevenue);
+router.get("/monthlyrevenue",MonthlyRevenue)
 export default router;

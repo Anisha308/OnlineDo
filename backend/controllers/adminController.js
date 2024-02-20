@@ -8,6 +8,8 @@ import Category from "../models/categoryModel.js";
 import destroyToken from "../utils/destroyUserToken.js";
 import destroyTokenInstructor from "../utils/destroyTokenInstructor.js";
 import sendEmail from "../utils/nodemailer.js";
+import Course from "../models/courseModel.js";
+import Purchase from "../models/purchaseModel.js";
 
 const authAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -260,6 +262,108 @@ const rejectmail = asyncHandler(async (req, res) => {
   }
 });
 
+
+const countUser = asyncHandler(async (req, res) => {
+  try {
+    const count = await User.countDocuments({})
+    console.log(count,'count');
+    res.json({
+      success: true,
+      message: "fetched count successfully",
+      count,
+    })
+  } catch (error) {
+    console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+
+  }
+})
+
+const countInstructor = asyncHandler(async (req, res) => {
+  try {
+    const count = await Instructor.countDocuments({})
+    res.json({
+      success: true,
+      message: "fetched count successfully",
+      count,
+    })
+  } catch (error) {
+     console.error(error);
+     res.status(500).json({ message: "Internal server error" });
+  }
+})
+
+const CountCourse = asyncHandler(async (req, res) => {
+  try {
+    const count = await Course.countDocuments({})
+    res.json({
+      success: true,
+      message: "Fetched course",
+      count,
+    })
+  } catch (error) {
+    console.error(error);
+  }
+})
+
+
+const YearlyRevenue = asyncHandler(async (req, res) => {
+   try {
+     const currentDate = new Date();
+     const startDate = new Date(currentDate.getFullYear(), 0, 1); // January 1st of the current year
+     const endDate = new Date(currentDate.getFullYear(), 11, 31); // December 31st of the current year
+
+     const purchases = await Purchase.find({
+       purchaseDate: { $gte: startDate, $lte: endDate },
+     }).populate("courses");
+console.log(purchases,'purchases');
+     let yearlyRevenue = 0;
+
+     purchases.forEach((purchase) => {
+    console.log(purchase.courses.price,'kk');
+    if (purchase.courses && purchase.courses.price) {
+      yearlyRevenue += purchase.courses.price;
+    }
+     });
+     console.log(yearlyRevenue,'k');
+     res.json({ revenue: yearlyRevenue });
+   } catch (error) {
+    console.error("Error fetching yearly revenue:", error);
+    res.status(500).json({ error: "Internal server error" });
+   }
+})
+
+const MonthlyRevenue = asyncHandler(async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const startDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    ); // First day of the current month
+    const endDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    ); // Last day of the current month
+
+    const purchases = await Purchase.find({
+      purchaseDate: { $gte: startDate, $lte: endDate },
+    }).populate("courses");
+
+    let monthlyRevenue = 0;
+     purchases.forEach((purchase) => {
+       console.log(purchase.courses.price, "kk");
+       if (purchase.courses && purchase.courses.price) {
+         monthlyRevenue += purchase.courses.price;
+       }
+     });
+    res.json({ revenue: monthlyRevenue });
+  } catch (error) {
+    console.error("Error fetching monthly revenue:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 export {
   authAdmin,
   logoutAdmin,
@@ -270,4 +374,9 @@ export {
   unblockInstructor,
   getAllInstructors,
   rejectmail,
+  countUser,
+  countInstructor,
+  CountCourse,
+  MonthlyRevenue,
+  YearlyRevenue,
 };
