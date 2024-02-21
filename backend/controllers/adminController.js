@@ -295,11 +295,13 @@ const countInstructor = asyncHandler(async (req, res) => {
 
 const CountCourse = asyncHandler(async (req, res) => {
   try {
-    const count = await Course.countDocuments({})
+    const course=await Course.countDocuments({})
+    const purchase = await Purchase.countDocuments({})
+    console.log(purchase,'purchas');
     res.json({
-      success: true,
-      message: "Fetched course",
-      count,
+     
+       purchasedCourse:purchase,
+      totalcourse:course,
     })
   } catch (error) {
     console.error(error);
@@ -309,24 +311,29 @@ const CountCourse = asyncHandler(async (req, res) => {
 
 const YearlyRevenue = asyncHandler(async (req, res) => {
    try {
-     const currentDate = new Date();
-     const startDate = new Date(currentDate.getFullYear(), 0, 1); // January 1st of the current year
-     const endDate = new Date(currentDate.getFullYear(), 11, 31); // December 31st of the current year
+       const currentYear = new Date().getFullYear();
+       const yearlyData = [];
 
-     const purchases = await Purchase.find({
-       purchaseDate: { $gte: startDate, $lte: endDate },
-     }).populate("courses");
-console.log(purchases,'purchases');
-     let yearlyRevenue = 0;
+     
+    for (let year = 2021; year <= currentYear; year++) {
+      const startDate = new Date(year, 0, 1); // January 1st
+      const endDate = new Date(year, 11, 31); // December 31st
 
-     purchases.forEach((purchase) => {
-    console.log(purchase.courses.price,'kk');
-    if (purchase.courses && purchase.courses.price) {
-      yearlyRevenue += purchase.courses.price;
+      const purchases = await Purchase.find({
+        purchaseDate: { $gte: startDate, $lte: endDate },
+      }).populate("courses");
+
+      let yearlyRevenue = 0;
+      purchases.forEach((purchase) => {
+        if (purchase.courses && purchase.courses.price) {
+          yearlyRevenue += purchase.courses.price;
+        }
+      });
+
+      yearlyData.push({ year: year, revenue: yearlyRevenue });
     }
-     });
-     console.log(yearlyRevenue,'k');
-     res.json({ revenue: yearlyRevenue });
+ console.log("Yearly revenue data:", yearlyData);
+ res.json(yearlyData);
    } catch (error) {
     console.error("Error fetching yearly revenue:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -336,29 +343,29 @@ console.log(purchases,'purchases');
 const MonthlyRevenue = asyncHandler(async (req, res) => {
   try {
     const currentDate = new Date();
-    const startDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
-    ); // First day of the current month
-    const endDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      0
-    ); // Last day of the current month
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth();
 
-    const purchases = await Purchase.find({
-      purchaseDate: { $gte: startDate, $lte: endDate },
-    }).populate("courses");
+        const monthlyRevenue = [];
+   for (let i = 0; i <= currentMonth; i++) {
+     const startDate = new Date(currentYear, i, 1);
+     const endDate = new Date(currentYear, i + 1, 0);
 
-    let monthlyRevenue = 0;
+     const purchases = await Purchase.find({
+       purchaseDate: { $gte: startDate, $lte: endDate },
+     }).populate("courses");
+
+     let monthlyTotal = 0;
      purchases.forEach((purchase) => {
-       console.log(purchase.courses.price, "kk");
        if (purchase.courses && purchase.courses.price) {
-         monthlyRevenue += purchase.courses.price;
+         monthlyTotal += purchase.courses.price;
        }
      });
-    res.json({ revenue: monthlyRevenue });
+
+     monthlyRevenue.push({ month: i + 1, revenue: monthlyTotal });
+    }
+    console.log(monthlyRevenue,'montnhlyrevenue');
+    res.json( monthlyRevenue );
   } catch (error) {
     console.error("Error fetching monthly revenue:", error);
     res.status(500).json({ error: "Internal server error" });

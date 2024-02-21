@@ -1,16 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import apiInstance from "../../../Api";
-import { Chart } from "chart.js";
-
+import Chart from "chart.js/auto";
+import { FaCalendarAlt } from "react-icons/fa";
+import SideBar from "../../components/Header/SideBar"
+import { Pie } from "react-chartjs-2";
 const Dashboard = () => {
-  const chartRef = useRef(null);
-
   const [totalusers, setTotalUsers] = useState(0);
   const [totalInstructor, setTotalInstructor] = useState(0);
   const [totalcourse, setTotalCourse] = useState(0);
-  const [yearlyRevenue, setYearlyRevenue] = useState(0);
-  const [monthlyRevenue, setMonthlyRevenue] = useState(0);
+const [totalPurchasedCourses, setTotalPurchasedCourses] = useState({});
+const [yearlyRevenue, setYearlyRevenue] = useState([]);
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+  const [isYearlyView, setIsYearlyView] = useState(true)
+  
+  const chartRef = useRef(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -23,19 +28,21 @@ const Dashboard = () => {
         );
         setTotalInstructor(instructorResponse.data.count);
 
-        // const courseResponse = await apiInstance.get(`api/admin/countcourse`);
-        // setTotalCourse(courseResponse.data.count);
+        const courseResponse = await apiInstance.get(`api/admin/countcourse`);
+        console.log(courseResponse.data,'course');
+        setTotalPurchasedCourses(courseResponse.data);
+        setTotalCourse(courseResponse.data.course)
 
         const yearlyRevenue = await apiInstance.get(`api/admin/yearlyrevenue`);
-        console.log(yearlyRevenue.data.revenue, "jj");
-        setYearlyRevenue(yearlyRevenue.data.revenue);
+
+        console.log(yearlyRevenue.data, "yearly revenue");
+        setYearlyRevenue(yearlyRevenue.data); // Assuming the response is an array of objects
 
         const monthlyRevenue = await apiInstance.get(
           `api/admin/monthlyrevenue`
-        );
-        console.log(monthlyRevenue, "mk");
-        setMonthlyRevenue(monthlyRevenue.data.revenue);
-        drawChart();
+        ); 
+        console.log(monthlyRevenue.data, "monthly revenue");
+        setMonthlyRevenue(monthlyRevenue.data);
       } catch (error) {
         console.error(error);
       }
@@ -44,32 +51,164 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  const drawChart = () => {
-    if (chartRef.current && monthlyRevenue.length > 0) {
-      new Chart(chartRef.current, {
-        type: "line",
-        data: {
-          labels: monthlyRevenue.map((data, index) => `Month ${index + 1}`),
-          datasets: [
-            {
-              label: "Monthly Revenue",
-              data: monthlyRevenue.map((data) => data.revenue),
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      });
+  useEffect(() => {
+    if (chartRef.current) {
+      updateChart()
     }
+  }, [isYearlyView, yearlyRevenue, monthlyRevenue])
+   
+useEffect(() => {
+  console.log("kgg  ",totalPurchasedCourses);
+
+  if (Object.keys(totalPurchasedCourses)) {
+    console.log("kj");
+    updatePurchasedCoursesChart();
+  }
+}, [totalPurchasedCourses]);
+
+
+ const updateChart = () => {
+   const ctx = chartRef.current.getContext("2d");
+   let data = {};
+   let options = {};
+
+   if (isYearlyView) {
+     data = {
+       labels: yearlyRevenue.map((data) => data.year),
+       datasets: [
+         {
+           label: "Yearly Revenue",
+           data: yearlyRevenue.map((data) => data.revenue),
+           borderColor: "blue",
+           borderWidth: 1,
+           fill: false,
+         },
+       ],
+     };
+     options = {
+       scales: {
+         x: {
+           type: "category",
+           beginAtZero: true,
+           title: {
+             display: true,
+             text: "Year",
+           },
+         },
+         y: {
+           beginAtZero: true,
+           title: {
+             display: true,
+             text: "Revenue",
+           },
+         },
+       },
+     };
+   } else {
+     const monthLabels = [
+       "Jan",
+       "Feb",
+       "Mar",
+       "Apr",
+       "May",
+       "Jun",
+       "Jul",
+       "Aug",
+       "Sep",
+       "Oct",
+       "Nov",
+       "Dec",
+     ];
+     data = {
+       labels: monthLabels,
+       datasets: [
+         {
+           label: "Monthly Revenue",
+           data: monthlyRevenue.map((data) => data.revenue),
+           borderColor: "green",
+           borderWidth: 1,
+           fill: false,
+         },
+       ],
+     };
+     options = {
+       scales: {
+         x: {
+           type: "category",
+           beginAtZero: true,
+           title: {
+             display: true,
+             text: "Month",
+           },
+         },
+         y: {
+           beginAtZero: true,
+           title: {
+             display: true,
+             text: "Revenue",
+           },
+         },
+       },
+     };
+   }
+
+   if (chartRef.current.chart) {
+     chartRef.current.chart.destroy();
+   }
+
+   chartRef.current.chart = new Chart(ctx, {
+     type: "line",
+     data,
+     options,
+   });
+ };
+
+ const updatePurchasedCoursesChart = () => {
+   const existingChart = Chart.getChart("purchasedCoursesChart");
+   if (existingChart) {
+     existingChart.destroy();
+   }
+   console.log(totalPurchasedCourses, "ooo");
+   const labels = Object.keys(totalPurchasedCourses);
+   console.log(labels, "labelssssssssssssssss");
+   const data = Object.values(totalPurchasedCourses);
+   console.log(data);
+   const ctx = document.getElementById("purchasedCoursesChart");
+
+   new Chart(ctx, {
+     type: "pie",
+     data: {
+       labels: labels,
+       datasets: [
+         {
+           data: data,
+           backgroundColor: [
+             "rgba(255, 99, 132, 0.6)",
+             "rgba(54, 162, 235, 0.6)",
+           ],
+         },
+       ],
+     },
+   });
+ };
+
+
+  const handleToggleView = () => {
+    setIsYearlyView(!isYearlyView);
   };
+ 
+
+  const currentMonth = new Date().getMonth() + 1; 
+  const currentMonthRevenue = monthlyRevenue.find(
+    (data) => data.month === currentMonth
+  );
+const currentYear = new Date().getFullYear(); // Get the current year
+const currentYearRevenue = yearlyRevenue.find(
+  (data) => data.year === currentYear
+);
+
+
+  
   return (
     <>
       {/* component */}
@@ -79,9 +218,11 @@ const Dashboard = () => {
       <link rel="preconnect" href="https://fonts.bunny.net" />
 
       <title>Admin Panel</title>
+          <div className="flex">
 
-      <main className="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-200 min-h-screen transition-all main">
-        {/* component */}
+      <SideBar />
+
+      <main className="w-full  md:w-[calc(100%-256px)] md:ml-6 bg-gray-200 min-h-screen transition-all main">
         <div className="p-4 w-full">
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12 sm:col-span-6 md:col-span-3">
@@ -113,9 +254,9 @@ const Dashboard = () => {
                 <div className="flex items-center justify-center flex-shrink-0 h-12 w-12 rounded-xl bg-green-100 text-green-500">
                   <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
                     />
                   </svg>
@@ -131,16 +272,20 @@ const Dashboard = () => {
                 <div className="flex items-center justify-center flex-shrink-0 h-12 w-12 rounded-xl bg-orange-100 text-orange-500">
                   <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
                     ></path>
                   </svg>
                 </div>
                 <div className="flex flex-col flex-grow ml-4">
                   <div className="text-sm text-gray-500">Monthly Revenue</div>
-                  <div className="font-bold text-lg">{monthlyRevenue}</div>
+                  <div className="font-bold text-lg">
+                    {currentMonthRevenue && (
+                      <div>{currentMonthRevenue.revenue}</div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -164,126 +309,63 @@ const Dashboard = () => {
                 </div>
                 <div className="flex flex-col flex-grow ml-4">
                   <div className="text-sm text-gray-500"> Yearly Revenue</div>
-                  <div className="font-bold text-lg">{yearlyRevenue}</div>
+                  <div className="font-bold text-lg">
+                    {currentYearRevenue && (
+                      <div>{currentYearRevenue.revenue}</div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-md shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-4">Monthly Revenue</h2>
-          <div className="flex items-center justify-center">
-            <div className="w-full max-w-lg">
-              {/* Graph */}
-              <div className="bg-gray-100 rounded-lg overflow-hidden">
-                {/* Graph area */}
-                <div className="flex justify-between p-4">
-                  {[...Array(12)].map((_, index) => (
-                    <div
-                      key={index}
-                      className="text-xs text-gray-500"
-                    >{`Month ${index + 1}`}</div>
-                  ))}
-                </div>
-                <div className="flex items-end h-24 p-4">
-                  {[...Array(12)].map((_, index) => (
-                    <div
-                      key={index}
-                      className={`w-1/12 bg-blue-${index + 5}00`}
-                    ></div>
-                  ))}
-                </div>
-              </div>
-            </div>
+        {/* Your JSX for UI */}
+        <button
+          onClick={handleToggleView}
+          className={`bg-${
+            isYearlyView ? "green" : "blue"
+          }-500 text-white rounded-full py-0 px-1 hover:bg-${
+            isYearlyView ? "green" : "blue"
+          }-600 focus:outline-none focus:ring-2 focus:ring-${
+            isYearlyView ? "green" : "blue"
+          }-500`}
+          style={{
+            minWidth: "16px",
+            fontSize: "12px",
+            fontWeight: "bold",
+            marginLeft: "12px",
+            height:"19px"
+          }}
+        >
+          {isYearlyView ? "Show Monthly Revenue" : "Show Yearly Revenue"}
+        </button>
+
+        <div className="flex">
+          <div
+            className="chart-container"
+            style={{ position: "relative", width: "40vw", flex: 1 }}
+          >
+            <canvas ref={chartRef} style={{ height: "220px" }}></canvas>
+          </div>
+
+          <div
+            className="chart-container"
+            style={{
+              position: "relative",
+              height: "65vh",
+              width: "150vw",
+              flex: 1,
+            }}
+          >
+            <canvas id="purchasedCoursesChart"></canvas>
           </div>
         </div>
-        <div className="col-span-12 sm:col-span-12 md:col-span-6">
-          <div className="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
-            <h2 className="text-lg font-semibold mb-4">Monthly Revenue</h2>
-            <svg
-              viewBox="0 0 500 300"
-              width="100%"
-              height="auto"
-              preserveAspectRatio="xMidYMid meet"
-            >
-              {/* X-axis */}
-              <line x1="50" y1="250" x2="450" y2="250" stroke="black" />
-              {/* Y-axis */}
-              <line x1="50" y1="50" x2="50" y2="250" stroke="black" />
+        <div />
 
-              {/* X-axis labels */}
-              {/* {monthlyRevenue.map((data, index) => (
-                <circle
-                  key={index}
-                  cx={50 + index * 50}
-                  cy={
-                    250 -
-                    (200 * data.revenue) /
-                      Math.max(...monthlyRevenue.map((data) => data.revenue))
-                  }
-                  r="3"
-                  fill="blue"
-                />
-              ))} */}
-
-              {/* Y-axis labels */}
-              <text x="20" y="50" fill="black" fontSize="12" textAnchor="end">
-                0
-              </text>
-              {/* <text x="30" y="150" fill="black" fontSize="12" textAnchor="end">
-                {Math.max(...monthlyRevenue.map((data) => data.revenue))}
-              </text> */}
-
-              {/* Data points */}
-              {/* {monthlyRevenue.map((data, index) => (
-                <circle
-                  key={index}
-                  cx={50 + index * 50}
-                  cy={
-                    250 -
-                    (200 * data.revenue) /
-                      Math.max(...monthlyData.map((data) => data.revenue))
-                  }
-                  r="3"
-                  fill="blue"
-                />
-              ))} */}
-
-              {/* Connecting lines */}
-              {/* {monthlyRevenue.map(
-                (data, index) =>
-                  index < monthlyRevenue.length - 1 && (
-                    <line
-                      key={index}
-                      x1={50 + index * 50}
-                      y1={
-                        250 -
-                        (200 * data.revenue) /
-                          Math.max(
-                            ...monthlyRevenue.map((data) => data.revenue)
-                          )
-                      }
-                      x2={50 + (index + 1) * 50}
-                      y2={
-                        250 -
-                        (200 * monthlyRevenue[index + 1].revenue) /
-                          Math.max(
-                            ...monthlyRevenue.map((data) => data.revenue)
-                          )
-                      }
-                      stroke="blue"
-                    />
-                  )
-              )} */}
-            </svg>
-          </div>
-        </div>
         {/* End Content */}
       </main>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+</div>
       <script src="https://unpkg.com/@popperjs/core@2"></script>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </>
   );
 };
