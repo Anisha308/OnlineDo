@@ -3,7 +3,7 @@ import Instructor from "../models/InstructorModel.js";
 import Course from "../models/courseModel.js";
 import cloudinary from "cloudinary";
 import Category from "../models/categoryModel.js";
-
+import User from "../models/userModel.js"
 import generateTokenInstructor from "../utils/generateTokenInstructor.js";
 import generateOTP from "../utils/otp.js";
 import sendEmail from "../utils/nodemailer.js";
@@ -317,7 +317,15 @@ const instructorviewCourse = asyncHandler(async (req, res) => {
     console.error("Error fetching course", error);
   }
 });
-
+const getusers = asyncHandler(async (req, res) => {
+  try {
+    const users = await User.find();
+    const countusers = await User.countDocuments({}); // await the countDocuments() method
+    res.status(200).json({ success: true, users, countusers });
+  } catch (error) {
+    console.log(error,'error');
+  }
+})
 export {
   authInstructor,
   registerInstructor,
@@ -328,4 +336,5 @@ export {
   instructotpVerify,
   showCategory,
   instructorviewCourse,
+  getusers,
 };

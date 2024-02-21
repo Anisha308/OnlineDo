@@ -15,10 +15,10 @@ import {
   countInstructor,
   countUser,
   CountCourse,
-  YearlyRevenue,
-  MonthlyRevenue,
+ 
 } from "../controllers/adminController.js";
-
+import { YearlyRevenue,
+  MonthlyRevenue} from "../controllers/paymentController.js"
 import { addCategories,
   getCategories
 } from "../controllers/categoryController.js"
@@ -47,5 +47,5 @@ router.get('/countuser', countUser)
 router.get("/countinstructor", countInstructor);
 router.get("/countcourse", CountCourse)
 router.get("/yearlyrevenue", YearlyRevenue);
-router.get("/monthlyrevenue",MonthlyRevenue)
+router.get("/monthlyrevenue", MonthlyRevenue);
 export default router;

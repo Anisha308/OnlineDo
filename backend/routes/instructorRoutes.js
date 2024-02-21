@@ -10,9 +10,9 @@ import {
   instructotpVerify,
   showCategory,
   instructorviewCourse,
-
+  getusers,
 } from "../controllers/instructorController.js";
-
+import { YearlyRevenue,MonthlyRevenue } from "../controllers/paymentController.js";
 import {
   addCourse,
   getcoursetoupdate,
@@ -39,5 +39,9 @@ router.get("/categories", instructorProtect, showCategory);
 router.get("/instructorcourse/:id", instructorProtect, instructorviewCourse);
 router.put("/updatecourse/:id", instructorProtect, updatecourse);
 router.get("/:id/courselist", instructorProtect, getcoursetoupdate);
-router.get("/purchaselist",getchpurchase)
+router.get("/purchaselist", getchpurchase)
+router.get("/getusers", getusers)
+router.get("/yearlyrevenue", YearlyRevenue);
+router.get("/monthlyrevenue", MonthlyRevenue);
+
 export default router;

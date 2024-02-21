@@ -13,7 +13,7 @@ const SideBar = () => {
         items={[
           {
             title: "Dashboard",
-            itemId: "/dashboard",
+            itemId: "/Dashboard",
 
             elemBefore: () => <Icon name="inbox" />,
           },

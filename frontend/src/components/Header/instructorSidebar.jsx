@@ -13,7 +13,7 @@ const InstructorSidebar = ({ instructorId }) => {
         items={[
           {
             title: "Dashboard",
-            itemId: "/dashboard",
+            itemId: "/instructor/Dashboard",
 
             elemBefore: () => <Icon name="inbox" />,
           },
