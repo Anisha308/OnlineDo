@@ -3,6 +3,7 @@ const cloud_name = "dvp3lkojc";
 
 const uploadToCloudinary = async (file, isImage) => {
   const uploadData = new FormData();
+
   uploadData.append("upload_preset", upload_preset);
   uploadData.append("cloud_name", cloud_name);
   uploadData.append("file", file);
@@ -17,7 +18,6 @@ const uploadToCloudinary = async (file, isImage) => {
       method: "post",
       body: uploadData,
     });
-
     const data = await res.json();
 
     return data;

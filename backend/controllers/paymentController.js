@@ -105,7 +105,6 @@ const YearlyRevenue = asyncHandler(async (req, res) => {
 
       yearlyData.push({ year: year, revenue: yearlyRevenue });
     }
-    console.log("Yearly revenue data:", yearlyData);
     res.json(yearlyData);
   } catch (error) {
     console.error("Error fetching yearly revenue:", error);
@@ -137,7 +136,6 @@ const MonthlyRevenue = asyncHandler(async (req, res) => {
 
       monthlyRevenue.push({ month: i + 1, revenue: monthlyTotal });
     }
-    console.log(monthlyRevenue, "montnhlyrevenue");
     res.json(monthlyRevenue);
   } catch (error) {
     console.error("Error fetching monthly revenue:", error);

@@ -18,7 +18,7 @@ const InstructCourseView = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        console.log(id,'id');
+        console.log(id,'idddddddddddd');
         const response = await apiInstance.get(
           
           `/api/instructor/instructorcourse/${id}`
@@ -26,7 +26,6 @@ const InstructCourseView = () => {
         setCourse(response.data);
         // Extracting instructorid from course data
         const instructorId = response.data.course.instructor;
-        console.log(instructorId,'instructoirifd');
         // const categoryId = response.data.course.category;
         setInstructorId(instructorId);
         // setCategoryId(categoryId);
@@ -53,7 +52,11 @@ const InstructCourseView = () => {
     if (videosElement) {
       videosElement.classList.toggle("hidden");
      }
-   };
+  };
+  const handleEditClick = async () => {
+    console.log(id,'ids');
+    navigate(`/instructor/updatecourse/${id}`);
+  }
   return (
     <div className="flex ">
       <InstructorSidebar instructorId={instructorId} />
@@ -122,12 +125,12 @@ const InstructCourseView = () => {
                             </p>
                           </div>
                           <div className="my-4 flex items-center justify-between px-4">
-                            {/* <button
+                            <button
                                 onClick={handleEditClick}
                               className="text-sm font-semibold text-white bg-violet-500 px-10 h-10"
                             >
                               Edit
-                            </button> */}
+                            </button>
                           </div>
                         </div>
                       </div>

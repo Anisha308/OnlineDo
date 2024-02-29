@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 const IconChat = () => {
 const navigate=useNavigate()
     const handlechat = () => {
-        navigate('/chat')
+        navigate('/instructor/chat')
     }
   return (
     

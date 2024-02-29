@@ -4,6 +4,7 @@ import apiInstance from "../../../Api";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SideBar from "../../components/Header/SideBar"
+
 const DetailedCourse = () => {
   const user = useSelector((state) => state.auth.userInfo);
   const [course, setCourse] = useState(null);
@@ -13,19 +14,16 @@ const DetailedCourse = () => {
   //   // const [category, setCategory] = useState(null);
   const instructid=useParams()
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        console.log(instructid.instructorId, 'iddddddddddddd');
         const id=instructid.instructorId
         
         const response = await apiInstance.get(
           `/api/admin/courselist/${id}`
           );
-       console.log(
-         response.data.courses,
-         "responseeeeeeeeeeee"
-       );
+      
         // Extracting instructorid from course data
    
         // const categoryId = response.data.course.category;
@@ -38,7 +36,6 @@ const instructors = response.data.courses.map((course) => course.instructor);
 const instructor = instructors.length > 0 ? instructors[0] : null;
         setInstructor(instructor);
 
-        console.log(instructor,'l');        // const categoryresponse = await apiInstance.get(
         //   `api/instructor/getCategory/${categoryId}`
         // );
         // setCategory(categoryresponse.data);

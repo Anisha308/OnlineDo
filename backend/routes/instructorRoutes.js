@@ -37,8 +37,8 @@ router.get(
 router.post("/instructotpverify", instructotpVerify);
 router.get("/categories", instructorProtect, showCategory);
 router.get("/instructorcourse/:id", instructorProtect, instructorviewCourse);
-router.put("/updatecourse/:id", instructorProtect, updatecourse);
-router.get("/:id/courselist", instructorProtect, getcoursetoupdate);
+router.put("/updatecourse", instructorProtect, updatecourse);
+// router.get("/:id/courselist", getcoursetoupdate);
 router.get("/purchaselist", getchpurchase)
 router.get("/getusers", getusers)
 router.get("/yearlyrevenue", YearlyRevenue);

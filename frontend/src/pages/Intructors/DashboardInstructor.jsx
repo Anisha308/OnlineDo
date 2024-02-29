@@ -16,16 +16,13 @@ const [yearlyRevenue, setYearlyRevenue] = useState([]);
     useEffect(() => {
         const fetchData = async()=> {
     const response = await apiInstance.get(`/api/instructor/getusers`)
-            console.log(response.data.countusers, 'res');
             setTotalUsers(response.data.countusers)
 
             const result= await apiInstance.get(`api/instructor/yearlyrevenue`)
-            console.log(result.data);
 
             setYearlyRevenue(result.data)
 
             const res=await apiInstance.get(`/api/instructor/monthlyrevenue`)
-            console.log(res.data);
             setMonthlyRevenue(res.data)
         }
     fetchData()
@@ -42,16 +39,13 @@ const [yearlyRevenue, setYearlyRevenue] = useState([]);
   );
 const [purchases, setPurchases] = useState([]);
 const instructor = useSelector((state) => state.instructorAuth.instructorInfo);
-console.log(instructor._id);
 const navigate = useNavigate();
 useEffect(() => {
   const fetchPurchases = async () => {
     try {
-      console.log(instructor._id);
       const response = await apiInstance.get(`api/instructor/purchaselist`, {
         params: { instructorId: instructor._id }, // Pass instructorId in params
       });
-      console.log(response.data);
       setPurchases(response.data);
     } catch (error) {
       console.error("Error fetching purchases", error);

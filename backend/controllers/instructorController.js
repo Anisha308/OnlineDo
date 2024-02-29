@@ -310,7 +310,6 @@ const showCategory = asyncHandler(async (req, res) => {
 const instructorviewCourse = asyncHandler(async (req, res) => {
   try {
     const courseId = req.params.id;
-    console.log(courseId);
     const course = await Course.findById(courseId);
     res.status(200).json({ success: true, course });
   } catch (error) {

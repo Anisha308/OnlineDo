@@ -8,7 +8,6 @@ import Purchase from "../models/purchaseModel.js";
 const viewCourse = asyncHandler(async (req, res) => {
   try {
     const courseId = req.params.id;
-    console.log(courseId,'ppp');
     const course = await Course.findById(courseId);
     res.status(200).json({ success: true, course });
   } catch (error) {
@@ -18,7 +17,6 @@ const viewCourse = asyncHandler(async (req, res) => {
 const instructorcourse = asyncHandler(async (req, res) => {
   try {
     const instructorId = req.params.id;
-    console.log(instructorId, 'instructorid');
 
     // Fetch courses for the given instructorId
     const courses = await Course.find({ instructor: instructorId });
@@ -33,7 +31,6 @@ const instructorcourse = asyncHandler(async (req, res) => {
 
 const addCourse = asyncHandler(async (req, res) => {
   const instructorId = req.params.instructorId;
-  console.log(instructorId,'pp');
   const {
     courseName,
     paid,
@@ -45,7 +42,6 @@ const addCourse = asyncHandler(async (req, res) => {
     image,
     previewVideo,
   } = req.body;
-console.log(req.body,'req.body');
   if (
     !courseName ||
     !description ||
@@ -71,7 +67,6 @@ console.log(req.body,'req.body');
   try {
     // Check if the instructor exists
     const instructor = await Instructor.findById(instructorId);
-    console.log(instructor,'instructor');
     if (!instructor) {
       res.status(404);
       throw new Error("Instructor not found");
@@ -81,9 +76,7 @@ const existingCourse = await Course.findOne({
   instructor: instructorId,
   courseName,
 });
-    console.log(existingCourse,'existssss');
     if (existingCourse) {
-  console.log('dups');
   res.status(400).json({ error: "dup" });
   return;
 }
@@ -101,7 +94,6 @@ const existingCourse = await Course.findOne({
       modules, // Corrected to use the modules state
       previewVideo,
     });
-console.log(course,'course');
     if (req.file) {
       // Assuming you want to add the file to the first module's videos
       if (
@@ -116,7 +108,6 @@ console.log(course,'course');
   
     // Save the course
     const savedCourse = await course.save();
-    console.log(savedCourse,'saves');
     // Add the course to the instructor's courses array
     instructor.courses.push(savedCourse._id);
     await instructor.save();
@@ -145,30 +136,37 @@ const getchpurchase = asyncHandler(async (req, res) => {
 })
 const updatecourse = asyncHandler(async (req, res) => {
   try {
-    const courseId = req.params.id;
-    const updatedCourse = req.body;
-
-    const result = await Course.findByIdAndUpdate(courseId, updatedCourse, {
-      new: true,
-    });
-    if (!result) {
-      return res.status(404).json({ message: "Course not found" });
+   const {id,courseName,description,price,duration,paid,categories,modules,image,previewVideo}=req.body
+    const updatecourse = await Course.findByIdAndUpdate(id, {
+      courseName,
+      description,
+      price,
+      duration,
+      paid,
+      categories,
+      modules,
+      image,
+      previewVideo
+    }, { new: true })
+    
+    if (!updatecourse) {
+      return res.status(404).json({ error: "course not found"})
     }
-
-    res
-      .status(200)
-      .json({ message: "Course updated successfully", course: result });
+    res.json(updatecourse)
   } catch (error) {
-    console.error(error);
-
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error updating course:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to update course. Please try again later." });
   }
 });
 
 const getcoursetoupdate = asyncHandler(async (req, res) => {
+  console.log('jhgh');
   try {
     const id = req.params.id;
-    const course = await findById(id);
+    console.log(id,'id');
+    const course = await Course.findById(id);
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }

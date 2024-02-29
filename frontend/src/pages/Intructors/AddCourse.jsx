@@ -118,16 +118,7 @@ const AddCourse = () => {
     }
 
     try {
-      console.log( courseName,
-        description,
-        price,
-        duration,
-        paid,
-        categories,
-         image.secure_url,
-        modules,
-        instructorId,
-        previewVideo);
+     
       const { data } = await addCourseMutation({
         courseName,
         description,
@@ -140,7 +131,6 @@ const AddCourse = () => {
         instructorId,
         previewVideo,
       });
-console.log(data);
       if (data) {
         Navigate(`/instructor/${instructorId}/courselist`);
         toast.success("Course added successfully:", data);
@@ -227,6 +217,7 @@ console.log(data);
 
     setModules(updatedModules);
   };
+  
   const handlecategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };

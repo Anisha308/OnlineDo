@@ -11,16 +11,13 @@ import { instructApiSlice } from "../../Slices/authInstructorSlice";
 const PurchaseCourse = () => {
   const [purchases, setPurchases] = useState([]);
   const instructor = useSelector((state) => state.instructorAuth.instructorInfo);
-console.log(instructor._id);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchPurchases = async () => {
       try {
-        console.log(instructor._id);
     const response = await apiInstance.get(`api/instructor/purchaselist`, {
       params: { instructorId: instructor._id }, // Pass instructorId in params
     });
-        console.log(response.data);
         setPurchases(response.data);
       } catch (error) {
         console.error("Error fetching purchases", error);

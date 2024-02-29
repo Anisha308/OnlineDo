@@ -18,7 +18,6 @@ import SideBar from "../../components/Header/SideBar";
 
 const Course = () => {
     const { instructorId } = useParams();
-    console.log(instructorId,'ins');
   const Navigate = useNavigate();
   const { data, error, isLoading } = useGetCourseQuery(instructorId);
 

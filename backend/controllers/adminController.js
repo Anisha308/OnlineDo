@@ -201,7 +201,6 @@ const getAllInstructors = asyncHandler(async (req, res) => {
       .limit(pageSize)
       .lean(); // Convert Mongoose documents to plain JavaScript objects // Corrected syntax: use parentheses instead of colons
     const totalInstructors = await Instructor.countDocuments(); // Count total users
-console.log(instructors,'instructors');
     const totalPages = Math.ceil(totalInstructors / pageSize);
     res.status(200).json({
       success: true,
@@ -266,7 +265,6 @@ const rejectmail = asyncHandler(async (req, res) => {
 const countUser = asyncHandler(async (req, res) => {
   try {
     const count = await User.countDocuments({})
-    console.log(count,'count');
     res.json({
       success: true,
       message: "fetched count successfully",
@@ -297,7 +295,6 @@ const CountCourse = asyncHandler(async (req, res) => {
   try {
     const course=await Course.countDocuments({})
     const purchase = await Purchase.countDocuments({})
-    console.log(purchase,'purchas');
     res.json({
      
        purchasedCourse:purchase,
