@@ -12,6 +12,8 @@ import {
   getInstructor,
   googleAuth,
   getSingleCourseById,
+  userrating,
+  fetchRating
 } from "../controllers/userController.js";
 import { createChat, userChats } from "../controllers/chatController.js";
 import { viewCourse } from "../controllers/courseController.js";
@@ -42,5 +44,8 @@ router.post("/create-checkout-session/:price", protect, setStripeSession);
 router.post("/google",googleAuth);
 router.get("/:userId/purchaselist", getPurchaseByUser);
 router.get("/:purchaseId/course", protect, getSingleCourseById);
-router.get("/chat/getChats",userChats)
+router.get("/chat/getChats", userChats)
+router.route("/rating").post( userrating).get(fetchRating)
+
+
 export default router;

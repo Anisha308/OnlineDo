@@ -6,7 +6,8 @@ import generateOTP from "../utils/otp.js";
 import sendEmail from "../utils/nodemailer.js";
 import Instructor from "../models/InstructorModel.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken"
+import Rating from '../models/ratingModel.js'
 import Category from "../models/categoryModel.js";
 
 const authUser = asyncHandler(async (req, res) => {
@@ -387,6 +388,58 @@ const getSingleCourseById = asyncHandler(async (req, res) => {
   }
 });
 
+
+const userrating = asyncHandler(async (req, res) => {
+  console.log('hii');
+  try {
+    const { purchaseId, rating, comment } = req.body
+    console.log(purchaseId, rating, comment,'body');
+    const newRating = new Rating({
+      purchaseId,
+      rating,
+      comment,
+    })
+console.log(newRating,'neyyy');
+    await newRating.save()
+    res.status(200).json({newRating,message:"Rating submitted successfully"})
+  } catch (error) {
+    console.error(error,'error ');
+  }
+})
+
+const fetchRating = asyncHandler(async (req, res) => {
+  try {
+    console.log('jjj');
+
+    const count = await Rating.countDocuments({})
+    console.log(count);
+    const ratings = await Rating.aggregate([
+      {
+        $group: {
+          _id: "$rating",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+const user = await Rating.find({}).populate({
+  path: "purchaseId",
+  populate: {
+    path: "userId",
+    model: "User",
+  },
+});
+
+    console.log(ratings,count,'rating');
+    res.status(200).json({ ratings,count,user, success:true})
+  } catch (error) {
+    console.error(error);
+  }
+})
 export {
   authUser,
   registerUser,
@@ -400,4 +453,6 @@ export {
   getInstructor,
   googleAuth,
   getSingleCourseById,
+  userrating,
+  fetchRating,
 };
