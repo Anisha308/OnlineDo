@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../../Slices/authSlice";
 import Modal from "react-modal";
 import signupImg from "../../assets/images/hero-bg.jpg";
-const SignUp = () => {
+const test = () => {
   const [previewURL, setPreviewURL] = useState("");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -37,8 +37,8 @@ const SignUp = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (userInfo) {
-      console.log("isemail");
+      if (userInfo) {
+        console.log('isemail');
       setIsEmailVerificationModalOpen(true); // Open the email verification modal
       navigate("/");
     }
@@ -51,7 +51,7 @@ const SignUp = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value, "nsme");
+console.log(name,value,'nsme');
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -59,11 +59,11 @@ const SignUp = () => {
   };
 
   const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    console.log(file);
+      const file = event.target.files[0];
+      console.log(file);
     try {
       const data = await uploadImageToCloudinary(file);
-      console.log(data, "data");
+console.log(data,'data');
       setPreviewURL(data.url);
 
       setFormData({ ...formData, profilephoto: data.url });
@@ -88,16 +88,16 @@ const SignUp = () => {
         profilephoto: formData.profilephoto,
         typedOtp: recievedOtp, // Include the user-typed OTP
       });
-      console.log(response, "response");
+        console.log(response,'response');
       if (response.error) {
         toast.error("Invalid otp");
 
         console.error("OTP verification failed:", response.error);
       } else {
         const data = response.data;
-        console.log(data, "daata");
-        if (data.success) {
-          console.log('success');
+console.log(data,'daata');
+          if (data.success) {
+            console.log(success);
           dispatch(setCredentials({ ...data }));
           navigate("/");
           setIsOpen(false); // Close the modal after successful verification
@@ -112,8 +112,8 @@ const SignUp = () => {
       // Handle other errors, e.g., network issues or server errors
     }
   };
-  const submitHandler = async (e) => {
-    console.log("you are here");
+    const submitHandler = async (e) => {
+      console.log('you are here');
     e.preventDefault();
     setLoading(true);
 
@@ -138,7 +138,7 @@ const SignUp = () => {
           password,
           otp,
         }).unwrap();
-        console.log(res);
+          console.log(res);
         const recievedOtp = res.otp;
         setRecievedOtp(recievedOtp);
         setIsOpen(true);
@@ -335,71 +335,59 @@ const SignUp = () => {
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Email Verification Modal"
-            className="modal-content"
+            className="modal-content" // Add your custom styling for the modal content
           >
-            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-xl p-8 max-w-lg">
-              <div className="flex justify-between items-center">
-                <h2 className="text-gray-800 text-2xl font-semibold">
-                  Verify Your Email
-                </h2>
-                <button
-                  onClick={onRequestClose}
-                  className="text-gray-600 hover:text-gray-800 focus:outline-none transition duration-300 ease-in-out"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-
-              <p className="text-sm text-gray-600 mt-2">
-                We've sent a verification code to your email address. Please
-                enter the code below:
-              </p>
-
-              <form action="" method="post" className="mt-6">
-                <div className="max-w-xs mx-auto">
-                  <div className="flex items-center justify-between border border-gray-200 rounded-xl">
-                    <input
-                      className="w-full h-12 px-4 text-lg border-none outline-none focus:bg-gray-50"
-                      type="text"
-                      placeholder="Enter OTP"
-                      name="otp"
-                      value={formData.otp || ""}
-                      onChange={handleInputChange}
-                    />
-                    <button
-                      onClick={handleVerifyOtp}
-                      className="px-6 py-3 text-white text-sm bg-blue-600 hover:bg-blue-700 rounded-xl transition duration-300 ease-in-out"
-                    >
-                      Verify
-                    </button>
+            <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
+              <div className="mx-auto flex w-full max-w-md flex-col space-y-16">
+                <div className="flex flex-col items-center justify-center text-center space-y-2">
+                  <div className=" text-gray-500 ">
+                    <div className="pr-72">Email Verification</div>
                   </div>
-
-                  <div className="mt-5 text-center text-sm text-gray-600">
-                    <p>Didn't receive the code?</p>
-                    <a
-                      className="text-blue-600 hover:underline"
-                      href="http://"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Resend
-                    </a>
+                  <div className="flex flex-row text-sm font-medium text-gray-400">
+                    <p>We have sent a code to your email</p>
                   </div>
                 </div>
-              </form>
+
+                <form action="" method="post">
+                  <div className="flex flex-col space-y-16">
+                    <div className="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
+                      <div className="w-200 ">
+                        <input
+                          className="w-full h-9 border-black flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                          type="text"
+                          placeholder="Enter OTP"
+                          name="otp"
+                          value={formData.otp || ""} // Use formData.otp or an empty string if null
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col space-y-5">
+                      <div>
+                        <button
+                          onClick={handleVerifyOtp}
+                          className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-900 border-none text-white text-sm shadow-sm"
+                        >
+                          Verify Account
+                        </button>
+                      </div>
+
+                      <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
+                        <p>Didn't receive code?</p>{" "}
+                        <a
+                          className="flex flex-row items-center text-blue-600"
+                          href="http://"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Resend
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
           </Modal>
         </div>
@@ -408,4 +396,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default test;

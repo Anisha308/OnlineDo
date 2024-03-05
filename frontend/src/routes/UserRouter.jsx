@@ -17,6 +17,7 @@ import PurchaseList from "../pages/Users/PurchaseList.jsx";
 import CourseView from "../pages/Users/CourseView.jsx";
 import Chat1 from "../pages/Users/ChatMain.jsx";
 import Rating from "../pages/Users/rating.jsx";
+import Test from "../pages/Users/test.jsx"
 function UserRouter() {
   return (
     <>
@@ -34,7 +35,8 @@ function UserRouter() {
         <Route path="/:userId/purchaselist" element={<PurchaseList />} />
         <Route path="/:purchaseId/courseview" element={<CourseView />} />
         <Route path="/chat" element={<Chat1 />} />
-        <Route path="/rating" element={<Rating/>} />
+        <Route path="/rating" element={<Rating />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </>
   );

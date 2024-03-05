@@ -120,12 +120,14 @@ const otpVerify = async (req, res) => {
 
     const { otp, typedOtp, email, name, mobile, profilephoto, password } =
       req.body;
-
+console.log(otp, typedOtp, email, name, mobile, profilephoto, password,'reqbodyh');
     if (!otp || typedOtp !== otp) {
+      console.log('hmm non otp yar');
       return res.status(401).json({ message: "Entered Code is incorrect" });
     } else {
       const existingUser = await User.findOne({ email: email });
       if (existingUser) {
+        console.log('he is already  exist');
         return res.status(400).json({ message: "User already exists" });
       }
 
@@ -138,8 +140,9 @@ const otpVerify = async (req, res) => {
         role: "user",
       });
       await newUser.save();
+      console.log(newUser,'puthiya user');
       const jwtoken = generateToken(res, newUser._id);
-
+console.log(jwtoken);
       res.status(200).json({
         _id: newUser._id,
         name: newUser.name, // Update with the actual user properties
@@ -150,6 +153,7 @@ const otpVerify = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error " });
+    console.log('ndho error');
   }
 };
 
