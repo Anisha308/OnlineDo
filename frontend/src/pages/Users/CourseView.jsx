@@ -3,12 +3,11 @@ import apiInstance from "../../../Api";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Rating from "react-rating-stars-component";
-
+import { useSelector } from "react-redux";
 const CourseView = () => {
   const { purchaseId } = useParams();
   const [course, setCourse] = useState(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
-
   const [rating, setRating] = useState(0);
   const [count,setCount]=useState(0)
  const [ratings, setRatings] = useState([
@@ -18,9 +17,11 @@ const CourseView = () => {
    { _id: 4, count: 0 },
    { _id: 5, count: 0 },
  ]);
- 
+   const { userInfo } = useSelector((state) => state.auth);
+console.log(userInfo._id,'userInfo');
   const [comment, setComment] = useState("");
   
+const [name,setName]=useState("")
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -41,17 +42,27 @@ const CourseView = () => {
     const fetchRating = async () => {
       try {
         const response = await apiInstance.get(`api/users/rating`);
-        console.log(response, "ratingrespone");
+        console.log(response, "responseyyy");
         setRatings(response.data.ratings);
-        setCount(response.data.count)
-        
-        
+        setCount(response.data.count);
+        const userNames = response.data.users.map((user) => user.userId.name);
+        const userComments = response.data.users.map((user) => user.comment);
+        setComment(userComments); // Set comments in state
+
+        setName(userNames);
+        console.log(name, "name");
+        console.log(userNames, "usernames");
       } catch (error) {
         console.error(error);
       }
     }
     fetchRating()
-  },[])
+  }, [])
+  
+  useEffect(() => {
+    console.log(name, "namessss");
+  }, [name]);
+
   const toggleVideos = (moduleId) => {
     const videosElement = document.getElementById(`videos-${moduleId}`);
     if (videosElement) {
@@ -65,17 +76,33 @@ const CourseView = () => {
   };
   const submitRating = async () => {
     try {
-      console.log("gi");
+    const alreadyRated = ratings.some((item) => item._id === rating);
+
+    if (alreadyRated) {
+      toast.warning("User has already rated the course");
+      // Handle the case where the user has already rated the course
+      return;
+    }
+
+
+      console.log(alreadyRated,"gi");
       console.log(purchaseId, "ummm");
       console.log(comment, "comment");
       console.log(rating, "rting");
+      console.log(userInfo._id, "sjjus");
       const response = await apiInstance.post(`/api/users/rating`, {
         purchaseId,
         rating,
         comment,
+        userId: userInfo._id,
       });
       console.log(response, "repone");
-      setRatings([response.data.newRating.rating]); // Wrap the single object in an array
+      setRatings([...ratings, { _id: rating, count: 1 }]);
+      setName([...name, userInfo.name]); // Assuming userInfo contains the user's name
+      
+      setComment(""); // Reset comment field
+      setRating(0); // Reset rating field
+
       setShowRatingModal(false);
       toast.success("Rating submitted successfully");
     } catch (error) {
@@ -196,7 +223,7 @@ const CourseView = () => {
                     <span className="text-sm">
                       {((count / totalRatings) * 100).toFixed(0)}%
                     </span>
-                  </div> 
+                  </div>
                 </div>
               );
             })}
@@ -204,15 +231,43 @@ const CourseView = () => {
             {/* 5th */}
           </div>
         </div>
-       
+
+        {ratings.map((ratingItem, index) => (
+          <div key={index} className="bg-white shadow-md rounded-md p-4 mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-bold text-lg">{name[index]}</span>
+              <div className="flex items-center">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className={`h-6 w-6 fill-current ${
+                        i < ratingItem._id ? "text-yellow-500" : "text-gray-300"
+                      }`}
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 3.879l2.447 5.267 5.527.805-4.005 3.893.945 5.468L10 15.789l-4.914 2.403.945-5.468-4.005-3.893 5.527-.805L10 3.879zm0 2.393l-3.668.534L6.33 10.48 3.234 7.656l4.25-.617L10 4.272zm0 7.104l-3.175 1.55.606-3.513-2.569-2.492 3.553-.517L10 5.81l1.585 3.934 3.553.517-2.569 2.492.606 3.513-3.175-1.55z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+            </div>{" "}
+            <span className="ml-2 text-gray-600">{comment[index]}</span>{" "}
+          </div>
+        ))}
+
         <div className="w-full px-4">
-          <h3 className="font-medium tracking-tight">Review this item</h3>
           <p className="text-gray-700 text-sm py-1">
-            give your opinion about this item.
+            give your opinion about this instructor.
           </p>
           <button
             onClick={handleRating}
-            className="bg-blue-800 border border-white-400 px-3 py-1 rounded  text-white mt-2"
+            className="bg-blue-800 border border-white-400 px-3 py-1 rounded text-white mt-2"
           >
             Leave a review
           </button>
@@ -270,7 +325,7 @@ const CourseView = () => {
                     className="p-4 text-gray-500 rounded-xl resize-none"
                     placeholder="share your feedback"
                     // value={comment}
-                    onChange={(e) => setComment(e.target.value)}
+                    // onChange={(e) => setComment(e.target.value)}
                   />
                   <button
                     onClick={submitRating}

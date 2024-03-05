@@ -51,7 +51,6 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
     if (chat !== null) fetchMessages();
   }, [chat]);
 
-  // Always scroll to last Message
   useEffect(() => {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

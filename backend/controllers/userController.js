@@ -392,12 +392,14 @@ const getSingleCourseById = asyncHandler(async (req, res) => {
 const userrating = asyncHandler(async (req, res) => {
   console.log('hii');
   try {
-    const { purchaseId, rating, comment } = req.body
+    const { purchaseId, rating, comment, userId } = req.body
+    console.log(userId,'userid');
     console.log(purchaseId, rating, comment,'body');
     const newRating = new Rating({
       purchaseId,
       rating,
       comment,
+      userId
     })
 console.log(newRating,'neyyy');
     await newRating.save()
@@ -410,7 +412,11 @@ console.log(newRating,'neyyy');
 const fetchRating = asyncHandler(async (req, res) => {
   try {
     console.log('jjj');
-
+   const users = await Rating.find({}).populate({
+     path: "userId",
+     select: "name"
+   });
+   console.log(users, "user");
     const count = await Rating.countDocuments({})
     console.log(count);
     const ratings = await Rating.aggregate([
@@ -426,16 +432,9 @@ const fetchRating = asyncHandler(async (req, res) => {
         },
       },
     ]);
-const user = await Rating.find({}).populate({
-  path: "purchaseId",
-  populate: {
-    path: "userId",
-    model: "User",
-  },
-});
 
     console.log(ratings,count,'rating');
-    res.status(200).json({ ratings,count,user, success:true})
+    res.status(200).json({ ratings,count,users, success:true})
   } catch (error) {
     console.error(error);
   }

@@ -7,6 +7,11 @@ const ratingSchema = new mongoose.Schema({
 
     required: true,
   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // Reference to the User model
+    required: true,
+  },
 
   rating: {
     type: Number,
@@ -21,11 +26,6 @@ const ratingSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  },
-  user: {
-    // Field to store the populated user information
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to the User model
   },
 });
 
