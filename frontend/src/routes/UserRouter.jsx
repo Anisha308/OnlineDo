@@ -17,7 +17,7 @@ import PurchaseList from "../pages/Users/PurchaseList.jsx";
 import CourseView from "../pages/Users/CourseView.jsx";
 import Chat1 from "../pages/Users/ChatMain.jsx";
 import Rating from "../pages/Users/rating.jsx";
-import Test from "../pages/Users/test.jsx"
+import Test from "../pages/test.jsx"
 function UserRouter() {
   return (
     <>

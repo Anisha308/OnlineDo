@@ -31,8 +31,10 @@ const AddCourse = () => {
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
+    console.log(file, 'file');
     try {
       const response = await uploadToCloudinary(file);
+      console.log(response,'responsesnns');
       setImage(response);
     } catch (error) {
       console.log("error in image upload", error);
@@ -118,7 +120,7 @@ const AddCourse = () => {
     }
 
     try {
-     
+     console.log(courseName);
       const { data } = await addCourseMutation({
         courseName,
         description,
@@ -131,6 +133,8 @@ const AddCourse = () => {
         instructorId,
         previewVideo,
       });
+
+      console.log(data,'dats');
       if (data) {
         Navigate(`/instructor/${instructorId}/courselist`);
         toast.success("Course added successfully:", data);

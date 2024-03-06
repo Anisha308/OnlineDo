@@ -1,19 +1,20 @@
 import React from "react";
-import signupImg from "../../assets/images/hero-bg.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useInstructorSignUpMutation } from "../../Slices/authInstructorSlice.js";
 import { useInstructverifyOtpMutation } from "../../Slices/authInstructorSlice.js";
-import { Modal } from "react-bootstrap";
-import uploadImageToCloudinary from "../../../../backend/utils/uploadCloudinary.js";
 import { useSelector, useDispatch } from "react-redux";
 import { instructorSetCredentials } from "../../Slices/instructorApiSlice.js";
-const InstructorSignup = () => {
+import Modal from "react-modal";
+function InstructorSignup() {
+  const [previewURL, setPreviewURL] = useState("");
+  const [previewCertificate, setPreviewCertificate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [idProof, setIdProofFile] = useState(null);
   const [experienceCertificateFile, setExperienceCertificateFile] =
     useState(null);
+
   const [recievedOtp, setRecievedOtp] = useState("");
   const [profilephoto, setprofilephoto] = useState(null);
   const [formData, setFormData] = useState({
@@ -136,6 +137,7 @@ const InstructorSignup = () => {
   };
 
   const submitHandler = async (e) => {
+    console.log("hiiiiiiiiiiiiiiiiii");
     e.preventDefault();
     const {
       name,
@@ -166,6 +168,7 @@ const InstructorSignup = () => {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setprofilephoto(reader.result);
+      setPreviewURL(reader.result); // Set preview URL here
     };
   };
 
@@ -192,140 +195,329 @@ const InstructorSignup = () => {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setExperienceCertificateFile(reader.result);
+      setPreviewCertificate(reader.result);
     };
   };
 
   return (
-    <section className="px-5 xl:px-0">
-      <div className="max-w-[900px] mx-auto  ">
-        <div className="grid grid-cols-1 lg:grid-cols-2 ">
-          {/*======img box ========*/}
-          <div className="hidden lg:block  rounded-l-lg">
-            <figure className="rounded-l-lg overflow-hidden">
-              <img
-                src={signupImg}
-                alt=""
-                className="w-full min-h-full object-cover rounded-l-lg"
-              />
-            </figure>
+    <>
+      {/* Hello world */}
+      {/* component */}
+      <div className=" md:flex">
+        <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center hidden">
+          <div>
+            <h1 className="text-white font-bold text-4xl font-sans">
+              OnlineDo
+            </h1>
+            <p className="text-white mt-1">
+              Don't worry about failure; you only have to be right once.
+            </p>
           </div>
-          {/*=========sign up form======*/}
-          <div className="rounded-l-lg lg:pl-16 py-10">
-            <h3 className="text-headingColor text-[22px] leading-9 front-bold mb-10 w-[500px]">
-              Register{" "}
-              <span className="text-primaryColor">to be an Instructor!!</span>
-            </h3>
+          <div className="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
+          <div className="absolute -bottom-40 -left-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
+          <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
+          <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
+        </div>
+        <div className="flex bg-white md:w-1/2 justify-center py-10 items-center bg-white">
+          <div className="">
+            <h1 className="text-gray-800 font-bold text-2xl ">Get Started!</h1>
+            <p className="text-sm font-normal text-gray-600 mb-4">
+              Welcome to OnlineDo
+            </p>
             <form onSubmit={submitHandler}>
-              <div className="mb-5">
+              <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                    clipRule="evenodd"
+                  />
+                </svg>
                 <input
+                  className="pl-2 outline-none border-none"
                   type="text"
-                  placeholder="Enter your name"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-                  required
+                  placeholder="Enter your name"
                 />
               </div>
-              <div className="mb-5">
+              <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 ml-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                  />
+                </svg>
                 <input
+                  className="pl-2 outline-none border-none"
                   type="email"
-                  placeholder="Enter your email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-                  required
+                  placeholder="Enter your email"
                 />
               </div>
-              <div className="mb-5">
-                <input
-                  type="number"
-                  placeholder="Enter your mobile number"
-                  name="mobile"
-                  value={formData.mobile}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-                  required
-                />
+              <div className="flex">
+                <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="#899499	"
+                    className="bi bi-telephone"
+                    viewBox="0 0 16 16"
+                  >
+                    {" "}
+                    <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />{" "}
+                  </svg>{" "}
+                  <input
+                    className="pl-2 outline-none border-none"
+                    type="number"
+                    placeholder="Mobile number"
+                    name="mobile"
+                    value={formData.mobile}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    x="0px"
+                    y="0px"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    style={{ fill: "#899499" }}
+                  >
+                    <path d="M 9 3 L 9 4 L 2 4 L 2 12 C 2 13.105 2.895 14 4 14 L 20 14 C 21.105 14 22 13.105 22 12 L 22 4 L 15 4 L 15 3 L 9 3 z M 12 10 C 12.552 10 13 10.448 13 11 C 13 11.552 12.552 12 12 12 C 11.448 12 11 11.552 11 11 C 11 10.448 11.448 10 12 10 z M 2 15.443359 L 2 20 L 22 20 L 22 15.443359 C 21.409 15.787359 20.732 16 20 16 L 4 16 C 3.268 16 2.591 15.787359 2 15.443359 z"></path>
+                  </svg>
+
+                  <input
+                    className="pl-2 outline-none border-none"
+                    type="number"
+                    placeholder="Year of experience"
+                    name="experience"
+                    value={formData.experience}
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
-              <div className="mb-5">
+              <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
+                <svg fill="#000000" class="w-5 h-5" viewBox="0 0 256 256">
+                  <g fill="#a19b9b">
+                    <rect x="92.8" y="134.1" width="2" height="2"></rect>
+                    <circle cx="79.9" cy="29.4" r="24.6"></circle>
+                    <path
+                      d="M117.2,151H75.7v-30.8L54.5,83.7c-0.8-1.5-0.2-3.3,1-4.2c1.5-0.8,3.3-0.2,4.2,1l24.6,42.3c1.9,3.1,5.2,5.4,9.2,5.4h42.3
+        c6,0,10.8-5,10.8-10.8c0-6-5-10.8-10.8-10.8l-35.4,0.4L72.2,59.6c-2.1-3.7-6.2-5.8-11.2-5.8c-0.6,0-2.3,0.2-2.9,0.4
+        c-0.6,0.2-1.7,0.4-2.3,0.6c-20.6,6.9-36.9,39.6-36.9,73.3c-0.2,10.2,0,18.7,0.6,26.9c-0.8,9.8,5,19.4,14.6,22.9
+        c2.5,0.8,5,1.5,7.5,1.5h61.7V237c0,7.9,6.2,14,14,14c7.9,0,14-6.2,14-14v-71.9c0-3.5-1.5-7.3-4.2-9.8
+        C124.1,152.5,120.5,151,117.2,151z"
+                    ></path>
+                    <polygon points="212,126 212.2,126.2 238,62.9 229.7,59.4 205.9,117.7 152.4,117.7 152.4,126.9 212,126.9"></polygon>
+                  </g>
+                </svg>
+
                 <input
-                  type="number"
-                  placeholder="Enter your total year of experience"
-                  name="experience"
-                  value={formData.experience}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-                  required
-                />
-              </div>
-              <div className="mb-5">
-                <input
+                  className="pl-2 outline-none border-none"
                   type="text"
-                  placeholder="Enter your job role"
+                  placeholder="Job role"
                   name="jobrole"
                   value={formData.jobrole}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-                  required
                 />
               </div>
-              <div className="mb-5">
+              <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
+                <svg
+                  width="19"
+                  height="19"
+                  viewBox="0 0 16 16"
+                  id="company-small-16px"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    id="Retângulo_223"
+                    data-name="Retângulo 223"
+                    width="16"
+                    height="16"
+                    fill="#899499"
+                    opacity="0"
+                  ></rect>
+                  <g id="Icone" transform="translate(0.648 -0.621)">
+                    <g
+                      id="Retângulo_203"
+                      data-name="Retângulo 203"
+                      transform="translate(2.352 2.621)"
+                      fill="none"
+                      stroke="#899499"
+                      strokeWidth="1"
+                    >
+                      <path
+                        d="M1,0H9a1,1,0,0,1,1,1V12a0,0,0,0,1,0,0H0a0,0,0,0,1,0,0V1A1,1,0,0,1,1,0Z"
+                        stroke="none"
+                      ></path>
+                      <rect
+                        x="0.5"
+                        y="0.5"
+                        width="9"
+                        height="11"
+                        rx="0.5"
+                        fill="none"
+                      ></rect>
+                    </g>
+                    <g
+                      id="Retângulo_227"
+                      data-name="Retângulo 227"
+                      transform="translate(5.352 9.621)"
+                      fill="none"
+                      stroke="#899499"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1"
+                    >
+                      <rect width="4" height="5" stroke="none"></rect>
+                      <rect
+                        x="0.5"
+                        y="0.5"
+                        width="3"
+                        height="4"
+                        fill="none"
+                      ></rect>
+                    </g>
+                    <g id="Grupo_334" data-name="Grupo 334">
+                      <g
+                        id="Retângulo_206"
+                        data-name="Retângulo 206"
+                        transform="translate(5.352 5.621)"
+                        fill="none"
+                        stroke="#899499"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1"
+                      >
+                        <rect width="1" height="1" stroke="none"></rect>
+                        <rect x="0.5" y="0.5" fill="none"></rect>
+                      </g>
+                      <g
+                        id="Retângulo_225"
+                        data-name="Retângulo 225"
+                        transform="translate(5.352 7.621)"
+                        fill="none"
+                        stroke="#899499"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1"
+                      >
+                        <rect width="1" height="1" stroke="none"></rect>
+                        <rect x="0.5" y="0.5" fill="none"></rect>
+                      </g>
+                      <g
+                        id="Retângulo_224"
+                        data-name="Retângulo 224"
+                        transform="translate(8.352 5.621)"
+                        fill="none"
+                        stroke="#899499"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1"
+                      >
+                        <rect width="1" height="1" stroke="none"></rect>
+                        <rect x="0.5" y="0.5" fill="none"></rect>
+                      </g>
+                      <g
+                        id="Retângulo_226"
+                        data-name="Retângulo 226"
+                        transform="translate(8.352 7.621)"
+                        fill="none"
+                        stroke="#899499"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1"
+                      >
+                        <rect width="1" height="1" stroke="none"></rect>
+                        <rect x="0.5" y="0.5" fill="none"></rect>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
                 <input
+                  className="pl-2 outline-none border-none"
                   type="text"
-                  placeholder="Enter your company/institute name"
+                  placeholder="Company name"
                   name="companyname"
                   value={formData.companyname}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-                  required
                 />
               </div>
-              <div className="mb-5">
-                <input
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-                  required
-                />
+              <div className="flex">
+                <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-gray-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <input
+                    className="pl-2 outline-none border-none"
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-gray-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <input
+                    className="pl-2 outline-none border-none"
+                    type="password"
+                    placeholder="Confirm Password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
-              <div className="mb-5">
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 bolder-b border-solid border-[#0866ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-painter "
-                  required
-                />
-              </div>
-
-              <div className="mt-7 flex justify-between items-center">
-                <button
-                  type="submit"
-                  className="w-[150px] bg-black text-white text-[18px] leading-[20px] px-4 py-3"
-                >
-                  Register
-                </button>
-                <button
-                  type="button"
-                  className="w-[150px] bg-gray-500 text-white text-[18px] leading-[20px] px-4 py-3 ml-4"
-                  onClick={() => {
-                    // Add cancel button logic here
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-
+              <button
+                type="submit" // Ensure the type is "button"
+                className="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-1"
+              >
+                Register
+              </button>
               <p
                 className="
-          mt-5 text-textColor text-center"
+         mt-5 text-textColor text-center"
               >
                 Already have an account?
                 <Link
@@ -335,137 +527,244 @@ const InstructorSignup = () => {
                   Login
                 </Link>
               </p>
-              {isModalOpen && (
-                <div
-                  id="popup-modal"
-                  className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white-1009 p-8 w-[400px] h-500px"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)",
-                    borderRadius: "10px",
-                    boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.1)",
-                    // Add other inline styles as needed
-                  }}
-                >
-                  <div className="mb-5">
-                    <p className="text-lg font-bold mb-3">Upload Documents</p>
-                    <label
-                      htmlFor="profilephoto"
-                      className="block  font-semibold mb-2"
-                    >
-                      Profile Photo:
-                    </label>{" "}
-                    <input
-                      type="file"
-                      id="profilephoto"
-                      accept="image/*"
-                      onChange={handleprofilephotoUpload}
-                    />
-                  </div>
-                  <div className="mb-5">
-                    <label
-                      htmlFor="idProof"
-                      className="block  font-semibold mb-2"
-                    >
-                      ID Proof:{" "}
-                    </label>
-                    <input
-                      type="file"
-                      id="idProof"
-                      onChange={handleIdProofUpload}
-                    />
-                  </div>
-                  <div className="mb-5">
-                    <label
-                      htmlFor="experienceCertificate"
-                      className="block  font-semibold mb-2"
-                    >
-                      Experience Certificate:{" "}
-                    </label>
-                    <input
-                      type="file"
-                      id="experienceCertificate"
-                      onChange={handleExperienceCertificateUpload}
-                    />
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <button
-                      type="button"
-                      onClick={() => setIsModalOpen(false)}
-                      className="text-gray hover:underline"
-                    >
-                      Close
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleModalSubmit}
-                      className="text-white bg-blue-900 hover:bg-primaryColorDark px-4 py-2"
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              )}
             </form>
-            {Emailverify && (
-              <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
-                <div className="mx-auto flex w-full max-w-md flex-col space-y-16">
-                  <div className="flex flex-col items-center justify-center text-center space-y-2">
-                    <div className=" text-gray-500 ">
-                      <div className="pr-72">Email Verification</div>
-                    </div>
-                    <div className="flex flex-row text-sm font-medium text-gray-400">
-                      <p>We have sent a code to your email</p>
-                    </div>
-                  </div>
 
-                  <form action="" method="post">
-                    <div className="flex flex-col space-y-16">
-                      <div className="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
-                        <div className="w-200 ">
-                          <input
-                            className="w-full h-9 border-black flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                            type="text"
-                            placeholder="Enter OTP"
-                            name="otp"
-                            value={formData.otp || ""} // Use formData.otp or an empty string if null
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col space-y-5">
-                        <div>
-                          <button
-                            onClick={handleVerifyOtp}
-                            className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-900 border-none text-white text-sm shadow-sm"
-                          >
-                            Verify Account
-                          </button>
-                        </div>
-
-                        <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
-                          <p>Didn't receive code?</p>{" "}
-                          <a
-                            className="flex flex-row items-center text-blue-600"
-                            href="http://"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Resend
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
+            {isModalOpen && (
+              <div
+                id="popup-modal"
+                className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white-1009 p-8 w-[400px] h-500px"
+                style={{
+                  background:
+                    "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)",
+                  borderRadius: "10px",
+                  boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.1)",
+                  // Add other inline styles as needed
+                }}
+              >
+                {" "}
+                <h3 className="font-bold mb-4">Upload Your Files</h3>
+                <div className="flex items-center border-2 py-3 px-3 rounded-2xl relative mb-2">
+                  <input
+                    className="hidden"
+                    type="file"
+                    name="profilephoto"
+                    id="profilephoto"
+                    accept="image/*"
+                    onChange={handleprofilephotoUpload}
+                  />
+                  {previewURL && (
+                    <figure className="w-[50px] h-[50px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center relative mr-4">
+                      <img
+                        className="w-[50px] h-[50px] rounded-full"
+                        src={previewURL}
+                        alt=""
+                      />
+                    </figure>
+                  )}
+                  <label
+                    htmlFor="profilephoto"
+                    className="flex-grow h-full flex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor font-semibold rounded-lg truncate cursor-pointer text-right"
+                  >
+                    Upload profile photo
+                  </label>
+                </div>
+                <div className="flex items-center border-2 py-3 px-3 rounded-2xl relative mb-2">
+                  <input
+                    className="hidden"
+                    type="file"
+                    name="idProof"
+                    id="idProof"
+                    onChange={handleIdProofUpload}
+                  />
+                  {idProof && (
+                    <figure className="w-[50px] h-[50px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center relative mr-4">
+                      <img
+                        className="w-[50px] h-[50px] rounded-full"
+                        src={idProof}
+                        alt=""
+                      />
+                    </figure>
+                  )}
+                  <label
+                    htmlFor="idProof"
+                    className="flex-grow h-full flex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor font-semibold rounded-lg truncate cursor-pointer text-right"
+                  >
+                    Upload ID Proof
+                  </label>
+                </div>
+                <div className="flex items-center border-2 py-3 px-3 rounded-2xl relative mb-2">
+                  <input
+                    className="hidden"
+                    type="file"
+                    name="experienceCertificate"
+                    id="experienceCertificate"
+                    onChange={handleExperienceCertificateUpload}
+                  />
+                  {previewCertificate && (
+                    <figure className="w-[50px] h-[50px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center relative mr-4">
+                      <img
+                        className="w-[50px] h-[50px] rounded-full"
+                        src={previewCertificate}
+                        alt=""
+                      />
+                    </figure>
+                  )}
+                  <label
+                    htmlFor="experienceCertificate"
+                    className="flex-grow h-full flex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor font-semibold rounded-lg truncate cursor-pointer text-right"
+                  >
+                    Upload Experience Certificate
+                  </label>
+                </div>
+                <div className="flex justify-between items-center">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="text-gray border border-gray-600 p-1 mt-6 w-20 h-9 rounded-md hover:underline"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleModalSubmit}
+                    className="text-white bg-blue-900 hover:bg-primaryColorDark px-4 py-2 mt-6 rounded-md"
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
             )}
           </div>
+          {/* {Emailverify && (
+            <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
+              <div className="mx-auto flex w-full max-w-md flex-col space-y-16">
+                <div className="flex flex-col items-center justify-center text-center space-y-2">
+                  <div className=" text-gray-500 ">
+                    <div className="pr-72">Email Verification</div>
+                  </div>
+                  <div className="flex flex-row text-sm font-medium text-gray-400">
+                    <p>We have sent a code to your email</p>
+                  </div>
+                </div>
+
+                <form action="" method="post">
+                  <div className="flex flex-col space-y-16">
+                    <div className="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
+                      <div className="w-200 ">
+                        <input
+                          className="w-full h-9 border-black flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                          type="text"
+                          placeholder="Enter OTP"
+                          name="otp"
+                          value={formData.otp || ""} // Use formData.otp or an empty string if null
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col space-y-5">
+                      <div>
+                        <button
+                          onClick={handleVerifyOtp}
+                          className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-900 border-none text-white text-sm shadow-sm"
+                        >
+                          Verify Account
+                        </button>
+                      </div>
+
+                      <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
+                        <p>Didn't receive code?</p>{" "}
+                        <a
+                          className="flex flex-row items-center text-blue-600"
+                          href="http://"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Resend
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )} */}
+
+          <Modal
+            isOpen={Emailverify}
+            onRequestClose={onRequestClose}
+            contentLabel="Email Verification Modal"
+            className="modal-content"
+          >
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-xl p-8 max-w-lg">
+              <div className="flex justify-between items-center">
+                <h2 className="text-gray-800 text-2xl font-semibold">
+                  Verify Your Email
+                </h2>
+                <button
+                  onClick={onRequestClose}
+                  className="text-gray-600 hover:text-gray-800 focus:outline-none transition duration-300 ease-in-out"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <p className="text-sm text-gray-600 mt-2">
+                We've sent a verification code to your email address. Please
+                enter the code below:
+              </p>
+
+              <form action="" method="post" className="mt-6">
+                <div className="max-w-xs mx-auto">
+                  <div className="flex items-center justify-between border border-gray-200 rounded-xl">
+                    <input
+                      className="w-full h-12 px-4 text-lg border-none outline-none focus:bg-gray-50"
+                      type="text"
+                      placeholder="Enter OTP"
+                      name="otp"
+                      value={formData.otp || ""}
+                      onChange={handleInputChange}
+                    />
+                    <button
+                      onClick={handleVerifyOtp}
+                      className="px-6 py-3 text-white text-sm bg-blue-900 hover:bg-blue-900 rounded-xl transition duration-300 ease-in-out"
+                    >
+                      Verify
+                    </button>
+                  </div>
+
+                  <div className="mt-5 text-center text-sm text-gray-600">
+                    <p>Didn't receive the code?</p>
+                    <a
+                      className="text-blue-600 hover:underline"
+                      href="http://"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Resend
+                    </a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </Modal>
         </div>
       </div>
-    </section>
+    </>
   );
-};
+}
+
 export default InstructorSignup;

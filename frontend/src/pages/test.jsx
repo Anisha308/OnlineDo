@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../../components/Header/Pagination";
-import apiInstance from "../../../Api";
+import Pagination from "../components/Header/Pagination";
+import apiInstance from "../../Api";
 import {
   Card,
   CardHeader,
@@ -9,14 +9,14 @@ import {
   Typography,
   Tooltip,
 } from "@material-tailwind/react";
-import { useGetAllCourseQuery } from "../../Slices/usersApiSlice";
+import { useGetAllCourseQuery } from "../Slices/usersApiSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import ViewCourse from "./ViewCourse";
+import ViewCourse from "../pages/Users/ViewCourse";
 
 const ITEMS_PER_PAGE = 6;
 
-const Allcourse = () => {
+const test= () => {
   const navigate = useNavigate();
 
   const { data, error, isLoading } = useGetAllCourseQuery(ITEMS_PER_PAGE);
@@ -336,8 +336,8 @@ const Allcourse = () => {
 
             <div tabIndex={0} className="focus:outline-none">
               {/* Remove py-8 */}
-              <div className="mx-auto container py-8  pl-2 ">
-                <div className="flex flex-wrap ease-in-out duration-300 items-center lg:justify-between justify-center">
+              <div className="mx-auto container py-8">
+                <div className="flex flex-wrap items-center lg:justify-between justify-center">
                   {courses &&
                     courses.length > 0 &&
                     courses
@@ -352,8 +352,8 @@ const Allcourse = () => {
                             state: { course },
                           }}
                           key={index}
-                          className="hover:no-underline mx-2 w-72 xl:mb-0 mb-8 transition-transform duration-300 ease-in-out transform hover:scale-110"
-                          style={{ maxWidth: "20%" }} // Ensure each card occupies 25% of the container
+                          className="hover:no-inderline"
+                          style={{ maxWidth: "22%" }} // Ensure each card occupies 25% of the container
                         >
                           {" "}
                           <div
@@ -409,6 +409,7 @@ const Allcourse = () => {
                                   >
                                     {course.courseName}
                                   </h2>
+                               
                                 </div>
                                 <p
                                   tabIndex={0}
@@ -436,6 +437,7 @@ const Allcourse = () => {
                                   </div>
                                 </div>
                                 <div className="flex items-center justify-between py-4">
+                                
                                   <h3
                                     tabIndex={0}
                                     className="focus:outline-none text-indigo-700 text-xl font-semibold"
@@ -455,4 +457,4 @@ const Allcourse = () => {
     </>
   );
 };
-export default Allcourse;
+export default test;

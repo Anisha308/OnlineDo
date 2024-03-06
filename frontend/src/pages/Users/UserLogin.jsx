@@ -73,7 +73,7 @@ const Login = () => {
               <div className="sm:text-4xl xl:text-5xl font-bold leading-tight mb-6">
                 <div className="hide-on-mobile">Embracing Knowledge</div>
               </div>
-              <div className="sm:text-sm xl:text-sm text-gray-200 leading-tight font-normal mb-6 hidden md:block">
+              <div className="sm:text-sm xl:text-sm text-white-200 leading-tight font-normal mb-6 hidden md:block">
                 {" "}
                 Education is the Movement from darkness to light!!Education is a
                 powerful tool for change. No matter what you're fighting for,

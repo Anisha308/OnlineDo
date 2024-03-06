@@ -31,6 +31,7 @@ const instructorcourse = asyncHandler(async (req, res) => {
 
 const addCourse = asyncHandler(async (req, res) => {
   const instructorId = req.params.instructorId;
+  console.log(instructorId,'instructiorid');
   const {
     courseName,
     paid,
@@ -42,6 +43,17 @@ const addCourse = asyncHandler(async (req, res) => {
     image,
     previewVideo,
   } = req.body;
+  console.log(
+    courseName,
+    paid,
+    description,
+    duration,
+    price,
+    modules,
+    categories,
+    image,
+    previewVideo
+  ,'hhhhhh');
   if (
     !courseName ||
     !description ||
