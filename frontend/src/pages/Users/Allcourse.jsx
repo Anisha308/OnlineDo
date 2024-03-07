@@ -20,7 +20,7 @@ const Allcourse = () => {
   const navigate = useNavigate();
 
   const { data, error, isLoading } = useGetAllCourseQuery(ITEMS_PER_PAGE);
-
+const [ratings,setRatings]=useState(0)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [courses, setCourses] = useState([]);
@@ -49,6 +49,21 @@ const Allcourse = () => {
     }
   }, [data, search]);
 
+
+
+  useEffect(() => {
+    const fetchrating=async()=> {
+  try {
+    const res = await apiInstance.get(`api/users/rating`);
+    console.log(res, "fresss");
+    setRatings(res.data); // Assuming ratings data is an object with courseId as keys and rating as values
+  } catch (error) {
+    console.error(error);
+  }
+    }
+
+    fetchrating()
+  },[])
   const indexOfLastCourse = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstCourse = indexOfLastCourse - ITEMS_PER_PAGE;
   const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
@@ -92,6 +107,13 @@ const Allcourse = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+const totalRating =
+  ratings && ratings.ratings
+    ? ratings.ratings.reduce((acc, rating) => acc + rating.count, 0)
+    : 0;
+const averageRating =
+  totalRating / (ratings && ratings.ratings ? ratings.ratings.length : 1);
 
   return (
     <>
@@ -414,8 +436,26 @@ const Allcourse = () => {
                                   tabIndex={0}
                                   className="focus:outline-none text-xs text-gray-600 mt-2"
                                 >
-                                  The Apple iPhone XS is available in 3 colors
-                                  with 64GB memory. Shoot amazing videos
+                                  <div className="flex  ">
+                                    {Array.from({ length: 5 }).map(
+                                      (_, index) => (
+                                        <svg
+                                          key={index}
+                                          className={`w-4 h-4 ${
+                                            index < averageRating
+                                              ? "text-yellow-500"
+                                              : "text-gray-500"
+                                          }`}
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 20 20"
+                                          fill="currentColor"
+                                        >
+                                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                      )
+                                    )}<p>{averageRating.toFixed(1)}</p>{" "}
+                                  </div>                                    
+
                                 </p>
                                 <div className="flex mt-4">
                                   <div>

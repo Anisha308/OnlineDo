@@ -76,13 +76,13 @@ const [name,setName]=useState("")
   };
   const submitRating = async () => {
     try {
-    const alreadyRated = ratings.some((item) => item._id === rating);
+     const alreadyRated = ratings.some((item) => item._id === rating);
 
-    if (alreadyRated) {
-      toast.warning("User has already rated the course");
-      // Handle the case where the user has already rated the course
-      return;
-    }
+     if (alreadyRated) {
+       toast.warning("User has already rated the course");
+       // Handle the case where the user has already rated the course
+       return;
+     }
 
 
       console.log(alreadyRated,"gi");
@@ -273,6 +273,8 @@ const [name,setName]=useState("")
           </button>
         </div>
       </div>
+
+      
       {showRatingModal && (
         <div className="fixed inset-0 pt-9 flex items-center justify-center bg-gray-800 bg-opacity-75">
           <div className="py-3 sm:max-w-xl sm:mx-auto">
@@ -325,7 +327,7 @@ const [name,setName]=useState("")
                     className="p-4 text-gray-500 rounded-xl resize-none"
                     placeholder="share your feedback"
                     // value={comment}
-                    // onChange={(e) => setComment(e.target.value)}
+                    onChange={(e) => setComment(e.target.value)}
                   />
                   <button
                     onClick={submitRating}

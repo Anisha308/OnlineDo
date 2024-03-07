@@ -154,26 +154,30 @@ const verifyInstructor = asyncHandler(async (req, res) => {
     const instructor = await Instructor.findById(instructorId);
 
     if (!instructor) {
-      res.status(404).json({ error: "instructoor not found" });
+      res.status(404).json({ error: "Instructor not found" });
       return;
     }
+
     instructor.verified = true;
     instructor.rejected = false;
 
     await instructor.save();
 
     res.status(200).json({
-      message: `Instructor verified successfully`,
+      message: "Instructor verified successfully",
       instructor: {
         _id: instructor._id,
         name: instructor.name,
         email: instructor.email,
+        verified: true, // Update verified status to true
       },
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 const getAllInstructors = asyncHandler(async (req, res) => {
   try {
@@ -192,6 +196,9 @@ const getAllInstructors = asyncHandler(async (req, res) => {
         companyname: 1,
         profilephoto: 1,
         idProof: 1,
+        verified: 1,
+        rejected: 1,
+        Blocked:1,
         courses:1,
         experienceCertificateFile: 1,
         _id: 1,

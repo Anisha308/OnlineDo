@@ -12,10 +12,20 @@ const SideBar = () => {
         onSelect={({ itemId }) => {}}
         items={[
           {
-            title: "Dashboard",
-            itemId: "/Dashboard",
+            // title: "Dashboard",
+            itemId: "/admin/dashboard",
 
-            elemBefore: () => <Icon name="inbox" />,
+            elemBefore: () => (
+              <>
+                <Icon name="inbox" />
+                <Link
+                  to="/admin/dashboard"
+                  className=" ml-4 font-semibold"
+                >
+                  Dashboard
+                </Link>
+              </>
+            ),
           },
           {
             title: "Users",

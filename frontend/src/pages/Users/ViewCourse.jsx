@@ -125,6 +125,7 @@ const ViewCourse = () => {
                       />
                       Your browser does not support the video tag.
                     </video>
+
                     <div className="md:w-2/3 p-6">
                       <p className="font-bold text-gray-500">
                         {course.course.courseName}

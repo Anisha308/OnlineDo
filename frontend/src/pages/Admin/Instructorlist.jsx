@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 const InstructorLists = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [showActions, setShowActions] = useState(false);
 
   const { data, error, isLoading } = useGetInstructorlistQuery(currentPage);
   const [instructors, setInstructors] = useState([]);
@@ -29,21 +30,34 @@ const InstructorLists = () => {
   const [confirmVerify, setConfirmVerify] = useState(null);
   const [reason, setReason] = useState("");
   const [reject, setReject] = useState(null);
+const [showModalUnblock, setShowModalUnblock] = useState(false);
+  const [instructorIdToUnblock, setInstructorIdToUnblock] = useState(null);
+
   const isLastPage = currentPage === totalPages;
 
-  useEffect(() => {
-    if (data && data.data && data.data.instructors) {
-      setInstructors(data.data.instructors);
-      setTotalPages(data.data.pagination.totalPages);
-    } else {
-      if (error) {
-        console.error("Error fetching instructors:", error);
-        // navigate('admin/Login')
-      }
-      // Handle error or redirect if needed
-    }
-  }, [currentPage,data]); // Add instructors as a dependency
 
+    useEffect(() => {
+      const storedInstructors = JSON.parse(localStorage.getItem("instructors"));
+      if (storedInstructors) {
+        setInstructors(storedInstructors);
+      }
+    }, []);
+  
+  
+useEffect(() => {
+  if (data && data.data && data.data.instructors) {
+    setInstructors(data.data.instructors);
+    console.log(instructors,'instructors');
+    setTotalPages(data.data.pagination.totalPages);
+    localStorage.setItem("instructors", JSON.stringify(data.data.instructors));
+  } else {
+    if (error) {
+      console.error("Error fetching instructors:", error);
+      // navigate('admin/Login')
+    }
+    // Handle error or redirect if needed
+  }
+}, [currentPage, data, error]);
   const openPreview = (image) => {
     setPreviewImage(image);
   };
@@ -52,23 +66,42 @@ const InstructorLists = () => {
     setPreviewImage(null);
   };
 
-  const handleVerifyInstructor = async (instructorId) => {
-    try {
-      const response = await verifyInstructor({ instructorId }).unwrap();
-      // Update the state after a successful verification
-      setInstructors((prevInstructors) =>
-        prevInstructors.map((instructor) =>
-          instructor._id === instructorId
-            ? { ...instructor, Verified: true }
-            : instructor
-        )
-      );
-      setSelectedInstructor(null);
-      setConfirmVerify(null);
-    } catch (error) {
-      console.error("Error verifying instructor:", error);
-    }
-  };
+
+const cancelUnblock = () => {
+  setShowModalUnblock(false);
+  setInstructorIdToUnblock(null);
+};
+  const handleBlockUnblockInstructor = (e, instructor) => {
+  e.preventDefault()
+  if (instructor.Blocked) {
+    console.log('kkkkk');
+    handleUnblockInstructor(e,instructor._id);
+  } else {
+    handleBlockInstructor(instructor._id);
+  }
+};
+
+  
+  
+
+const handleVerifyInstructor = async (instructorId) => {
+  try {
+    const response = await verifyInstructor({ instructorId }).unwrap();
+    console.log("Verification response:", response); // Log the response
+    // Update the state after a successful verification
+    setInstructors((prevInstructors) =>
+      prevInstructors.map((instructor) =>
+        instructor._id === instructorId
+          ? { ...instructor, Verified: true, rejected: false } // Set rejected to false if previously rejected
+          : instructor
+      )
+    );
+    setSelectedInstructor(null);
+    setConfirmVerify(null);
+  } catch (error) {
+    console.error("Error verifying instructor:", error);
+  }
+};
 
   const handledocs = async (instructorId) => {
     try {
@@ -119,12 +152,16 @@ const InstructorLists = () => {
     setInstructorIdToBlock(null);
   };
 
-  const handleUnblockInstructor = async (instructorId) => {
-    try {
-      const response = await unblockInstructorMutation({
-        instructorId,
-      }).unwrap();
 
+  const handleUnblockInstructor = async (e, instructorId) => {
+    e.preventDefault()
+    setInstructorIdToUnblock(instructorId)
+    setShowModalUnblock(true)
+  }
+  const confirmUnblock = async (instructorId) => {
+    try {
+      const response = await unblockInstructorMutation({ instructorId });
+      console.log(response,'response');
       setInstructors((prevInstructors) =>
         prevInstructors.map((instructor) =>
           instructor._id === instructorId
@@ -132,10 +169,12 @@ const InstructorLists = () => {
             : instructor
         )
       );
+      setShowModalUnblock(false)
     } catch (error) {
       console.error("Error blocking/unblocking instructor:", error);
     }
   };
+
 
   const mailreason = async (reason) => {
     try {
@@ -157,10 +196,30 @@ const InstructorLists = () => {
       console.error("Error sending rejection email:", error);
     }
   };
-  const handleReject = () => {
-    setReason("");
-    setReject(true);
+  const handleReject = async (instructor) => {
+    console.log(instructor,'ins');
+    if (!selectedInstructor) return;
+    try {
+      console.log(reason,'reas');
+      const res = await apiInstance.post(`api/admin/sendmail`, {
+        reason,
+        instructorId: selectedInstructor._id,
+      });
+      console.log(res, "res");
+      setInstructors((prevInstructors) =>
+        prevInstructors.map((instructor) =>
+          instructor._id === selectedInstructor._id
+            ? { ...instructor, rejected: true, Verified: false } // Set Verified to false if previously verified
+            : instructor
+        )
+      );
+      setShowVerificationModal(false);
+      toast.success("Rejected successfully");
+    } catch (error) {
+      console.error("Error sending rejection email:", error);
+    }
   };
+
   const PreviewModal = () => (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 max-w-2xl w-full">
       <img src={previewImage} alt="Preview" className="w-full max-h-96" />
@@ -361,37 +420,59 @@ const InstructorLists = () => {
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                          <div className="flex space-x-4">
-                            <button onClick={()=>handleview(instructor._id) } className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 bg-red-200 opacity-50 rounded-full">
-                               view
-                            </button>
-                          </div>
-                          <div className="flex space-x-4">
+                          <div className="flex justify-center space-x-4">
                             <button
-                              onClick={() => handledocs(instructor._id)}
-                              className={`relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 ${
-                                instructor.Verified
-                                  ? "bg-green-200"
-                                  : instructor.rejected
-                                  ? "bg-red-200"
-                                  : "bg-yellow-200"
-                              } opacity-50 rounded-full`}
+                              onClick={() => handleview(instructor._id)}
+                              className="relative inline-block  py-1 font-semibold text-red-900 leading-tight bg-blue-200 rounded-full h-8"
+                              style={{ minWidth: "100px" }} // Adjust the minWidth as needed
                             >
-                              {instructor.Verified
-                                ? "Verified"
-                                : instructor.rejected
-                                ? "Rejected"
-                                : "Verify"}
+                              View Course
                             </button>
 
-                            <button
-                              onClick={() =>
-                                handleBlockInstructor(instructor._id)
-                              }
-                              className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 bg-red-200 opacity-50 rounded-full"
-                            >
-                              {instructor.Blocked ? "Unblock" : "Block"}
-                            </button>
+                            <div className="relative inline-block">
+                              <select
+                                value=""
+                                onChange={(e) => {
+                                  e.preventDefault(); // Prevent default form submission behavior
+
+                                  const value = e.target.value;
+                                  if (value === "verify") {
+                                    // Set the selected instructor
+                                    setSelectedInstructor(instructor);
+                                    // Open the verification modal
+                                    setShowVerificationModal(true);
+                                  } else if (value === "reject") {
+                                    setReject(true); // Set the reject state to true to trigger the rejection modal
+                                    setShowVerificationModal(true); // Open the verification modal
+                                  } else if (value === "unblock") {
+                                    handleBlockUnblockInstructor(e, instructor);
+                                  }
+                                }}
+                                className={`px-3 py-1 font-semibold text-red-900 leading-tight appearance-none border-none bg-transparent`}
+                              >
+                                <option disabled value="">
+                                  &#8942; {/* Vertical ellipsis */}
+                                </option>
+                                {instructor.Verified && (
+                                  <option value="reject">Reject</option>
+                                )}
+                                {instructor.Verified && (
+                                  <option value="verified">Verified</option>
+                                )}
+                                {instructor.rejected && (
+                                  <option value="rejected">rejected</option>
+                                )}
+                                {instructor.rejected && (
+                                  <option value="verify">verify</option>
+                                )}{" "}
+                                {!instructor.rejected && !instructor.Verified && (
+                                  <option value="verify">verify</option>
+                                )}
+                                <option value="unblock">
+                                  {instructor.Blocked ? "Unblock" : "Block"}
+                                </option>
+                              </select>
+                            </div>
                           </div>
                         </td>
                       </tr>
@@ -412,10 +493,11 @@ const InstructorLists = () => {
             <button
               onClick={confirmBlock}
               type="button"
-              className="text-white bg-blue-950 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
+              className="text-white bg-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
             >
               Yes, I'm sure
             </button>
+
             <button
               onClick={cancelBlock}
               type="button"
@@ -445,7 +527,7 @@ const InstructorLists = () => {
             <button
               onClick={() => handleVerifyInstructor(selectedInstructor._id)}
               type="button"
-              className="text-white bg-blue-950 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
+              className="text-white bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
             >
               Yes, I'm sure
             </button>
@@ -460,22 +542,26 @@ const InstructorLists = () => {
         </div>
       )}
       {previewImage && <PreviewModal />}
-      {showModal && (
+      {showModalUnblock && (
         <div
           id="popup-modal"
           className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8"
         >
-          <p className="mb-4"> Are you sure you want to block this user?</p>
+          <p className="mb-4"> Are you sure you want to unblock this user?</p>
           <div className="flex gap-4">
             <button
-              onClick={confirmBlock}
+              onClick={(e) => {
+                e.preventDefault();
+                confirmUnblock(instructorIdToUnblock); // Pass instructorIdToUnblock instead of instructors._id
+              }}
               type="button"
-              className="text-white bg-blue-950 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
+              className="text-white bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
             >
               Yes, I'm sure
             </button>
+
             <button
-              onClick={cancelBlock}
+              // onClick={cancelunBlock}
               type="button"
               className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
             >

@@ -1,460 +1,273 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../components/Header/Pagination";
-import apiInstance from "../../Api";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-  Tooltip,
-} from "@material-tailwind/react";
-import { useGetAllCourseQuery } from "../Slices/usersApiSlice";
+import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import ViewCourse from "../pages/Users/ViewCourse";
+import { useGetCourseQuery } from "../Slices/authInstructorSlice";
 
-const ITEMS_PER_PAGE = 6;
+import InstructorSidebar from "../components/Header/instructorSidebar";
+import IconChat from "../components/iconchat";
+import apiInstance from "../../Api";
 
-const test= () => {
-  const navigate = useNavigate();
+const Courselists = () => {
+  const { instructorId } = useParams();
+  const Navigate = useNavigate();
+  const { data, error, isLoading } = useGetCourseQuery(instructorId);
 
-  const { data, error, isLoading } = useGetAllCourseQuery(ITEMS_PER_PAGE);
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSort, setIsSort] = useState(false);
   const [courses, setCourses] = useState([]);
-  const [search, setSearch] = useState("");
+  const [instructor, setInstructor] = useState([]);
+  const [isLastPage, setIsLastPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // Assuming a default value of 1
-
   const [totalPages, setTotalPages] = useState(1); // Assuming a default value of 1
+  const [activePage, setActivePage] = useState(1);
 
-  const [sortBy, setSortBy] = useState(null);
-
-  const [filterOrder, setFilterOrder] = useState(null);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+  });
 
   useEffect(() => {
     if (data && data.courses) {
-      // Filter the courses based on the search query
-      const filteredCourses = data.courses.filter((course) =>
-        course.courseName.toLowerCase().includes(search.toLowerCase())
-      );
-      // Set the filtered courses
-      setCourses(filteredCourses);
-      // Calculate total pages based on the filtered courses
-      const totalPagesCount = Math.ceil(
-        filteredCourses.length / ITEMS_PER_PAGE
-      );
-      setTotalPages(totalPagesCount);
-    }
-  }, [data, search]);
+      setCourses(data.courses);
+      setInstructor(data.instructor); // Assuming data has a property named 'instructor'
+      setPagination(data.pagination);
+      setCurrentPage(data.pagination.currentPage);
+      setTotalPages(data.pagination.totalPages);
 
-  const indexOfLastCourse = currentPage * ITEMS_PER_PAGE;
-  const indexOfFirstCourse = indexOfLastCourse - ITEMS_PER_PAGE;
-  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
-  const isLastPage = currentPage === totalPages;
+      setIsLastPage(data.pagination.currentPage === data.pagination.totalPages);
+    } else if (error && error.status === 401) {
+      Navigate("/instructorLogin");
+    }
+  }, [data, error]);
 
   const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      const fetchData = async () => {
+        // Update the pagination state
+        setActivePage(pageNumber);
 
-  const handleSearchSortFilter = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+        setPagination((prevPagination) => ({
+          ...prevPagination,
+          currentPage: pageNumber,
+        }));
 
-    try {
-      const params = {};
-      if (search) {
-        params.query = search;
-      }
-      if (sortBy) {
-        params.sortBy = sortBy;
-      }
+        // Fetch data for the selected page
+        const newData = await fetchInstructorCourses(instructorId, pageNumber);
 
-      if (filterOrder) {
-        params.filterOrder = filterOrder;
-      }
-
-      const response = await apiInstance.get(
-        "/api/users/getcourse/searchSortFilter",
-        {
-          params,
+        // Update state with the new data
+        if (newData && newData.courses) {
+          setCourses(newData.courses);
+          setInstructor(newData.instructor);
         }
-      );
-      if (response.data && response.data.courses) {
-        setCourses(response.data.courses);
-      }
-    } catch (error) {
-      console.error("Error searching courses:", error.message);
+      };
+
+      fetchData();
     }
   };
-  // Allcourse component
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const fetchInstructorCourses = async (instructorId, page) => {
+    try {
+      const response = await apiInstance.get(
+        `api/instructor/${instructorId}/courselist?page=${page}`
+      );
+
+      const { courses, instructor, pagination } = response.data;
+
+      return {
+        courses,
+        instructor,
+        pagination,
+      };
+    } catch (error) {
+      console.error("Error fetching instructor courses:", error);
+      return {
+        courses: [],
+        instructor: {},
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+        },
+      };
+    }
   };
 
   return (
-    <>
-      <div className="bg-white">
-        <div>
-          <div
-            className={`relative z-40 ${isSidebarOpen ? "" : "hidden"}`}
-            role="dialog"
-            aria-modal="true"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-            <div className="fixed inset-0 z-40 flex">
-              {isSidebarOpen && (
+    <div className="flex  ">
+      <InstructorSidebar instructorId={instructorId} />
+      <IconChat />
+      <div className="mx-auto container py-8  pl-2 ">
+        <div className="flex flex-wrap ease-in-out duration-300 items-center lg:justify-between justify-center">
+          {isLoading && <div>Loading...</div>}
+
+          {courses &&
+            instructor &&
+            courses.map((course, index) => (
+              <Link
+                to={{
+                  pathname: `/instructor/instructorcourse/${course._id}`,
+                  state: { course },
+                }}
+                key={index}
+                className="hover:no-underline"
+                style={{ maxWidth: "20%" }} // Ensure each card occupies 25% of the container
+              >
+                {" "}
                 <div
-                  className={`relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 ${
-                    isSidebarOpen ? "" : "hidden"
-                  }`}
+                  key={index}
+                  className="focus:outline-none mx-2 w-72 xl:mb-0 mb-8"
                 >
-                  {" "}
-                  <div className="flex items-center justify-between px-4">
-                    <h2 className="text-lg font-medium text-gray-900">
-                      Filters
-                    </h2>
-                    <button
-                      type="button"
-                      className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
-                      onClick={() => setIsSidebarOpen(false)}
-                    >
-                      <span className="sr-only">Close menu</span>
-                      <svg
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
+                  <div>
+                    <img
+                      alt="profile-picture"
+                      src={course.thumbnail}
+                      tabIndex={0}
+                      className="focus:outline-none w-full h-44"
+                    />
+                  </div>
+                  <div className="bg-white">
+                    <div className="flex items-center justify-between px-4 pt-4">
+                      <div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          tabIndex={0}
+                          className="focus:outline-none"
+                          width={20}
+                          height={20}
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="#2c3e50"
+                          fill="none"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                  <form className="mt-4 border-t border-gray-200">
-                    <h3 className="sr-only">Categories</h3>
-
-                    <div className="border-t border-gray-200 px-4 py-6">
-                      <h3 className="-mx-2 -my-3 flow-root">
-                        <button
-                          type="button"
-                          className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500"
-                          aria-controls="filter-section-mobile-0"
-                          aria-expanded="false"
                         >
-                          <span className="font-medium text-gray-900">
-                            Price
-                          </span>
-                          <span className="ml-6 flex items-center"></span>
-                        </button>
-                      </h3>
-                      <div className="pt-6" id="filter-section-mobile-0">
-                        <div className="space-y-6">
-                          <div className="flex items-center">
-                            <button
-                              onClick={(e) => {
-                                setFilterOrder("1-500");
-                                handleSearchSortFilter(e);
-                              }}
-                              className="mr-44 min-w-0 flex-1 text-gray-500"
-                            >
-                              ₹1 - ₹500
-                            </button>
-                          </div>
-                          <div className="flex items-center">
-                            <button
-                              onClick={(e) => {
-                                setFilterOrder("501-1000");
-                                handleSearchSortFilter(e);
-                              }}
-                              className="mr-40 min-w-0 flex-1 text-gray-500"
-                            >
-                              ₹501-₹1,000
-                            </button>
-                          </div>
-                          <div className="flex items-center">
-                            <button
-                              onClick={(e) => {
-                                setFilterOrder("1001-2000");
-                                handleSearchSortFilter(e);
-                              }}
-                              className="mr-36 min-w-0 flex-1 text-gray-500"
-                            >
-                              ₹1001-₹2,000
-                            </button>
-                          </div>
-                          <div className="flex items-center">
-                            <button
-                              onClick={(e) => {
-                                setFilterOrder("2001-above");
-                                handleSearchSortFilter(e);
-                              }}
-                              className="mr-32 min-w-0 flex-1 text-gray-500"
-                            >
-                              ₹2001 and above
-                            </button>
-                          </div>
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
+                        </svg>
+                      </div>
+                      <div className="bg-yellow-200 py-1.5 px-6 rounded-full">
+                        <p
+                          tabIndex={0}
+                          className="focus:outline-none text-xs text-yellow-700"
+                        >
+                          {instructor.name}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <div className="flex items-center">
+                        <h2
+                          tabIndex={0}
+                          className="focus:outline-none text-lg font-semibold"
+                        >
+                          {course.courseName}
+                        </h2>
+                      </div>
+                      <p
+                        tabIndex={0}
+                        className="focus:outline-none text-xs text-gray-600 mt-2"
+                      >
+                        The Apple iPhone XS is available in 3 colors with 64GB
+                        memory. Shoot amazing videos
+                      </p>
+                      <div className="flex mt-4">
+                        <div>
+                          <p
+                            tabIndex={0}
+                            className="focus:outline-none text-xs text-gray-600 px-2 bg-gray-200 py-1"
+                          >
+                            ₹{course.price}
+                          </p>
+                        </div>
+                        <div className="pl-2">
+                          <p
+                            tabIndex={0}
+                            className="focus:outline-none text-xs text-gray-600 px-2 bg-gray-200 py-1"
+                          >
+                            {course.duration} Months
+                          </p>
                         </div>
                       </div>
-                    </div>
-                  </form>
-                </div>
-              )}
-            </div>
-          </div>
-          <main className="mx-auto max-w-7xl px-4  sm:px-6 lg:px-8">
-            <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-2">
-              <h1 className="text-3xl font-bold  tracking-tight text-gray-800">
-                All Courses
-              </h1>
-              <div
-                className="flex  rounded mt-5 mb-5 w-80 bg-gray-300"
-                data-x-data="{ search: '' }"
-              >
-                <input
-                  type="search"
-                  className="w-full border-none bg-transparent px-4 py-1 text-white-900 focus:outline-none"
-                  placeholder="Type Here..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <button
-                  className={`m-2 bg-black text-white rounded px-4 py-2 font-semibold ${
-                    search ? "bg-purple-500" : "bg-black-500 cursor-not-allowed"
-                  }`}
-                  onClick={(e) => handleSearchSortFilter(e)}
-                  disabled={!search}
-                >
-                  Search
-                </button>
-              </div>
-              <div className="flex items-center">
-                <div className="relative inline-block text-left">
-                  <div>
-                    <button
-                      type="button"
-                      className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
-                      id="menu-button"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      onClick={() => setIsSort(!isSort)}
-                    >
-                      Sort
-                      <svg
-                        className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                          clipRule="evenodd"
+                      <div className="flex items-center justify-between py-4">
+                        <h3
+                          tabIndex={0}
+                          className="focus:outline-none text-indigo-700 text-xl font-semibold"
                         />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {isSort && (
-                    <div
-                      className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="menu-button"
-                      tabIndex={-1}
-                    >
-                      <div className="py-1" role="none">
-                        <button
-                          onClick={(e) => {
-                            setSortBy("newest");
-
-                            handleSearchSortFilter(e);
-                          }}
-                          className="text-gray-500 block px-4 py-2 text-sm"
-                          role="menuitem"
-                          tabIndex={-1}
-                          id="menu-item-2"
-                        >
-                          Newest
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            setSortBy("lowtohigh");
-                            handleSearchSortFilter(e);
-                          }}
-                          className="text-gray-500 block px-4 py-2 text-sm"
-                          role="menuitem"
-                          tabIndex={-1}
-                          id="menu-item-3"
-                        >
-                          Price: Low to High
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            setSortBy("hightolow");
-                            handleSearchSortFilter(e);
-                          }}
-                          className="text-gray-500 block px-4 py-2 text-sm"
-                          role="menuitem"
-                          tabIndex={-1}
-                          id="menu-item-4"
-                        >
-                          Price: High to Low
-                        </button>
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
-
-                <button
-                  type="button"
-                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6  "
-                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                >
-                  <span className="sr-only">Filters</span>
-                  <svg
-                    className="h-5 w-5"
-                    aria-hidden="true"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.591L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div tabIndex={0} className="focus:outline-none">
-              {/* Remove py-8 */}
-              <div className="mx-auto container py-8">
-                <div className="flex flex-wrap items-center lg:justify-between justify-center">
-                  {courses &&
-                    courses.length > 0 &&
-                    courses
-                      .slice(
-                        (currentPage - 1) * ITEMS_PER_PAGE,
-                        currentPage * ITEMS_PER_PAGE
-                      )
-                      .map((course, index) => (
-                        <Link
-                          to={{
-                            pathname: `/viewcourse/${course._id}`,
-                            state: { course },
-                          }}
-                          key={index}
-                          className="hover:no-inderline"
-                          style={{ maxWidth: "22%" }} // Ensure each card occupies 25% of the container
-                        >
-                          {" "}
-                          <div
-                            tabIndex={0}
-                            className="focus:outline-none mx-2 w-72 xl:mb-0 mb-8"
-                          >
-                            <div>
-                              <img
-                                alt="profile-picture"
-                                src={course.thumbnail}
-                                tabIndex={0}
-                                className="focus:outline-none w-full h-44"
-                              />
-                            </div>
-                            <div className="bg-white">
-                              <div className="flex items-center justify-between px-4 pt-4">
-                                <div>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    tabIndex={0}
-                                    className="focus:outline-none"
-                                    width={20}
-                                    height={20}
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="1.5"
-                                    stroke="#2c3e50"
-                                    fill="none"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  >
-                                    <path
-                                      stroke="none"
-                                      d="M0 0h24v24H0z"
-                                      fill="none"
-                                    />
-                                    <path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
-                                  </svg>
-                                </div>
-                                <div className="bg-yellow-200 py-1.5 px-6 rounded-full">
-                                  <p
-                                    tabIndex={0}
-                                    className="focus:outline-none text-xs text-yellow-700"
-                                  >
-                                    {course.instructor.name}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="p-4">
-                                <div className="flex items-center">
-                                  <h2
-                                    tabIndex={0}
-                                    className="focus:outline-none text-lg font-semibold"
-                                  >
-                                    {course.courseName}
-                                  </h2>
-                               
-                                </div>
-                                <p
-                                  tabIndex={0}
-                                  className="focus:outline-none text-xs text-gray-600 mt-2"
-                                >
-                                  The Apple iPhone XS is available in 3 colors
-                                  with 64GB memory. Shoot amazing videos
-                                </p>
-                                <div className="flex mt-4">
-                                  <div>
-                                    <p
-                                      tabIndex={0}
-                                      className="focus:outline-none text-xs text-gray-600 px-2 bg-gray-200 py-1"
-                                    >
-                                      ₹{course.price}
-                                    </p>
-                                  </div>
-                                  <div className="pl-2">
-                                    <p
-                                      tabIndex={0}
-                                      className="focus:outline-none text-xs text-gray-600 px-2 bg-gray-200 py-1"
-                                    >
-                                      {course.duration} Months
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="flex items-center justify-between py-4">
-                                
-                                  <h3
-                                    tabIndex={0}
-                                    className="focus:outline-none text-indigo-700 text-xl font-semibold"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
-                </div>
-              </div>
-            </div>
-          </main>
+              </Link>
+            ))}
         </div>
       </div>
-    </>
+      {/* Pagination */}
+      <div className="mt-auto mb-4">
+        <div>
+          <div className="mt-auto mb-4">
+            <nav>
+              <ul className="flex ">
+                <li>
+                  <a
+                    className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                      isLastPage ? "disabled" : ""
+                    }`}
+                    href="#"
+                    onClick={() =>
+                      paginate(currentPage > 1 ? currentPage - 1 : 1)
+                    }
+                    aria-label="Previous"
+                    disabled={currentPage === 1}
+                  >
+                    <span className="material-icons text-sm">
+                      keyboard_arrow_left
+                    </span>
+                  </a>
+                </li>
+                {[...Array(totalPages)].map((page, index) => (
+                  <li key={index}>
+                    <a
+                      className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-300 p-0 text-sm text-black shadow-md transition duration-150 ease-in-out 
+                      ${activePage === index + 1 ? "bg-gray-500" : ""}
+                      }`}
+                      href="#"
+                      onClick={() => paginate(index + 1)}
+                    >
+                      {index + 1}
+                    </a>
+                  </li>
+                ))}
+                <li>
+                  <a
+                    className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 ${
+                      currentPage === totalPages ? "disabled" : ""
+                    }`}
+                    href="#"
+                    onClick={() =>
+                      paginate(
+                        currentPage < totalPages ? currentPage + 1 : totalPages
+                      )
+                    }
+                    aria-label="Next"
+                    disabled={isLastPage}
+                  >
+                    <span className="material-icons text-sm">
+                      keyboard_arrow_right
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+
+            <link
+              rel="stylesheet"
+              href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
+            />
+            <link
+              href="https://fonts.googleapis.com/icon?family=Material+Icons"
+              rel="stylesheet"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
-export default test;
+
+export default Courselists;
