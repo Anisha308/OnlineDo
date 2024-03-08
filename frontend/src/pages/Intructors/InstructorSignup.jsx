@@ -137,7 +137,6 @@ function InstructorSignup() {
   };
 
   const submitHandler = async (e) => {
-    console.log("hiiiiiiiiiiiiiiiiii");
     e.preventDefault();
     const {
       name,

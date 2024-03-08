@@ -85,7 +85,6 @@ const [video, setVideo] = useState([]);
 
   const addVideo = (e, moduleIndex) => {
     e.preventDefault();
-    console.log(moduleIndex, "moduleIndex");
     const updatedModules = [...modules];
     if (!updatedModules[moduleIndex].videos) {
       updatedModules[moduleIndex].videos = [];
@@ -93,21 +92,18 @@ const [video, setVideo] = useState([]);
     const newVideo = { url: "" };
 
     updatedModules[moduleIndex].videos.push(newVideo);
-    console.log(updatedModules);
     setModules(updatedModules);
   };
 
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        console.log(id, "id");
         const response = await apiInstance.get(
           `/api/instructor/instructorcourse/${id}`
         );
-        console.log(response.data.course, "response");
         setCourse(response.data.course);
         setModules(response.data.course.modules);
-        setCourseName(response.data.course.courseName); // Update courseName state
+        setCourseName(response.data.course.courseName); 
         setPaid(response.data.course.paid);
         setPrice(response.data.course.price);
         setDuration(response.data.course.duration);
@@ -115,7 +111,6 @@ const [video, setVideo] = useState([]);
         setDescription(response.data.course.description);
         setPreviewVideo(response.data.course.previewVideo);
         setVideo(response.data.course.modules);
-        console.log(video,'video');
       } catch (error) {
         console.error(error, "error");
       }
@@ -130,19 +125,7 @@ const [video, setVideo] = useState([]);
 
   const updateCourse = async (e) => {
     e.preventDefault();
-    console.log("yes");
-    // if (
-    //   !courseName ||
-    //   !description ||
-    //   !price ||
-    //   !duration ||
-    //   !selectedCategory ||
-    //   !image ||
-    //   !previewVideo
-    // ) {
-    //   toast.error("All fields must be filled");
-    //   return;
-    // }
+  
 
     if (isNaN(parseFloat(price)) || !isFinite(price)) {
       toast.error("Invalid Price");
@@ -166,7 +149,6 @@ const [video, setVideo] = useState([]);
     }
 
     try {
-      console.log(video,'vidoe');
       const updatedCourseData = {
         id,
         courseName,
@@ -188,9 +170,7 @@ const [video, setVideo] = useState([]);
         `/api/instructor/updatecourse`,
         updatedCourseData
       );
-      console.log(response, "data");
       if (response.data) {
-        console.log("dayr");
         Navigate(`/instructor/${id}/courselist`);
         toast.success("Course updated successfully:", respodata);
       } else {
@@ -212,7 +192,6 @@ const [video, setVideo] = useState([]);
   const getCategories = async () => {
     try {
       const response = await apiInstance.get("api/instructor/categories");
-      console.log(response.data, "repqojkd");
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories", error);
@@ -227,7 +206,6 @@ const [video, setVideo] = useState([]);
     const file = e.target.files[0];
     try {
       const response = await uploadToCloudinary(file);
-      console.log(response, "res");
       setImage(response.secure_url);
     } catch (error) {
       console.log("error in image upload", error);
@@ -256,11 +234,9 @@ const [video, setVideo] = useState([]);
   };
 const handleOnUpload = async (e) => {
   const file = e.currentTarget.files[0];
-  console.log(file);
   try {
     setLoading(true);
     const response = await uploadToCloudinary(file);
-    console.log(response.secure_url, "redsrfihoiokkpkp");
     // Update video state with the previous videos and the new one
     setVideo((prevVideos) => [...prevVideos, response.secure_url]); // Update video state with new URL
   } catch (error) {

@@ -47,7 +47,6 @@ const [showModalUnblock, setShowModalUnblock] = useState(false);
 useEffect(() => {
   if (data && data.data && data.data.instructors) {
     setInstructors(data.data.instructors);
-    console.log(instructors,'instructors');
     setTotalPages(data.data.pagination.totalPages);
     localStorage.setItem("instructors", JSON.stringify(data.data.instructors));
   } else {
@@ -74,7 +73,6 @@ const cancelUnblock = () => {
   const handleBlockUnblockInstructor = (e, instructor) => {
   e.preventDefault()
   if (instructor.Blocked) {
-    console.log('kkkkk');
     handleUnblockInstructor(e,instructor._id);
   } else {
     handleBlockInstructor(instructor._id);
@@ -87,12 +85,10 @@ const cancelUnblock = () => {
 const handleVerifyInstructor = async (instructorId) => {
   try {
     const response = await verifyInstructor({ instructorId }).unwrap();
-    console.log("Verification response:", response); // Log the response
-    // Update the state after a successful verification
     setInstructors((prevInstructors) =>
       prevInstructors.map((instructor) =>
         instructor._id === instructorId
-          ? { ...instructor, Verified: true, rejected: false } // Set rejected to false if previously rejected
+          ? { ...instructor, Verified: true, rejected: false } 
           : instructor
       )
     );
@@ -161,7 +157,6 @@ const handleVerifyInstructor = async (instructorId) => {
   const confirmUnblock = async (instructorId) => {
     try {
       const response = await unblockInstructorMutation({ instructorId });
-      console.log(response,'response');
       setInstructors((prevInstructors) =>
         prevInstructors.map((instructor) =>
           instructor._id === instructorId
@@ -197,15 +192,12 @@ const handleVerifyInstructor = async (instructorId) => {
     }
   };
   const handleReject = async (instructor) => {
-    console.log(instructor,'ins');
     if (!selectedInstructor) return;
     try {
-      console.log(reason,'reas');
       const res = await apiInstance.post(`api/admin/sendmail`, {
         reason,
         instructorId: selectedInstructor._id,
       });
-      console.log(res, "res");
       setInstructors((prevInstructors) =>
         prevInstructors.map((instructor) =>
           instructor._id === selectedInstructor._id

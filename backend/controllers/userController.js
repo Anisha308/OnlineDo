@@ -120,14 +120,11 @@ const otpVerify = async (req, res) => {
 
     const { otp, typedOtp, email, name, mobile, profilephoto, password } =
       req.body;
-console.log(otp, typedOtp, email, name, mobile, profilephoto, password,'reqbodyh');
     if (!otp || typedOtp !== otp) {
-      console.log('hmm non otp yar');
       return res.status(401).json({ message: "Entered Code is incorrect" });
     } else {
       const existingUser = await User.findOne({ email: email });
       if (existingUser) {
-        console.log('he is already  exist');
         return res.status(400).json({ message: "User already exists" });
       }
 
@@ -140,9 +137,7 @@ console.log(otp, typedOtp, email, name, mobile, profilephoto, password,'reqbodyh
         role: "user",
       });
       await newUser.save();
-      console.log(newUser,'puthiya user');
       const jwtoken = generateToken(res, newUser._id);
-console.log(jwtoken);
       res.status(200).json({
         _id: newUser._id,
         name: newUser.name, // Update with the actual user properties
@@ -153,7 +148,6 @@ console.log(jwtoken);
     }
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error " });
-    console.log('ndho error');
   }
 };
 
@@ -394,18 +388,15 @@ const getSingleCourseById = asyncHandler(async (req, res) => {
 
 
 const userrating = asyncHandler(async (req, res) => {
-  console.log('hii');
   try {
     const { purchaseId, rating, comment, userId } = req.body
-    console.log(userId,'userid');
-    console.log(purchaseId, rating, comment,'body');
+
     const newRating = new Rating({
       purchaseId,
       rating,
       comment,
       userId
     })
-console.log(newRating,'neyyy');
     await newRating.save()
     res.status(200).json({newRating,message:"Rating submitted successfully"})
   } catch (error) {
@@ -415,14 +406,11 @@ console.log(newRating,'neyyy');
 
 const fetchRating = asyncHandler(async (req, res) => {
   try {
-    console.log('jjj');
    const users = await Rating.find({}).populate({
      path: "userId",
      select: "name"
    });
-   console.log(users, "user");
     const count = await Rating.countDocuments({})
-    console.log(count);
     const ratings = await Rating.aggregate([
       {
         $group: {
@@ -437,7 +425,6 @@ const fetchRating = asyncHandler(async (req, res) => {
       },
     ]);
 
-    console.log(ratings,count,'rating');
     res.status(200).json({ ratings,count,users, success:true})
   } catch (error) {
     console.error(error);

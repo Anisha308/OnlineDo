@@ -7,18 +7,18 @@ import { useNavigate } from "react-router-dom";
 import apiInstance from "../../../Api";
 
 const UserLists = () => {
-  const [page, setPage] = useState(1); // Initialize page state variable with 1
+  const [page, setPage] = useState(1); 
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [isLastPage, setIsLastPage] = useState(false); // Added state for last page
+  const [isLastPage, setIsLastPage] = useState(false); 
 
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
   });
   const { data, error, isLoading } = useGetUserListQuery({
-    page: currentPage, // Pass the current page to fetch data
+    page: currentPage,
   });
   const [users, setUsers] = useState([]);
   const [blockUserMutation] = useBlockuserMutation();

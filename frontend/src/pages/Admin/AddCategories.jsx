@@ -26,13 +26,11 @@ const AddCategories = () => {
   };
   const addCategory = async () => {
     try {
-      console.log('hjk');
       const response = await apiInstance.post("/api/admin/addcategory", {
         categoryName,
         description,
         liststatus: selectedOption,
       });
-console.log(response,'responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
       if (response.data) {
         toast.success("Category added successfully");
         fetchCategories(currentPage); // Fetch categories after adding

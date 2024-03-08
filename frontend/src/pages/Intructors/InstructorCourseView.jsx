@@ -18,7 +18,6 @@ const InstructCourseView = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        console.log(id,'idddddddddddd');
         const response = await apiInstance.get(
           
           `/api/instructor/instructorcourse/${id}`
@@ -54,7 +53,6 @@ const InstructCourseView = () => {
      }
   };
   const handleEditClick = async () => {
-    console.log(id,'ids');
     navigate(`/instructor/updatecourse/${id}`);
   }
   return (

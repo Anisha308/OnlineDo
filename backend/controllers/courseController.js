@@ -31,7 +31,6 @@ const instructorcourse = asyncHandler(async (req, res) => {
 
 const addCourse = asyncHandler(async (req, res) => {
   const instructorId = req.params.instructorId;
-  console.log(instructorId,'instructiorid');
   const {
     courseName,
     paid,
@@ -43,17 +42,7 @@ const addCourse = asyncHandler(async (req, res) => {
     image,
     previewVideo,
   } = req.body;
-  console.log(
-    courseName,
-    paid,
-    description,
-    duration,
-    price,
-    modules,
-    categories,
-    image,
-    previewVideo
-  ,'hhhhhh');
+
   if (
     !courseName ||
     !description ||
@@ -174,10 +163,8 @@ const updatecourse = asyncHandler(async (req, res) => {
 });
 
 const getcoursetoupdate = asyncHandler(async (req, res) => {
-  console.log('jhgh');
   try {
     const id = req.params.id;
-    console.log(id,'id');
     const course = await Course.findById(id);
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
