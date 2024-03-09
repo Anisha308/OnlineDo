@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import "./chatbox.css";
+import "./chatBox.css";
 import { format } from "timeago.js";
 import InputEmoji from "react-input-emoji";
 import PropTypes from "prop-types";
