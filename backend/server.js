@@ -11,6 +11,8 @@ import messageRouter from "./routes/messageRoutes.js";
 import { Server } from "socket.io";
 import http from "http";
 import path from "path";
+const currentWorkingDir = path.resolve();
+const parentDir = path.dirname(currentWorkingDir);
 
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
@@ -48,20 +50,21 @@ app.use("/api/instructor", instructorRoutes);
 app.use("/api/chat", chatRouter)
 app.use("/api/message",messageRouter)
 app.use(cors(corsOptions));
+const enviornment = "production";
 
-if (process.env.NODE_ENV === 'production') {
+if (enviornment === "production") {
   const __dirname = path.resolve();
-  console.log(__dirname,'dirname');
-  app.use(express.static(path.join(__dirname, '/frontend/dist')));
+  app.use(express.static(path.join(parentDir, "/frontend/dist")));
 
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(parentDir, "frontend", "dist", "index.html"))
   );
 } else {
-  app.get('/', (req, res) => {
-    res.send('API is running....');
+  app.get("/", (req, res) => {
+    res.send("API is running....");
   });
-}
+}         
+
 app.use(notFound);
 app.use(errorHandler);
 
