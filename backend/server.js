@@ -14,7 +14,7 @@ import path from "path";
 const __dirname = path.resolve();
 
 const frontendDistPath =
-  process.env.FRONTEND_DIST_PATH || path.join(__dirname, "frontend", "dist");
+  process.env.FRONTEND_DIST_PATH 
 console.log(frontendDistPath,'jjj');
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
