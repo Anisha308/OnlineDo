@@ -11,10 +11,11 @@ import messageRouter from "./routes/messageRoutes.js";
 import { Server } from "socket.io";
 import http from "http";
 import path from "path";
-const currentWorkingDir = path.resolve();
-console.log(currentWorkingDir,'currentworking');
-const parentDir = path.dirname(currentWorkingDir);
+const __dirname = path.resolve();
 
+const frontendDistPath =
+  process.env.FRONTEND_DIST_PATH || path.join(__dirname, "frontend", "dist");
+console.log(frontendDistPath,'jjj');
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
 dotenv.config();
@@ -54,13 +55,11 @@ app.use(cors(corsOptions));
 const enviornment = "production";
 
 if (enviornment === "production") {
-  const __dirname = path.resolve();
-  app.use(express.static(path.join(parentDir, "OnlineDo/frontend/dist")));
-    console.log(parentDir,'prentDir')
+ app.use(express.static(frontendDistPath));
 
   app.get("*", (req, res) =>
-    res.sendFile(path.resolve(parentDir,"OnlineDo","frontend", "dist", "index.html"))
-  );
+  res.sendFile(path.join(frontendDistPath, 'index.html')))
+  
 } else {
   app.get("/", (req, res) => {
     res.send("API is running....");
