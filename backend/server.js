@@ -72,7 +72,7 @@ app.use(errorHandler);
 let socketport=app.listen(port, () => console.log(`Server started on port ${port}`));
 const io = new Server(socketport, {
   cors: {
-    origin: "http://localhost:3002",
+    origin: "http://www.anisha.shop/",
   },
 });
 // Socket.IO logic
