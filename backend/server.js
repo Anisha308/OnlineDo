@@ -12,6 +12,7 @@ import { Server } from "socket.io";
 import http from "http";
 import path from "path";
 const currentWorkingDir = path.resolve();
+console.log(currentWorkingDir,'currentworking');
 const parentDir = path.dirname(currentWorkingDir);
 
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -54,10 +55,11 @@ const enviornment = "production";
 
 if (enviornment === "production") {
   const __dirname = path.resolve();
-  app.use(express.static(path.join(parentDir, "/frontend/dist")));
+  app.use(express.static(path.join(parentDir, "OnlineDo/frontend/dist")));
+    console.log(parentDir,'prentDir')
 
   app.get("*", (req, res) =>
-    res.sendFile(path.resolve(parentDir, "frontend", "dist", "index.html"))
+    res.sendFile(path.resolve(parentDir,"OnlineDo","frontend", "dist", "index.html"))
   );
 } else {
   app.get("/", (req, res) => {
