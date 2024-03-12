@@ -320,9 +320,12 @@ const getInstructor = asyncHandler(async (req, res) => {
 const googleAuth = asyncHandler(async (req, res) => {
   try {
     const { email, name, photo } = req.body;
+    console.log(email,name,photo,'jjjjgfgygj');
     const user = await User.findOne({ email });
+    console.log(user,'user');
     if (user) {
       const token = generateToken(res, user._id);
+      console.log(token,'token');
       const { password: hashedPassword, ...rest } = user._doc;
 
       const expiryDate = new Date(Date.now() + 3600000);

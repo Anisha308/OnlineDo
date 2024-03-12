@@ -200,9 +200,7 @@ function InstructorSignup() {
 
   return (
     <>
-      {/* Hello world */}
-      {/* component */}
-      <div className=" md:flex">
+      <div className=" md:flex  ">
         <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center hidden">
           <div>
             <h1 className="text-white font-bold text-4xl font-sans">
@@ -217,14 +215,14 @@ function InstructorSignup() {
           <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
           <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
         </div>
-        <div className="flex bg-white md:w-1/2 justify-center py-10 items-center bg-white">
-          <div className="">
-            <h1 className="text-gray-800 font-bold text-2xl ">Get Started!</h1>
-            <p className="text-sm font-normal text-gray-600 mb-4">
+        <div className="flex  h-screen ">
+          <div className="max-w-xl pl-20 rounded-xl">
+            <h1 className="text-2xl font-bold mb-4">Get Started!</h1>
+            <p className=" font-normal text-gray-600 mb-4">
               Welcome to OnlineDo
             </p>
-            <form onSubmit={submitHandler}>
-              <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
+            <form onSubmit={submitHandler} >
+              <div className="flex  border-2 py-2 px-3 rounded-2xl mb-2 ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 text-gray-400"
@@ -238,7 +236,7 @@ function InstructorSignup() {
                   />
                 </svg>
                 <input
-                  className="pl-2 outline-none border-none"
+                  className="pl-2 outline-none border-none "
                   type="text"
                   name="name"
                   value={formData.name}
@@ -246,7 +244,7 @@ function InstructorSignup() {
                   placeholder="Enter your name"
                 />
               </div>
-              <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 ml-0">
+              <div className="flex  items-center border-2 py-2 px-3 rounded-2xl mb-2 ml-0">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 text-gray-400"
@@ -262,7 +260,7 @@ function InstructorSignup() {
                   />
                 </svg>
                 <input
-                  className="pl-2 outline-none border-none"
+                  className=" pl-2 outline-none border-none"
                   type="email"
                   name="email"
                   value={formData.email}
@@ -284,7 +282,7 @@ function InstructorSignup() {
                     <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />{" "}
                   </svg>{" "}
                   <input
-                    className="pl-2 outline-none border-none"
+                    className="w-4/5 mt-1 pl-2 rounded-md  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" // Adjust width here
                     type="number"
                     placeholder="Mobile number"
                     name="mobile"
@@ -306,7 +304,7 @@ function InstructorSignup() {
                   </svg>
 
                   <input
-                    className="pl-2 outline-none border-none"
+                    className="w-4/5 rounded-md py-2 px-3 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     type="number"
                     placeholder="Year of experience"
                     name="experience"
@@ -527,7 +525,6 @@ function InstructorSignup() {
                 </Link>
               </p>
             </form>
-
             {isModalOpen && (
               <div
                 id="popup-modal"
@@ -634,60 +631,6 @@ function InstructorSignup() {
               </div>
             )}
           </div>
-          {/* {Emailverify && (
-            <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
-              <div className="mx-auto flex w-full max-w-md flex-col space-y-16">
-                <div className="flex flex-col items-center justify-center text-center space-y-2">
-                  <div className=" text-gray-500 ">
-                    <div className="pr-72">Email Verification</div>
-                  </div>
-                  <div className="flex flex-row text-sm font-medium text-gray-400">
-                    <p>We have sent a code to your email</p>
-                  </div>
-                </div>
-
-                <form action="" method="post">
-                  <div className="flex flex-col space-y-16">
-                    <div className="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
-                      <div className="w-200 ">
-                        <input
-                          className="w-full h-9 border-black flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                          type="text"
-                          placeholder="Enter OTP"
-                          name="otp"
-                          value={formData.otp || ""} // Use formData.otp or an empty string if null
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col space-y-5">
-                      <div>
-                        <button
-                          onClick={handleVerifyOtp}
-                          className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-900 border-none text-white text-sm shadow-sm"
-                        >
-                          Verify Account
-                        </button>
-                      </div>
-
-                      <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
-                        <p>Didn't receive code?</p>{" "}
-                        <a
-                          className="flex flex-row items-center text-blue-600"
-                          href="http://"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Resend
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )} */}
 
           <Modal
             isOpen={Emailverify}

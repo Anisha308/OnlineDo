@@ -83,8 +83,11 @@ const InstructorLogin = () => {
           >
             <div className="absolute bg-gradient-to-b from-blue-900 to-gray-900 opacity-75 inset-0 z-0" />
             <div
-              className="absolute triangle  min-h-screen right-0 w-16"
-              style={{}}
+              className="absolute triangle right-0 hidden xl:block"
+              style={{
+                borderTop: "calc(100vw / 2) solid #fff", // Adjust the height of the triangle
+                borderLeft: "calc(50vw / 2) solid transparent", // Adjust the width of the triangle
+              }}
             />
             <a
               href="https://codepen.io/uidesignhub"
@@ -97,7 +100,7 @@ const InstructorLogin = () => {
               <div className="sm:text-4xl xl:text-5xl font-bold leading-tight mb-6">
                 <div className="hide-on-mobile">Instruct. Inspire</div>
               </div>
-              <div className="hide-on-mobile sm:text-sm xl:text-sm text-white-200 leading-tight font-normal mb-6 hidden md:block">
+              <div className="sm:text-sm xl:text-sm text-white-200 leading-tight font-normal mb-6 hidden md:block">
                 {" "}
                 "Instruct with precision, guiding minds through knowledge's
                 maze, while inspiring them to soar beyond boundaries, igniting a
@@ -105,31 +108,31 @@ const InstructorLogin = () => {
               </div>
             </div>
           </div>
-          <div className="md:flex mb-9 md:flex-col md:items-start md:justify-center sm:w-auto md:h-full w-3/5 mr-19 xl:w-2/5 p-10   md:p-18 lg:p-25 sm:rounded-lg md:rounded-none bg-white  ">
-            <div className="max-w-md w-full space-y-8 ">
-              <div className="text-center">
-                <h2 className=" mb-2 text-3xl font-bold text-gray-900">
-                  Welcome Back!
-                </h2>
-                <p className="mb-5 text-sm  text-gray-900">
-                  Sign in to continue teaching..{" "}
-                </p>
-              </div>
+          <div className="md:w-1/2 xl:w-1/2  p-6 ">
+            <div className="max-w-md mx-auto  space-y-6">
+              <h2 className=" mb-2  text-3xl font-bold text-gray-900">
+                Welcome Back!
+              </h2>
+              <p className="mb-5 text-sm  text-gray-900">
+                Sign in to continue teaching..{" "}
+              </p>
 
               <form
-                className=" space-y-6"
+                className="max-w-sm  space-y-6"
+                style={{ width: "150%", marginRight: 160 }}
                 onSubmit={submitHandler}
                 action="#"
                 method="POST"
               >
-                <input type="hidden" name="remember" defaultValue="true" />
-                <div className="relative">
-                  <div className="absolute right-3 mt-0"></div>
-                  <label className="ml-3 text-sm font-bold text-gray-700 tracking-wide">
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="email"
+                    className="text-sm font-semibold text-gray-700 mb-1"
+                  >
                     Email
                   </label>
                   <input
-                    className=" mt-1 w-full text-base px-2 py-2 border-b border-gray-300 focus:outline-none rounded-2xl focus:border-indigo-500"
+                    className="px-4 py-2 border-b border-gray-300 focus:outline-none rounded-md focus:border-indigo-500"
                     type="email"
                     name="email"
                     id="email"
@@ -138,14 +141,17 @@ const InstructorLogin = () => {
                     placeholder="mail@gmail.com"
                   />
                 </div>
-                <div className="mt-0 content-center">
+                <div className="flex flex-col">
                   {" "}
                   {/* Reduced the top margin here */}
-                  <label className="ml-3 text-sm font-bold text-gray-700 tracking-wide">
+                  <label
+                    htmlFor="password"
+                    className="text-sm font-semibold text-gray-700 mb-1"
+                  >
                     Password
                   </label>
                   <input
-                    className="w-full content-center text-base px-2 py-2 border-b rounded-2xl border-gray-300 focus:outline-none focus:border-indigo-500"
+                    className="px-4 py-2 border-b border-gray-300 focus:outline-none rounded-md focus:border-indigo-500"
                     type="password"
                     name="password"
                     value={formData.password}
@@ -154,23 +160,19 @@ const InstructorLogin = () => {
                     placeholder="Enter your password"
                   />
                 </div>
-
-                <div className="mt-1">
+                <div>
                   <button
                     type="submit"
-                    className="w-full  flex justify-center bg-gradient-to-r from-indigo-500 to-blue-600  hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-600 text-gray-100 p-4  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500"
+                    className="w-full bg-gradient-to-r from-indigo-500 to-blue-600 hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-600 text-gray-100 p-3 rounded-full font-semibold shadow-lg cursor-pointer transition duration-300"
                   >
                     Sign in
                   </button>
                 </div>
-                <p
-                  className="
-          mt-5 text-textColor text-center"
-                >
+                <p className="text-center text-gray-500 text-sm">
                   Dont have an account?
                   <Link
                     to="/instructorRegister"
-                    className="text-primaryColor font-medium ml-1"
+                    className="text-indigo-500 hover:text-blue-500"
                   >
                     SignUp
                   </Link>

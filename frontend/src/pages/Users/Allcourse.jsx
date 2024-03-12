@@ -231,12 +231,12 @@ const averageRating =
             </div>
           </div>
           <main className="mx-auto max-w-7xl px-4  sm:px-6 lg:px-8">
-            <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-2">
+            <div className="flex flex-col md:flex-row items-baseline justify-between border-b border-gray-200 pb-6 pt-2">
               <h1 className="text-3xl font-bold  tracking-tight text-gray-800">
                 All Courses
               </h1>
               <div
-                className="flex  rounded mt-5 mb-5 w-80 bg-gray-300"
+                className="flex  rounded mt-5 mb-5 ml-6  mr-8 w-80 bg-gray-300"
                 data-x-data="{ search: '' }"
               >
                 <input
@@ -247,7 +247,7 @@ const averageRating =
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <button
-                  className={`m-2 bg-black text-white rounded px-4 py-2 font-semibold ${
+                  className={`m-2 bg-black  text-white rounded px-4 py-2 font-semibold ${
                     search ? "bg-purple-500" : "bg-black-500 cursor-not-allowed"
                   }`}
                   onClick={(e) => handleSearchSortFilter(e)}
@@ -453,9 +453,9 @@ const averageRating =
                                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
                                       )
-                                    )}<p>{averageRating.toFixed(1)}</p>{" "}
-                                  </div>                                    
-
+                                    )}
+                                    <p>{averageRating.toFixed(1)}</p>{" "}
+                                  </div>
                                 </p>
                                 <div className="flex mt-4">
                                   <div>

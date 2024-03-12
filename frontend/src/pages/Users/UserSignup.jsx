@@ -156,7 +156,7 @@ const SignUp = () => {
       {/* Hello world */}
       {/* component */}
       <div className=" md:flex">
-        <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center hidden">
+        <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-400 to-blue-700 i justify-around items-center hidden">
           <div>
             <h1 className="text-white font-bold text-4xl font-sans">
               OnlineDo
@@ -171,7 +171,7 @@ const SignUp = () => {
           <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
         </div>
         <div className="flex md:w-1/2 justify-center py-10 items-center bg-white">
-          <form className="bg-white">
+          <form className="bg-white ">
             <h1 className="text-gray-800 font-bold text-2xl ">Get Started!</h1>
             <p className="text-sm font-normal text-gray-600 mb-4">
               Welcome to OnlineDo
@@ -191,7 +191,7 @@ const SignUp = () => {
                   />
                 </svg>
                 <input
-                  className="pl-2 outline-none border-none"
+                  className="pl-2  outline-none border-none"
                   type="text"
                   name="name"
                   value={formData.name}
