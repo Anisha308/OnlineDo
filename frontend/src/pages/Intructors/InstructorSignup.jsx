@@ -200,8 +200,8 @@ function InstructorSignup() {
 
   return (
     <>
-      <div className=" md:flex  ">
-        <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center hidden">
+      <div className="flex flex-col md:flex-row">
+        <div className="md:w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 justify-around items-center relative h-screen">
           <div>
             <h1 className="text-white font-bold text-4xl font-sans">
               OnlineDo
@@ -215,14 +215,13 @@ function InstructorSignup() {
           <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
           <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
         </div>
-        <div className="flex  h-screen ">
-          <div className="max-w-xl pl-20 rounded-xl">
+        <div className="md:w-1/2 flex justify-center items-center bg-white overflow-hidden">
+          <div className="max-w-md w-full px-6 py-12">
             <h1 className="text-2xl font-bold mb-4">Get Started!</h1>
-            <p className=" font-normal text-gray-600 mb-4">
-              Welcome to OnlineDo
-            </p>
-            <form onSubmit={submitHandler} >
-              <div className="flex  border-2 py-2 px-3 rounded-2xl mb-2 ">
+            <p className="text-gray-600 mb-4">Welcome to OnlineDo</p>
+
+            <form onSubmit={submitHandler} className="space-y-4">
+              <div className="sm:w-1/2 mb-4 sm:mb-0">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 text-gray-400"
@@ -244,7 +243,7 @@ function InstructorSignup() {
                   placeholder="Enter your name"
                 />
               </div>
-              <div className="flex  items-center border-2 py-2 px-3 rounded-2xl mb-2 ml-0">
+              <div className="flex flex-col">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 text-gray-400"
@@ -269,7 +268,7 @@ function InstructorSignup() {
                 />
               </div>
               <div className="flex">
-                <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
+                <div className="flex flex-col">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
