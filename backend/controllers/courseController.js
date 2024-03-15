@@ -123,18 +123,34 @@ const existingCourse = await Course.findOne({
 
 const getchpurchase = asyncHandler(async (req, res) => {
   try {
-     const instructorId = req.query.instructorId
-  
+    const instructorId = req.query.instructorId;
+    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const limit = parseInt(req.query.limit) || 10; // Default limit to 10 if not provided
+
+    const totalDocs = await Purchase.countDocuments({
+      instructor: instructorId,
+    });
+    const totalPages = Math.ceil(totalDocs / limit);
+
     const result = await Purchase.find({ instructor: instructorId })
       .populate("user")
-      .populate("courses");;
-      res.status(200).json(result);
+      .populate("courses")
+      .skip((page - 1) * limit)
+      .limit(limit);
 
+    res.status(200).json({
+      data: result,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+      },
+    });
   } catch (error) {
-    console.log(error,'error');
+    console.log(error, "error");
+    res.status(500).json({ message: "Internal server error" });
   }
- 
-})
+});
+
 const updatecourse = asyncHandler(async (req, res) => {
   try {
    const {id,courseName,description,price,duration,paid,categories,modules,image,previewVideo}=req.body

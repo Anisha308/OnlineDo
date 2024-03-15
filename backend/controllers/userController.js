@@ -107,6 +107,7 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = (req, res) => {
+  console.log('ji hii');
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
