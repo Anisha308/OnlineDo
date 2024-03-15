@@ -237,7 +237,7 @@ function InstructorSignup() {
                   />
                 </svg>
                 <input
-                  className="mt-1 block w-full rounded-md shadow-sm sm:text-sm"
+                  className="pl-2 outline-none border-none w-full sm:w-40 py-1 text-sm"
                   type="text"
                   name="name"
                   value={formData.name}
@@ -261,7 +261,7 @@ function InstructorSignup() {
                   />
                 </svg>
                 <input
-                  className="mt-1 block w-full  rounded-md shadow-sm  sm:text-sm"
+                  className="pl-2 outline-none border-none w-full sm:w-40 py-1 text-sm"
                   type="email"
                   name="email"
                   value={formData.email}
