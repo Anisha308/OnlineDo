@@ -237,7 +237,7 @@ function InstructorSignup() {
                   />
                 </svg>
                 <input
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm"
                   type="text"
                   name="name"
                   value={formData.name}
@@ -261,7 +261,7 @@ function InstructorSignup() {
                   />
                 </svg>
                 <input
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm  sm:text-sm"
                   type="email"
                   name="email"
                   value={formData.email}
