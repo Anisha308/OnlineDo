@@ -200,8 +200,8 @@ function InstructorSignup() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row">
-        <div className="md:w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 justify-around items-center relative h-screen">
+      <div className=" md:flex min-h-screen ">
+        <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center hidden">
           <div>
             <h1 className="text-white font-bold text-4xl font-sans">
               OnlineDo
@@ -215,13 +215,15 @@ function InstructorSignup() {
           <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
           <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8" />
         </div>
-        <div className="md:w-1/2 flex justify-center items-center bg-white overflow-hidden">
-          <div className="max-w-md w-full px-6 py-12">
-            <h1 className="text-2xl font-bold mb-4">Get Started!</h1>
-            <p className="text-gray-600 mb-4">Welcome to OnlineDo</p>
+        <div className="sm:w-1/3 md:w-3/3 lg:w-3/4 xl:w-3/5 flex py-10 bg-white">
+          <div className="ml-10  ">
+            <h1 className="text-gray-800 font-bold text-2xl">Get Started!</h1>
+            <p className="text-sm font-normal text-gray-600 mb-4">
+              Welcome to OnlineDo
+            </p>
 
-            <form onSubmit={submitHandler} className="space-y-4">
-              <div className="sm:w-1/2 mb-4 sm:mb-0">
+            <form onSubmit={submitHandler}>
+              <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 text-gray-400"
@@ -235,7 +237,7 @@ function InstructorSignup() {
                   />
                 </svg>
                 <input
-                  className="pl-2 outline-none border-none "
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   type="text"
                   name="name"
                   value={formData.name}
@@ -243,10 +245,10 @@ function InstructorSignup() {
                   placeholder="Enter your name"
                 />
               </div>
-              <div className="flex flex-col">
+              <div className="flex w-19 items-center border-2 py-2 px-3 rounded-2xl mb-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-400"
+                  className="h-5  text-gray-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -259,7 +261,7 @@ function InstructorSignup() {
                   />
                 </svg>
                 <input
-                  className=" pl-2 outline-none border-none"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   type="email"
                   name="email"
                   value={formData.email}
@@ -267,11 +269,11 @@ function InstructorSignup() {
                   placeholder="Enter your email"
                 />
               </div>
-              <div className="flex">
-                <div className="flex flex-col">
+              <div className="lg:flex ">
+                <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="16"
+                    width="21"
                     height="16"
                     fill="#899499	"
                     className="bi bi-telephone"
@@ -281,7 +283,7 @@ function InstructorSignup() {
                     <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />{" "}
                   </svg>{" "}
                   <input
-                    className="w-4/5 mt-1 pl-2 rounded-md  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" // Adjust width here
+                    className="pl-2 outline-none border-none w-full sm:w-40 py-1 text-sm"
                     type="number"
                     placeholder="Mobile number"
                     name="mobile"
@@ -303,7 +305,7 @@ function InstructorSignup() {
                   </svg>
 
                   <input
-                    className="w-4/5 rounded-md py-2 px-3 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="pl-2 outline-none border-none w-full sm:w-40 py-1 text-sm"
                     type="number"
                     placeholder="Year of experience"
                     name="experience"
@@ -459,7 +461,7 @@ function InstructorSignup() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="flex">
+              <div className="lg:flex">
                 <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-2 mr-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -474,7 +476,7 @@ function InstructorSignup() {
                     />
                   </svg>
                   <input
-                    className="pl-2 outline-none border-none"
+                    className="pl-2 outline-none border-none w-full sm:w-40 py-1 text-sm"
                     type="password"
                     placeholder="Password"
                     name="password"
@@ -496,7 +498,7 @@ function InstructorSignup() {
                     />
                   </svg>
                   <input
-                    className="pl-2 outline-none border-none"
+                    className="pl-2 outline-none border-none w-full sm:w-40 py-1 text-sm"
                     type="password"
                     placeholder="Confirm Password"
                     name="confirmPassword"
@@ -524,6 +526,7 @@ function InstructorSignup() {
                 </Link>
               </p>
             </form>
+
             {isModalOpen && (
               <div
                 id="popup-modal"
@@ -637,7 +640,7 @@ function InstructorSignup() {
             contentLabel="Email Verification Modal"
             className="modal-content"
           >
-            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-xl p-8 max-w-lg">
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-xl p-8 max-w-lg w-full">
               <div className="flex justify-between items-center">
                 <h2 className="text-gray-800 text-2xl font-semibold">
                   Verify Your Email
@@ -670,9 +673,9 @@ function InstructorSignup() {
 
               <form action="" method="post" className="mt-6">
                 <div className="max-w-xs mx-auto">
-                  <div className="flex items-center justify-between border border-gray-200 rounded-xl">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between border border-gray-200 rounded-xl">
                     <input
-                      className="w-full h-12 px-4 text-lg border-none outline-none focus:bg-gray-50"
+                      className="w-full md:w-56 h-12 px-4 text-lg border-none outline-none focus:bg-gray-50"
                       type="text"
                       placeholder="Enter OTP"
                       name="otp"
@@ -681,7 +684,7 @@ function InstructorSignup() {
                     />
                     <button
                       onClick={handleVerifyOtp}
-                      className="px-6 py-3 text-white text-sm bg-blue-900 hover:bg-blue-900 rounded-xl transition duration-300 ease-in-out"
+                      className="w-full md:w-auto px-6 py-3 mt-2 md:mt-0 text-white text-sm bg-blue-900 hover:bg-blue-900 rounded-xl transition duration-300 ease-in-out"
                     >
                       Verify
                     </button>

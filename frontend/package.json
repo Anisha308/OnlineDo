@@ -22,13 +22,16 @@
     "vite-plugin-node-polyfills": "^0.21.0"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.1",
     "@reduxjs/toolkit": "^2.0.0",
     "buffer": "^6.0.3",
     "jsonwebtoken": "^9.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
     "react-minimal-side-navigation": "^1.9.2",
     "react-redux": "^9.0.0",
+    "react-responsive": "^9.0.2",
     "react-router-dom": "^6.20.1",
     "safe-buffer": "^5.2.1",
     "util.inherits": "^1.0.3"

@@ -88,17 +88,14 @@ const Login = () => {
           <div className="md:w-1/2 xl:w-1/2  p-6">
             {" "}
             <div className="max-w-md mx-auto space-y-6">
-              <h2 className="mb-2 text-3xl font-bold text-gray-900">
+                <h2 className="mb-2 text-3xl font-bold text-gray-900">
                 Welcome Back!
               </h2>
               <p className="mb-5 text-sm  text-gray-900">
                 Please sign in to your account
               </p>
 
-              <form
-                className="max-w-sm  space-y-6"
-                style={{ width: "150%", marginRight:160 }}
-              >
+              <form className="max-w-sm  space-y-6">
                 <div className="flex flex-col">
                   <label
                     htmlFor="email"
@@ -144,7 +141,7 @@ const Login = () => {
                   {isLoading && <Loader />} {/* Show loader if loading */}
                   <OAuth />
                 </div>
-                <p className="text-center text-gray-500 text-sm">
+                <p className=" text-center text-gray-500 text-sm">
                   Don't have an account?{" "}
                   <Link
                     to="/Register"

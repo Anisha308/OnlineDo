@@ -18,11 +18,7 @@ const Login = () => {
 
   const { adminInfo } = useSelector((state) => state.authAdmin);
 
-  useEffect(() => {
-    if (adminInfo) {
-      navigate("/admin/userlist");
-    }
-  }, []);
+  
 
   const submitHandler = async (e) => {
     e.preventDefault();

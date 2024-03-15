@@ -34,8 +34,7 @@ const UserLists = () => {
       setCurrentPage(data.pagination.currentPage);
       setTotalPages(data.pagination.totalPages);
       setIsLastPage(data.pagination.currentPage === data.pagination.totalPages); // Update isLastPage state
-    } else {
-      navigate('/admin/Login')
+    
     }
   }, [data, error]);
 

@@ -72,16 +72,16 @@ const InstructorLogin = () => {
             "\n/*remove custom style*/\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    overflow: hidden;\n}\n  .circles li{\n    position: absolute;\n    display: block;\n    list-style: none;\n    width: 20px;\n    height: 20px;\n    background: rgba(255, 255, 255, 0.2);\n    animation: animate 25s linear infinite;\n    bottom: -150px;  \n}\n.circles li:nth-child(1){\n    left: 25%;\n    width: 80px;\n    height: 80px;\n    animation-delay: 0s;\n}\n \n \n.circles li:nth-child(2){\n    left: 10%;\n    width: 20px;\n    height: 20px;\n    animation-delay: 2s;\n    animation-duration: 12s;\n}\n \n.circles li:nth-child(3){\n    left: 70%;\n    width: 20px;\n    height: 20px;\n    animation-delay: 4s;\n}\n \n.circles li:nth-child(4){\n    left: 40%;\n    width: 60px;\n    height: 60px;\n    animation-delay: 0s;\n    animation-duration: 18s;\n}\n \n.circles li:nth-child(5){\n    left: 65%;\n    width: 20px;\n    height: 20px;\n    animation-delay: 0s;\n}\n \n.circles li:nth-child(6){\n    left: 75%;\n    width: 110px;\n    height: 110px;\n    animation-delay: 3s;\n}\n \n.circles li:nth-child(7){\n    left: 35%;\n    width: 150px;\n    height: 150px;\n    animation-delay: 7s;\n}\n \n.circles li:nth-child(8){\n    left: 50%;\n    width: 25px;\n    height: 25px;\n    animation-delay: 15s;\n    animation-duration: 45s;\n}\n \n.circles li:nth-child(9){\n    left: 20%;\n    width: 15px;\n    height: 15px;\n    animation-delay: 2s;\n    animation-duration: 35s;\n}\n \n.circles li:nth-child(10){\n    left: 85%;\n    width: 150px;\n    height: 150px;\n    animation-delay: 0s;\n    animation-duration: 11s;\n}\n  @keyframes animate {\n \n    0%{\n        transform: translateY(0) rotate(0deg);\n        opacity: 1;\n        border-radius: 0;\n    }\n \n    100%{\n        transform: translateY(-1000px) rotate(720deg);\n        opacity: 0;\n        border-radius: 50%;\n    }\n \n}\n.triangle{\n  border-top:60rem solid #fff;\n  border-left:25rem solid transparent;\n}\n",
         }}
       />
-      <div className="relative h-screen flex justify-center ">
-        <div className="flex  flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white">
+      <div className="relative min-h-screen flex justify-center  ">
+        <div className="flex flex-col md:flex-row items-center md:items-start flex-auto min-w-0 bg-white">
           <div
-            className="sm:w-1/2 xl:w-3/5 h-full hidden md:flex flex-auto items-center justify-start p-10 overflow-hidden bg-purple-900 text-white bg-no-repeat bg-cover relative"
+            className="md:w-1/2 xl:w-1/2 h-full hidden md:flex flex-auto items-center justify-start p-10 overflow-hidden bg-purple-900 text-white bg-no-repeat bg-cover relative"
             style={{
               backgroundImage:
                 "url(https://img.freepik.com/premium-photo/close-up-hand-using-computer-keyboard-typing-internet-online_175201-426.jpg)",
             }}
           >
-            <div className="absolute bg-gradient-to-b from-blue-900 to-gray-900 opacity-75 inset-0 z-0" />
+            <div className="absolute bg-gradient-to-b from-blue-400 to-gray-900 opacity-75  inset-0 z-0" />
             <div
               className="absolute triangle right-0 hidden xl:block"
               style={{
@@ -109,8 +109,9 @@ const InstructorLogin = () => {
             </div>
           </div>
           <div className="md:w-1/2 xl:w-1/2  p-6 ">
-            <div className="max-w-md mx-auto  space-y-6">
-              <h2 className=" mb-2  text-3xl font-bold text-gray-900">
+            {" "}
+            <div className="max-w-md mx-auto space-y-6 mb-4">
+              <h2 className="mb-7 text-3xl font-bold text-gray-900 ">
                 Welcome Back!
               </h2>
               <p className="mb-5 text-sm  text-gray-900">
@@ -119,7 +120,6 @@ const InstructorLogin = () => {
 
               <form
                 className="max-w-sm  space-y-6"
-                style={{ width: "150%", marginRight: 160 }}
                 onSubmit={submitHandler}
                 action="#"
                 method="POST"

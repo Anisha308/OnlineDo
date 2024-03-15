@@ -106,7 +106,7 @@ const AddCategories = () => {
   return (
     <div className="flex">
       <SideBar />
-      <div className="flex-grow">
+      <div className="flex-grow m-8 pl-28">
         <>
           <link
             rel="stylesheet"

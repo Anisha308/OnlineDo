@@ -5,36 +5,52 @@ import IconChat from "../../components/iconchat";
 import InstructorSidebar from "../../components/Header/instructorSidebar";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useCreateChatMutation } from "../../Slices/chatApiSlice";
-import { instructApiSlice } from "../../Slices/authInstructorSlice";
 
 const PurchaseCourse = () => {
   const [purchases, setPurchases] = useState([]);
-  const instructor = useSelector((state) => state.instructorAuth.instructorInfo);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+  });
+  const instructor = useSelector(
+    (state) => state.instructorAuth.instructorInfo
+  );
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchPurchases = async () => {
       try {
-    const response = await apiInstance.get(`api/instructor/purchaselist`, {
-      params: { instructorId: instructor._id }, // Pass instructorId in params
-    });
-        setPurchases(response.data);
+        const response = await apiInstance.get(`api/instructor/purchaselist`, {
+          params: {
+            instructorId: instructor._id,
+            page: pagination.currentPage,
+            limit: 10, // Adjust as needed
+          },
+        });
+        setPurchases(response.data.data);
+        setPagination({
+          currentPage: response.data.pagination.currentPage,
+          totalPages: response.data.pagination.totalPages,
+        });
       } catch (error) {
         console.error("Error fetching purchases", error);
       }
     };
 
     fetchPurchases();
-  },[instructor._id] );
+  }, [instructor._id, pagination.currentPage]);
 
+  const handlePagination = (pageNumber) => {
+    setPagination({ ...pagination, currentPage: pageNumber });
+  };
 
   return (
-    <div className="flex flex-wrap   bg-white p-8 rounded-md ">
+    <div className="flex flex-wrap bg-white p-8 rounded-md ">
       <InstructorSidebar />
       <IconChat />
 
-      <div className=" w-[1000px]   ">
-        <div className=" flex items-center justify-between pb-6">
+      <div className="w-[1000px]">
+        <div className="flex items-center justify-between pb-6">
           <div className="float-left">
             <h2 className="text-gray-600 font-semibold">Purchase list</h2>
             <span className="text-xs">All orders</span>
@@ -58,11 +74,10 @@ const PurchaseCourse = () => {
                       Email
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      course
+                      Course
                     </th>
-
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      price
+                      Price
                     </th>
                   </tr>
                 </thead>
@@ -117,16 +132,6 @@ const PurchaseCourse = () => {
                             ₹{user.courses.price}
                           </p>
                         </td>
-                        {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                          <div>
-                            <button
-                              onClick={() => handleBlockUser(user._id)}
-                              className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 bg-red-200 opacity-50 rounded-full"
-                            >
-                              {user.Blocked ? "Unblock" : "Block"}
-                            </button>
-                          </div>
-                        </td> */}
                       </tr>
                     ))}
                 </tbody>
@@ -134,68 +139,51 @@ const PurchaseCourse = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center mt-4">
+
+        <div className="mt-auto mb-4 text-center">
           <nav>
-            <ul className="flex ">
+            <ul className="flex justify-center">
               <li>
-                <a
-                  className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300
-                  `}
-                  href="#"
-                  // onClick={() =>
-                  //   paginate(currentPage > 1 ? currentPage - 1 : 1)
-                  // }
-                  aria-label="Previous"
-                  // disabled={currentPage === 1}
+                <button
+                  onClick={() =>
+                    handlePagination(
+                      pagination.currentPage > 1
+                        ? pagination.currentPage - 1
+                        : 1
+                    )
+                  }
+                  disabled={pagination.currentPage === 1}
                 >
-                  <span className="material-icons text-sm">
-                    keyboard_arrow_left
-                  </span>
-                </a>
+                  Previous
+                </button>
               </li>
-              {/* {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (pageNumber) => (
-                  <li key={pageNumber}>
-                    <a
-                      className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full bg-gray-300 p-0 text-sm text-black shadow-md transition duration-150 ease-in-out 
-        ${currentPage === pageNumber ? "bg-gray-500" : ""}
-      `}
-                      href="#"
-                      onClick={() => paginate(pageNumber)}
-                    >
-                      {pageNumber}
-                    </a>
-                  </li>
-                )
-              )} */}
+              {[...Array(pagination.totalPages)].map((_, index) => (
+                <li key={index}>
+                  <button
+                    onClick={() => handlePagination(index + 1)}
+                    disabled={pagination.currentPage === index + 1}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
               <li>
-                <a
-                  className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 `}
-                  href="#"
-                  // onClick={() =>
-                  //   paginate(
-                  //     currentPage < totalPages ? currentPage + 1 : totalPages
-                  //   )
-                  // }
-                  aria-label="Next"
-                  // disabled={isLastPage}
+                <button
+                  onClick={() =>
+                    handlePagination(
+                      pagination.currentPage < pagination.totalPages
+                        ? pagination.currentPage + 1
+                        : pagination.totalPages
+                    )
+                  }
+                  disabled={pagination.currentPage === pagination.totalPages}
                 >
-                  <span className="material-icons text-sm">
-                    keyboard_arrow_right
-                  </span>
-                </a>
+                  Next
+                </button>
               </li>
             </ul>
           </nav>
         </div>
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
-        />
-        <link
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet"
-        />
       </div>
     </div>
   );
