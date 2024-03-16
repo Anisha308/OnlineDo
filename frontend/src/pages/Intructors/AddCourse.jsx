@@ -228,7 +228,6 @@ const AddCourse = () => {
       setCategory(response.data);
     } catch (error) {
       console.error("Error fetching categories", error);
-      Navigate("/instructorLogin");
       console.error("Unauthorized access. Redirecting to login...");
     }
   };
