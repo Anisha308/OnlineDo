@@ -5,8 +5,9 @@ import asyncHandler from "express-async-handler";
 const addCategories = asyncHandler(async (req, res) => {
   try {
     const { categoryName, description, liststatus } = req.body;
+    console.log(categoryName,description,liststatus,'statuuss');
      const existingCategory = await Category.findOne({ categoryName });
-
+console.log(existingCategory);
     if (existingCategory) {
        // If the category already exists, return an error response
        return res.status(400).json({ error: "Category already exists" });
@@ -17,7 +18,9 @@ const addCategories = asyncHandler(async (req, res) => {
       description,
       liststatus,
     });
+    console.log(newCategory,'newcategoryt');
     const savedCategory = await newCategory.save();
+    console.log(savedCategory,'savedCategory');
     res.status(200).json(savedCategory);
   } catch (error) {
     console.log(error);
