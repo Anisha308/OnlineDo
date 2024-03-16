@@ -68,7 +68,6 @@ const AddCategories = () => {
     }
     } catch (error) {
       console.error("failed to fetch categories:", error);
-      Navigate("/admin/Login");
       console.error("Unauthorized access. Redirecting to login...");
     }
   };

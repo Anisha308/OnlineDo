@@ -42,9 +42,7 @@ const Course = () => {
       setTotalPages(data.pagination.totalPages);
 
       setIsLastPage(data.pagination.currentPage === data.pagination.totalPages);
-    } else if (error && error.status === 401) {
-      Navigate("/instructorLogin");
-    }
+    } 
   }, [data, error]);
 
   const paginate = (pageNumber) => {
