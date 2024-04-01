@@ -39,6 +39,7 @@ const app = express();
 
 const server = http.createServer(app);
 
+app.use(cors(corsOptions));
 
 
 app.use(cookieParser());
@@ -47,11 +48,6 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-  next();
-});
 
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
