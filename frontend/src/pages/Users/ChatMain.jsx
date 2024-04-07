@@ -47,15 +47,12 @@ const Chat = () => {
       try {
         const userId = userInfo?._id || instructorInfo?._id;
         if (userId) {
-          // Add condition to fetch chats only when currentChat is not null
           const { data } = await userChats(userId);
-          // Convert updatedAt strings to Date objects and then sort in descending order
           const sortedChats = data
             .map((chat) => ({ ...chat, updatedAt: new Date(chat.updatedAt) }))
             .sort((a, b) => b.updatedAt - a.updatedAt);
           setChats(sortedChats);
 
-          // Set the last chat as the default chat
           if (sortedChats.length > 0) {
             setCurrentChat(sortedChats[0]);
           }
@@ -68,7 +65,6 @@ const Chat = () => {
     getChats();
   }, [userInfo?._id, instructorInfo?._id]);
 
-  // Connect to Socket.io
   useEffect(() => {
     socket.current = io("http://localhost:5002");
     const userId = userInfo?._id || instructorInfo?._id;
@@ -80,14 +76,12 @@ const Chat = () => {
     });
   }, [userInfo?._id, instructorInfo?._id]);
 
-  // Send Message to socket server
   useEffect(() => {
     if (sendMessage !== null) {
       socket.current.emit("send-message", sendMessage);
     }
   }, [sendMessage]);
 
-  // Get the message from socket server
   useEffect(() => {
     socket.current.on("recieve-message", (data) => {
       setReceivedMessage(data);
@@ -103,12 +97,11 @@ const Chat = () => {
       return online ? true : false;
     }
 
-    return false; // Default to false if userId is not available
+    return false;
   };
 
   return (
     <div className="grid grid-cols-1  sm:grid-cols-5 mr-2 gap-2">
-      {/* Left Side */}
       <div className="sm:col-span-1  m-4">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col bg-gray-100 rounded p-4 overflow-auto h-auto min-h-[95vh]">
@@ -132,9 +125,8 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Right Side */}
       <div className="sm:col-span-4 flex flex-col gap-4">
-        <div className="self-end">{/* NavIcons */}</div>
+        <div className="self-end"></div>
         <ChatBox
           chat={currentChat}
           currentUser={userInfo?._id || instructorInfo?._id}

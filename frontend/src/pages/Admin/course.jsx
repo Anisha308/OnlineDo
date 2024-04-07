@@ -17,15 +17,15 @@ import apiInstance from "../../../Api";
 import SideBar from "../../components/Header/SideBar";
 
 const Course = () => {
-    const { instructorId } = useParams();
+  const { instructorId } = useParams();
   const Navigate = useNavigate();
   const { data, error, isLoading } = useGetCourseQuery(instructorId);
 
   const [courses, setCourses] = useState([]);
   const [instructor, setInstructor] = useState([]);
   const [isLastPage, setIsLastPage] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1); // Assuming a default value of 1
-  const [totalPages, setTotalPages] = useState(1); // Assuming a default value of 1
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [activePage, setActivePage] = useState(1);
 
   const [pagination, setPagination] = useState({
@@ -36,19 +36,18 @@ const Course = () => {
   useEffect(() => {
     if (data && data.courses) {
       setCourses(data.courses);
-      setInstructor(data.instructor); // Assuming data has a property named 'instructor'
+      setInstructor(data.instructor);
       setPagination(data.pagination);
       setCurrentPage(data.pagination.currentPage);
       setTotalPages(data.pagination.totalPages);
 
       setIsLastPage(data.pagination.currentPage === data.pagination.totalPages);
-    } 
+    }
   }, [data, error]);
 
   const paginate = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       const fetchData = async () => {
-        // Update the pagination state
         setActivePage(pageNumber);
 
         setPagination((prevPagination) => ({
@@ -56,10 +55,8 @@ const Course = () => {
           currentPage: pageNumber,
         }));
 
-        // Fetch data for the selected page
         const newData = await fetchInstructorCourses(instructorId, pageNumber);
 
-        // Update state with the new data
         if (newData && newData.courses) {
           setCourses(newData.courses);
           setInstructor(newData.instructor);
@@ -140,7 +137,6 @@ const Course = () => {
             </Link>
           ))}
       </div>{" "}
-      {/* Pagination */}
       <div className="mt-auto mb-4">
         <div>
           <div className="mt-auto mb-4">

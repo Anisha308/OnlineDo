@@ -10,32 +10,22 @@ const InstructCourseView = () => {
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [instructor, setInstructor] = useState(null);
-  //   // const [categoryId, setCategoryId] = useState(null);
   const [instructorId, setInstructorId] = useState(null);
-  //   // const [category, setCategory] = useState(null);
 
   const navigate = useNavigate();
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         const response = await apiInstance.get(
-          
           `/api/instructor/instructorcourse/${id}`
         );
         setCourse(response.data);
-        // Extracting instructorid from course data
         const instructorId = response.data.course.instructor;
-        // const categoryId = response.data.course.category;
         setInstructorId(instructorId);
-        // setCategoryId(categoryId);
         const instructorresponse = await apiInstance.get(
           `/api/users/getInstructor/${instructorId}`
         );
         setInstructor(instructorresponse.data);
-        // const categoryresponse = await apiInstance.get(
-        //   `api/instructor/getCategory/${categoryId}`
-        // );
-        // setCategory(categoryresponse.data);
       } catch (error) {
         console.error("Error fetching course", error);
         navigate("/login");
@@ -44,17 +34,15 @@ const InstructCourseView = () => {
     fetchCourse();
   }, [id]);
 
-
-
   const toggleVideos = (moduleId) => {
-     const videosElement = document.getElementById(`videos-${moduleId}`);
+    const videosElement = document.getElementById(`videos-${moduleId}`);
     if (videosElement) {
       videosElement.classList.toggle("hidden");
-     }
+    }
   };
   const handleEditClick = async () => {
     navigate(`/instructor/updatecourse/${id}`);
-  }
+  };
   return (
     <div className="flex ">
       <InstructorSidebar instructorId={instructorId} />
@@ -124,7 +112,7 @@ const InstructCourseView = () => {
                           </div>
                           <div className="my-4 flex items-center justify-between px-4">
                             <button
-                                onClick={handleEditClick}
+                              onClick={handleEditClick}
                               className="text-sm font-semibold text-white bg-violet-500 px-10 h-10"
                             >
                               Edit

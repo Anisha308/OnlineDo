@@ -33,7 +33,7 @@ const Dashboard = () => {
 
         const yearlyRevenue = await apiInstance.get(`api/admin/yearlyrevenue`);
 
-        setYearlyRevenue(yearlyRevenue.data); // Assuming the response is an array of objects
+        setYearlyRevenue(yearlyRevenue.data);
 
         const monthlyRevenue = await apiInstance.get(
           `api/admin/monthlyrevenue`
@@ -189,14 +189,13 @@ const Dashboard = () => {
   const currentMonthRevenue = monthlyRevenue.find(
     (data) => data.month === currentMonth
   );
-  const currentYear = new Date().getFullYear(); // Get the current year
+  const currentYear = new Date().getFullYear();
   const currentYearRevenue = yearlyRevenue.find(
     (data) => data.year === currentYear
   );
 
   return (
     <>
- 
       <div className="flex">
         <SideBar />
 
@@ -297,7 +296,6 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          {/* Your JSX for UI */}
           <button
             onClick={handleToggleView}
             className={`bg-${
@@ -339,8 +337,6 @@ const Dashboard = () => {
             </div>
           </div>
           <div />
-
-          {/* End Content */}
         </main>
       </div>
       <script src="https://unpkg.com/@popperjs/core@2"></script>

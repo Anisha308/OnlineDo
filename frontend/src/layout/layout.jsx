@@ -12,7 +12,7 @@ const Layout = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
   const instructor = location.pathname.startsWith("/instructor");
-  const chat=location.pathname.startsWith("/instructor/chat")
+  const chat = location.pathname.startsWith("/instructor/chat");
   return (
     <>
       {isAdmin ? (

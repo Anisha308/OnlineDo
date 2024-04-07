@@ -12,21 +12,21 @@ const setStripeSession = async (req, res) => {
     const numPrice = Number(price);
 
     const user = req.body.user;
-    const course = req.body.courses.course; // Assuming you have course information in the request
-  
+    const course = req.body.courses.course;
+
     const instructor = await Instructor.findOne({
-    name: req.body.instructorName,
+      name: req.body.instructorName,
     });
-    
+
     if (instructor && user && course) {
       const newPurchase = new Purchase({
         user: user._id,
         courses: course._id,
-        instructor:instructor._id,
+        instructor: instructor._id,
       });
       await newPurchase.save();
     }
-  
+
     if (instructor) {
       const session = await stripeInstance.checkout.sessions.create({
         line_items: [
@@ -37,16 +37,16 @@ const setStripeSession = async (req, res) => {
                 name: `${instructor.name}`,
                 description: ` OnlineDo `,
               },
-              unit_amount: parseFloat(price) * 100, // or parseInt(price, 10) * 100
+              unit_amount: parseFloat(price) * 100,
             },
             quantity: 1,
           },
         ],
         mode: "payment",
-        billing_address_collection: "required", // Include this line to collect billing address
-        success_url: `${process.env.CLIENT_URL}/success`,
-        cancel_url: `${process.env.CLIENT_URL}/fail`,
-        submit_type: "auto", // Automatically submit the payment
+        billing_address_collection: "required",
+        success_url: `${process.env.SERVER_URL}/success`,
+        cancel_url: `${process.env.SERVER_URL}/fail`,
+        submit_type: "auto",
       });
 
       res.send(session.url);
@@ -59,38 +59,37 @@ const setStripeSession = async (req, res) => {
 
 const getPurchaseByUser = async (req, res) => {
   try {
-const userId=req.params.userId
+    const userId = req.params.userId;
     const purchases = await Purchase.find({ user: userId }).populate({
       path: "courses",
       populate: {
         path: "instructor",
       },
     });
-    
-    const detailedCourses = []
-    
+
+    const detailedCourses = [];
+
     for (const purchase of purchases) {
-      const courseId = purchase.courses
-      const courseDetails=await Course.findById(courseId)
-    
-    detailedCourses.push(courseDetails)
-    
+      const courseId = purchase.courses;
+      const courseDetails = await Course.findById(courseId);
+
+      detailedCourses.push(courseDetails);
     }
-    
+
     res.json({ detailedCourses });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
-}
+};
 const YearlyRevenue = asyncHandler(async (req, res) => {
   try {
     const currentYear = new Date().getFullYear();
     const yearlyData = [];
 
     for (let year = 2021; year <= currentYear; year++) {
-      const startDate = new Date(year, 0, 1); // January 1st
-      const endDate = new Date(year, 11, 31); // December 31st
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year, 11, 31);
 
       const purchases = await Purchase.find({
         purchaseDate: { $gte: startDate, $lte: endDate },

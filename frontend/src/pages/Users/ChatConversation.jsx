@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useGetUserMutation } from "../../Slices/chatApiSlice"
+import { useGetUserMutation } from "../../Slices/chatApiSlice";
 import PropTypes from "prop-types";
 
 const Conversation = ({ data, currentUser, online }) => {
@@ -30,7 +30,8 @@ const Conversation = ({ data, currentUser, online }) => {
         )}
         <img
           src={
-            userData?.userDetails?.profilephoto ||userData?.instructorDetails?.profilephoto ||
+            userData?.userDetails?.profilephoto ||
+            userData?.instructorDetails?.profilephoto ||
             "https://cdn1.iconfinder.com/data/icons/instagram-ui-colored/48/JD-17-512.png"
           }
           alt="Profile"
@@ -38,8 +39,7 @@ const Conversation = ({ data, currentUser, online }) => {
         />
         <div className="text-sm">
           <span className="font-semibold text-gray-800">
-            {userData?.userDetails?.name ||
-              userData?.instructorDetails?.name}
+            {userData?.userDetails?.name || userData?.instructorDetails?.name}
           </span>
           <br />
           <span className={online ? "text-green-500" : "text-gray-500"}>

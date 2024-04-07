@@ -20,14 +20,14 @@ const Allcourse = () => {
   const navigate = useNavigate();
 
   const { data, error, isLoading } = useGetAllCourseQuery(ITEMS_PER_PAGE);
-const [ratings,setRatings]=useState(0)
+  const [ratings, setRatings] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); // Assuming a default value of 1
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const [totalPages, setTotalPages] = useState(1); // Assuming a default value of 1
+  const [totalPages, setTotalPages] = useState(1);
 
   const [sortBy, setSortBy] = useState(null);
 
@@ -35,13 +35,10 @@ const [ratings,setRatings]=useState(0)
 
   useEffect(() => {
     if (data && data.courses) {
-      // Filter the courses based on the search query
       const filteredCourses = data.courses.filter((course) =>
         course.courseName.toLowerCase().includes(search.toLowerCase())
       );
-      // Set the filtered courses
       setCourses(filteredCourses);
-      // Calculate total pages based on the filtered courses
       const totalPagesCount = Math.ceil(
         filteredCourses.length / ITEMS_PER_PAGE
       );
@@ -49,21 +46,19 @@ const [ratings,setRatings]=useState(0)
     }
   }, [data, search]);
 
-
-
   useEffect(() => {
-    const fetchrating=async()=> {
-  try {
-    const res = await apiInstance.get(`api/users/rating`);
-    console.log(res, "fresss");
-    setRatings(res.data); // Assuming ratings data is an object with courseId as keys and rating as values
-  } catch (error) {
-    console.error(error);
-  }
-    }
+    const fetchrating = async () => {
+      try {
+        const res = await apiInstance.get(`api/users/rating`);
+        console.log(res, "fresss");
+        setRatings(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-    fetchrating()
-  },[])
+    fetchrating();
+  }, []);
   const indexOfLastCourse = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstCourse = indexOfLastCourse - ITEMS_PER_PAGE;
   const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
@@ -103,17 +98,16 @@ const [ratings,setRatings]=useState(0)
       console.error("Error searching courses:", error.message);
     }
   };
-  // Allcourse component
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-const totalRating =
-  ratings && ratings.ratings
-    ? ratings.ratings.reduce((acc, rating) => acc + rating.count, 0)
-    : 0;
-const averageRating =
-  totalRating / (ratings && ratings.ratings ? ratings.ratings.length : 1);
+  const totalRating =
+    ratings && ratings.ratings
+      ? ratings.ratings.reduce((acc, rating) => acc + rating.count, 0)
+      : 0;
+  const averageRating =
+    totalRating / (ratings && ratings.ratings ? ratings.ratings.length : 1);
 
   return (
     <>
@@ -357,7 +351,6 @@ const averageRating =
             </div>
 
             <div tabIndex={0} className="focus:outline-none">
-              {/* Remove py-8 */}
               <div className="mx-auto container py-8  pl-2 ">
                 <div className="flex flex-wrap ease-in-out duration-300 items-center lg:justify-between justify-center">
                   {courses &&
@@ -375,7 +368,7 @@ const averageRating =
                           }}
                           key={index}
                           className="hover:no-underline mx-2 w-72 xl:mb-0 mb-8 transition-transform duration-300 ease-in-out transform hover:scale-110"
-                          style={{ maxWidth: "20%" }} // Ensure each card occupies 25% of the container
+                          style={{ maxWidth: "20%" }}
                         >
                           {" "}
                           <div

@@ -69,7 +69,6 @@ const Header = () => {
     <header className="header flex Items-center bg-blue-900" ref={headerRef}>
       <div className="container">
         <div className="flex items-center justify-between">
-          {/*-------- logo ------- */}
           <div>
             <img
               src={ONLINEDO}
@@ -78,7 +77,6 @@ const Header = () => {
               className="pr-[20px] w-300 h-25 "
             />
           </div>
-          {/*-------menu-------*/}
           <div className="navigation" ref={menuRef} onClick={toggleMenu}>
             <ul className="menu flex items-center gap-[2.7rem]">
               {navLinks.map((link, index) => (
@@ -97,7 +95,6 @@ const Header = () => {
               ))}
             </ul>
           </div>
-          {/* ==================nav right ==============*/}
           <div className="flex items-center gap-4">
             {userInfo ? (
               <div className="flex items-center">

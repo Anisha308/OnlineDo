@@ -5,8 +5,8 @@ import userImg from "../../assets/images/profile.png";
 import { BiMenu } from "react-icons/bi";
 import { useAdminlogoutMutation } from "../../Slices/adminApiSlice";
 import { adminlogout } from "../../Slices/authAdminSlice";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { useDispatch,useSelector} from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 const AdminHeader = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
@@ -50,7 +50,6 @@ const AdminHeader = () => {
     <header className="header flex Items-center bg-blue" ref={headerRef}>
       <div className="container">
         <div className="flex items-center justify-between">
-          {/*-------- logo ------- */}
           <div>
             <img
               src={ONLINEDO}
@@ -59,25 +58,22 @@ const AdminHeader = () => {
               className="pr-[20px] w-300 h-25 "
             />
           </div>
-          {/*-------menu-------*/}
 
           <div className="flex items-center gap-4">
-
             <div className="text-white">Welcome Admin!</div>
             {adminInfo ? (
-
-            <button
-              onClick={logoutHandler}
-              className="bg-black py-2 px-5 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]"
-            >
-              Logout
-            </button>
-                        ):(
-            <span className="md:hidden" onClick={toggleMenu}>
-              <BiMenu className=" text-[white] w-6 h-6 cursor-pointer" />
-            </span>)}
+              <button
+                onClick={logoutHandler}
+                className="bg-black py-2 px-5 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]"
+              >
+                Logout
+              </button>
+            ) : (
+              <span className="md:hidden" onClick={toggleMenu}>
+                <BiMenu className=" text-[white] w-6 h-6 cursor-pointer" />
+              </span>
+            )}
           </div>
-                        
         </div>
       </div>
     </header>

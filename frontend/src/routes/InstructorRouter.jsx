@@ -11,6 +11,7 @@ import UpdateCourse from "../pages/Intructors/UpdateCourse.jsx";
 import PurchaseCourse from "../pages/Intructors/purchasedCourse.jsx";
 import Chat from "../pages/Users/ChatMain.jsx";
 import DashboardInstructor from "../pages/Intructors/DashboardInstructor.jsx";
+import InstructorPrivateRoute from "../components/ProtectedRoutes/instructorPrivateRoutes.jsx";
 function InstructorRouter() {
   return (
     <>
@@ -19,36 +20,78 @@ function InstructorRouter() {
         <Route path="/instructorRegister" element={<InstructorSignup />} />
         <Route
           path="/instructor/:instructorId/courselist"
-          element={<Courselists />}
+          element={
+            <InstructorPrivateRoute>
+              <Courselists />
+            </InstructorPrivateRoute>
+          }
         />
         <Route
           path="/instructor/addcourse/:instructorId"
-          element={<Addcourse />}
+          element={
+            <InstructorPrivateRoute>
+              <Addcourse />
+            </InstructorPrivateRoute>
+          }
         />
         <Route
           path="/instructor/showprofile/:id"
-          element={<InstructorProfile />}
+          element={
+            <InstructorPrivateRoute>
+              <InstructorProfile />
+            </InstructorPrivateRoute>
+          }
         />
         <Route
           path="/instructor/showprofile/:instructorId"
-          element={<InstructorProfile />}
+          element={
+            <InstructorPrivateRoute>
+              <InstructorProfile />
+            </InstructorPrivateRoute>
+          }
         />
         <Route path="/instructor" element={<InstructorHome />} />
 
         <Route
           path="/instructor/instructorcourse/:id"
-          element={<InstructorCourseView />}
+          element={
+            <InstructorPrivateRoute>
+              <InstructorCourseView />
+            </InstructorPrivateRoute>
+          }
         />
         <Route
           path="/instructor/updatecourse/:id"
-          element={<UpdateCourse />}
+          element={
+            <InstructorPrivateRoute>
+              <UpdateCourse />
+            </InstructorPrivateRoute>
+          }
         ></Route>
         <Route
           path="/instructor/coursepurchase"
-          element={<PurchaseCourse />}
+          element={
+            <InstructorPrivateRoute>
+              <PurchaseCourse />
+            </InstructorPrivateRoute>
+          }
         ></Route>
-        <Route path="/instructor/chat" element={<Chat />} />
-        <Route path="/instructor/Dashboard" element={<DashboardInstructor />} />
+        <Route
+          path="/instructor/chat"
+          element={
+            <InstructorPrivateRoute>
+              <Chat />
+            </InstructorPrivateRoute>
+          }
+        />
+        <Route
+          path="/instructor/Dashboard"
+          element={
+            <InstructorPrivateRoute>
+              <DashboardInstructor />
+            </InstructorPrivateRoute>
+          }
+        />
       </Routes>
     </>
   );

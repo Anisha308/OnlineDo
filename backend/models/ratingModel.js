@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 const ratingSchema = new mongoose.Schema({
   purchaseId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Purchase", // Reference to the Purchase model
+    ref: "Purchase",
 
     required: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to the User model
+    ref: "User",
     required: true,
   },
 
@@ -29,5 +29,5 @@ const ratingSchema = new mongoose.Schema({
   },
 });
 
-const Rating = mongoose.model("Rating", ratingSchema)
-export default Rating; // Exporting Rating model as default
+const Rating = mongoose.model("Rating", ratingSchema);
+export default Rating;

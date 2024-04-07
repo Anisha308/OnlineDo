@@ -3,32 +3,30 @@ import { Navigation } from "react-minimal-side-navigation";
 import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
 import Icon from "./Icons";
 import { NavLink, Link } from "react-router-dom";
-import { FaBars } from "react-icons/fa"; // Import menu icon
-import { useMediaQuery } from "react-responsive"; // Import media query hook
+import { FaBars } from "react-icons/fa";
+import { useMediaQuery } from "react-responsive";
 
 const InstructorSidebar = ({ instructorId }) => {
-    const isLargeScreen = useMediaQuery({ minWidth: 768 });
+  const isLargeScreen = useMediaQuery({ minWidth: 768 });
 
-    const [showSidebar, setShowSidebar] = useState(isLargeScreen); // Initialize sidebar visibility based on screen size
-    const handleMenuClick = () => {
-      if (!isLargeScreen) {
-        // Only toggle sidebar visibility on small screens
-        setShowSidebar(!showSidebar);
-      }
-    };
-    const handleSidebarClick = (e) => {
-      // Prevent toggling the sidebar when clicking inside the navigation component
-      e.stopPropagation();
-    };
+  const [showSidebar, setShowSidebar] = useState(isLargeScreen);
+  const handleMenuClick = () => {
+    if (!isLargeScreen) {
+      setShowSidebar(!showSidebar);
+    }
+  };
+  const handleSidebarClick = (e) => {
+    e.stopPropagation();
+  };
   return (
     <div className="relative w-[250px]">
       <button className="md:hidden" onClick={handleMenuClick}>
         <FaBars />
       </button>
-      {showSidebar && ( // Show sidebar only if showSidebar is true
+      {showSidebar && (
         <div
-          className="absolute top-0 left-0 h-full z-10" // Apply gray background color
-          onClick={handleSidebarClick} // Prevent toggling sidebar when clicking inside
+          className="absolute top-0 left-0 h-full z-10"
+          onClick={handleSidebarClick}
         >
           <div className="bg-gray-200 h-full ">
             <Navigation
@@ -36,7 +34,6 @@ const InstructorSidebar = ({ instructorId }) => {
               onSelect={({ itemId }) => {}}
               items={[
                 {
-                  // title: "Dashboard",
                   itemId: "/instructor/Dashboard",
 
                   elemBefore: () => (

@@ -6,7 +6,6 @@ const success = () => {
   const userId = user._id;
   return (
     <>
-      {/* component */}
       <div className="bg-gray-100 h-screen">
         <div className="bg-white p-6  md:mx-auto">
           <svg

@@ -6,11 +6,9 @@ import IconChat from "../../components/iconchat";
 import { toast } from "react-toastify";
 import uploadToCloudinary from "../../../../backend/utils/uploadCloudinary";
 import apiInstance from "../../../Api";
-import { set } from "mongoose";
-import { SmokingRoomsRounded } from "@mui/icons-material";
 
 const UpdateCourse = () => {
-  const { id } = useParams(); // Change 'id' to 'courseId'
+  const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [courseName, setCourseName] = useState("");
   const [description, setDescription] = useState("");
@@ -20,7 +18,7 @@ const UpdateCourse = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [image, setImage] = useState("");
   const [previewVideo, setPreviewVideo] = useState(null);
-const [video, setVideo] = useState([]);
+  const [video, setVideo] = useState([]);
 
   const Navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -34,8 +32,6 @@ const [video, setVideo] = useState([]);
     courseName: "",
     paid: "",
     description: "",
-
-    // ... other form inputs
   });
 
   const [categories, setCategories] = useState(null);
@@ -45,15 +41,13 @@ const [video, setVideo] = useState([]);
 
     const newModule = {
       title: "",
-      videos: [{ url: "" }], // Add a default video when adding a module
+      videos: [{ url: "" }],
     };
     setModules([...modules, newModule]);
 
     enqueueChapter(newModule);
   };
-  //   const handleOnUpload = (e) => {
 
-  // }
   const handleCourseNameChange = (e) => {
     setCourseName(e.target.value);
   };
@@ -103,7 +97,7 @@ const [video, setVideo] = useState([]);
         );
         setCourse(response.data.course);
         setModules(response.data.course.modules);
-        setCourseName(response.data.course.courseName); 
+        setCourseName(response.data.course.courseName);
         setPaid(response.data.course.paid);
         setPrice(response.data.course.price);
         setDuration(response.data.course.duration);
@@ -125,7 +119,6 @@ const [video, setVideo] = useState([]);
 
   const updateCourse = async (e) => {
     e.preventDefault();
-  
 
     if (isNaN(parseFloat(price)) || !isFinite(price)) {
       toast.error("Invalid Price");
@@ -177,7 +170,6 @@ const [video, setVideo] = useState([]);
         toast.error("failed to update course");
       }
     } catch (error) {
-      // Handle errors
       console.error("Error updating course:", error);
       toast.error("Failed to update course. Please try again later.");
     }
@@ -213,7 +205,7 @@ const [video, setVideo] = useState([]);
     }
   };
   const deleteModule = (e, index) => {
-    e.preventDefault()
+    e.preventDefault();
     const updatedModules = [...modules];
     updatedModules.splice(index, 1);
     setModules(updatedModules);
@@ -232,22 +224,19 @@ const [video, setVideo] = useState([]);
       setLoading(false);
     }
   };
-const handleOnUpload = async (e) => {
-  const file = e.currentTarget.files[0];
-  try {
-    setLoading(true);
-    const response = await uploadToCloudinary(file);
-    // Update video state with the previous videos and the new one
-    setVideo((prevVideos) => [...prevVideos, response.secure_url]); // Update video state with new URL
-  } catch (error) {
-    console.error("Error uploading video:", error);
-    toast.error("Failed to upload video. Please try again later.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+  const handleOnUpload = async (e) => {
+    const file = e.currentTarget.files[0];
+    try {
+      setLoading(true);
+      const response = await uploadToCloudinary(file);
+      setVideo((prevVideos) => [...prevVideos, response.secure_url]);
+    } catch (error) {
+      console.error("Error uploading video:", error);
+      toast.error("Failed to upload video. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex ">
@@ -429,7 +418,7 @@ const handleOnUpload = async (e) => {
                         type="file"
                         id="thumbnail-input"
                         className="hidden"
-                        onChange={handleThumbnailChange} // Call handleThumbnailChange on file change
+                        onChange={handleThumbnailChange}
                       />
                     </div>
                   </div>
@@ -468,7 +457,7 @@ const handleOnUpload = async (e) => {
                         type="file"
                         id="video-input"
                         className="hidden"
-                        onChange={handlePreviewVideoUpload} // Call handleThumbnailChange on file change
+                        onChange={handlePreviewVideoUpload}
                       />
                     </div>
                   </div>
@@ -522,7 +511,7 @@ const handleOnUpload = async (e) => {
                           <div className="md:flex justify-start ml-3">
                             <button
                               className="btn btn-outline-danger bg-red-500 text-white p-2 rounded-full flex items-center w-10 h-10 justify-center"
-                              onClick={(e) => deleteModule(e,index)}
+                              onClick={(e) => deleteModule(e, index)}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -560,11 +549,13 @@ const handleOnUpload = async (e) => {
                                     alt=""
                                   />
                                 ) : videoItem ? (
-  <video controls>
-    <source src={videoItem.url} type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-
+                                  <video controls>
+                                    <source
+                                      src={videoItem.url}
+                                      type="video/mp4"
+                                    />
+                                    Your browser does not support the video tag.
+                                  </video>
                                 ) : (
                                   <svg
                                     className="w-8 h-8"
@@ -585,7 +576,7 @@ const handleOnUpload = async (e) => {
                                   type="file"
                                   id={`video-${index}-${videoIndex}`}
                                   className="hidden"
-                                  onChange={(e) => handleOnUpload(e, index)} // Pass the index to handleOnUpload
+                                  onChange={(e) => handleOnUpload(e, index)}
                                 />
                               </div>
 
@@ -611,7 +602,7 @@ const handleOnUpload = async (e) => {
                     <button
                       className="shadow bg-blue-900 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded "
                       type="button"
-                      onClick={updateCourse} // Change AddCourse to addCourse
+                      onClick={updateCourse}
                     >
                       Update
                     </button>

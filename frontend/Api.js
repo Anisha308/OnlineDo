@@ -5,6 +5,7 @@ const apiInstance = axios.create({
 
 apiInstance.interceptors.request.use(
   (config) => {
+    
     return config;
   },
   (error) => {
@@ -14,10 +15,14 @@ apiInstance.interceptors.request.use(
 
 apiInstance.interceptors.response.use(
   (response) => {
+    console.log(response, 'repone fromio');
+
     return response;
   },
   (error) => {
+    console.log(error,'errrrrrrrrrrrrrrrrr');
     return Promise.reject(error);
+    
   }
 );
 

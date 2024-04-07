@@ -15,8 +15,8 @@ const Courselists = () => {
   const [courses, setCourses] = useState([]);
   const [instructor, setInstructor] = useState([]);
   const [isLastPage, setIsLastPage] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1); // Assuming a default value of 1
-  const [totalPages, setTotalPages] = useState(1); // Assuming a default value of 1
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [activePage, setActivePage] = useState(1);
 
   const [pagination, setPagination] = useState({
@@ -27,7 +27,7 @@ const Courselists = () => {
   useEffect(() => {
     if (data && data.courses) {
       setCourses(data.courses);
-      setInstructor(data.instructor); // Assuming data has a property named 'instructor'
+      setInstructor(data.instructor);
       setPagination(data.pagination);
       setCurrentPage(data.pagination.currentPage);
       setTotalPages(data.pagination.totalPages);
@@ -41,7 +41,6 @@ const Courselists = () => {
   const paginate = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       const fetchData = async () => {
-        // Update the pagination state
         setActivePage(pageNumber);
 
         setPagination((prevPagination) => ({
@@ -49,10 +48,8 @@ const Courselists = () => {
           currentPage: pageNumber,
         }));
 
-        // Fetch data for the selected page
         const newData = await fetchInstructorCourses(instructorId, pageNumber);
 
-        // Update state with the new data
         if (newData && newData.courses) {
           setCourses(newData.courses);
           setInstructor(newData.instructor);
@@ -110,7 +107,7 @@ const Courselists = () => {
                 }}
                 key={index}
                 className="hover:no-underline mt-8"
-                style={{ maxWidth: "20%" }} // Ensure each card occupies 25% of the container
+                style={{ maxWidth: "20%" }}
               >
                 {" "}
                 <div
@@ -265,7 +262,5 @@ const Courselists = () => {
     </div>
   );
 };
-
-
 
 export default Courselists;

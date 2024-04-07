@@ -11,7 +11,7 @@ const YourCourse = () => {
   const [createChat] = useCreateChatMutation();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.userInfo);
- 
+
   useEffect(() => {
     const fetchPurchases = async () => {
       try {
@@ -45,11 +45,12 @@ const YourCourse = () => {
     }
   };
 
-
   return (
     <div>
       <div className="mt-7  text-gray-500 dark:text-gray-300">
-        <h2 className="font-bold ml-6  mt-5 text-2xl pb-4 text-black">Your Courses</h2>
+        <h2 className="font-bold ml-6  mt-5 text-2xl pb-4 text-black">
+          Your Courses
+        </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-5 min-h-[145px] w-full place-items-center overflow-x-scroll rounded-lg p-6 lg:overflow-visible">
           {purchases.map((purchase) => (
@@ -79,7 +80,7 @@ const YourCourse = () => {
                     {purchase.description}
                   </div>
                   <p className="block  font-sans text-base antialiased font-bold leading-relaxed text-gray-400">
-                    {purchase.duration} 
+                    {purchase.duration}
                   </p>
                 </div>
                 <div className="flex justify-between">

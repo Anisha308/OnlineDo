@@ -20,7 +20,7 @@ export const instructApiSlice = apiSlice.injectEndpoints({
     }),
     addcourse: builder.mutation({
       query: (data) => ({
-        url: `${INSTRUCT_URL}/addcourse/${data.instructorId}`, // Pass instructorId as a parameter
+        url: `${INSTRUCT_URL}/addcourse/${data.instructorId}`,
         method: "POST",
         body: data,
       }),
@@ -28,7 +28,7 @@ export const instructApiSlice = apiSlice.injectEndpoints({
 
     getInstructProfile: builder.mutation({
       query: (params) => ({
-        url: `${INSTRUCT_URL}/showprofile/${params.instructorId}`, // Assuming this endpoint returns user profile details
+        url: `${INSTRUCT_URL}/showprofile/${params.instructorId}`, 
         method: "GET",
       }),
     }),
@@ -41,7 +41,7 @@ export const instructApiSlice = apiSlice.injectEndpoints({
     }),
     getCourse: builder.query({
       query: (instructorId) => ({
-        url: `${INSTRUCT_URL}/${instructorId}/courselist`, // Assuming this endpoint returns user profile details
+        url: `${INSTRUCT_URL}/${instructorId}/courselist`, 
         method: "GET",
       }),
     }),

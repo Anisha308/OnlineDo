@@ -30,7 +30,7 @@ function InstructorSignup() {
   });
   const [Emailverify, setEmailverify] = useState(false);
 
-  const [register] = useInstructorSignUpMutation(); // Use your register mutation hook
+  const [register] = useInstructorSignUpMutation();
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -45,7 +45,6 @@ function InstructorSignup() {
   };
 
   const onRequestClose = () => {
-    // Logic to handle closing the modal
     setEmailverify(false);
     setIsModalOpen(false);
   };
@@ -89,15 +88,10 @@ function InstructorSignup() {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      // if (!formData.otp) {
-      //   toast.error("otp is invalid")
-      // }
-
       if (!formData.email) {
         console.error("OTP or email is not set");
         return;
       }
-
       const response = await verifyOtp({
         otp: formData.otp,
         email: formData.email,
@@ -110,29 +104,26 @@ function InstructorSignup() {
         experience: formData.experience,
         jobrole: formData.jobrole,
         companyname: formData.companyname,
-        typedOtp: recievedOtp, // Include the user-typed OTP
+        typedOtp: recievedOtp,
       });
       if (response.error) {
         toast.error("Invalid otp");
         console.error("OTP verification failed:", response.error);
-        // Handle OTP verification failure
       } else {
         const data = response.data;
         if (data.success) {
           dispatch(instructorSetCredentials({ ...data }));
-          setEmailverify(false); // Close the modal after successful verification
-          setIsModalOpen(false); // Open the Email Verification Modal
+          setEmailverify(false);
+          setIsModalOpen(false);
 
           toast.success("Registration successfull");
           navigate("/instructorLogin");
         } else {
           console.error("OTP verification failed:", data.message);
-          // Handle OTP verification failure
         }
       }
     } catch (error) {
       console.error("Error triggering OTP verification:", error.message);
-      // Handle other errors, e.g., network issues or server errors
     }
   };
 
@@ -151,9 +142,7 @@ function InstructorSignup() {
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
     } else {
-      // Open the modal for file uploads
       setIsModalOpen(true);
-      // setIsOpen(true);
     }
   };
 
@@ -167,7 +156,7 @@ function InstructorSignup() {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setprofilephoto(reader.result);
-      setPreviewURL(reader.result); // Set preview URL here
+      setPreviewURL(reader.result);
     };
   };
 
@@ -508,7 +497,7 @@ function InstructorSignup() {
                 </div>
               </div>
               <button
-                type="submit" // Ensure the type is "button"
+                type="submit"
                 className="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-1"
               >
                 Register
@@ -536,10 +525,8 @@ function InstructorSignup() {
                     "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)",
                   borderRadius: "10px",
                   boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.1)",
-                  // Add other inline styles as needed
                 }}
               >
-                {" "}
                 <h3 className="font-bold mb-4">Upload Your Files</h3>
                 <div className="flex items-center border-2 py-3 px-3 rounded-2xl relative mb-2">
                   <input

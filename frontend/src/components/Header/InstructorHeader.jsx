@@ -5,7 +5,7 @@ import userImg from "../../assets/images/profile.png";
 import { BiMenu } from "react-icons/bi";
 import { useLogoutMutation } from "../../Slices/usersApiSlice";
 import { useInstructorlogoutMutation } from "../../Slices/authInstructorSlice";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { instructlogout } from "../../Slices/instructorApiSlice";
@@ -17,11 +17,11 @@ const InstructorHeader = () => {
 
   const { instructorInfo } = useSelector((state) => state.instructorAuth);
 
-  const instructorId = instructorInfo ? instructorInfo._id : null; // Assuming _id is the instructor's unique identifier
+  const instructorId = instructorInfo ? instructorInfo._id : null;
 
   const dispatch = useDispatch();
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleStickyHeader = () => {
     window.addEventListener("scroll", () => {
@@ -69,7 +69,6 @@ const InstructorHeader = () => {
     <header className="header flex Items-center bg-blue" ref={headerRef}>
       <div className="container">
         <div className="flex items-center justify-between">
-          {/*-------- logo ------- */}
           <div>
             <img
               src={ONLINEDO}
@@ -78,7 +77,6 @@ const InstructorHeader = () => {
               className="pr-[20px] w-300 h-25 "
             />
           </div>
-          {/*-------menu-------*/}
           <div className="navigation" ref={menuRef} onClick={toggleMenu}>
             <ul className="menu flex items-center gap-[2.7rem]">
               {navLinks.map((link, index) => (
@@ -97,7 +95,6 @@ const InstructorHeader = () => {
               ))}
             </ul>
           </div>
-          {/* ==================nav right ==============*/}
           <div className="flex items-center gap-4">
             {instructorInfo ? (
               <div className="flex items-center">

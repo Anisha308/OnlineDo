@@ -1,11 +1,9 @@
-// models/CourseModel.js
-
 import mongoose from "mongoose";
 
 const categorySchema = new mongoose.Schema({
   course: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Course", // Assuming you have an Instructor model
+    ref: "Course",
   },
   categoryName: {
     type: String,

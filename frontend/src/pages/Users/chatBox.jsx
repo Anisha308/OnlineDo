@@ -22,9 +22,8 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
     setNewMessage(newMessage);
   };
 
-  // fetching data for header
   useEffect(() => {
-      const userId = chat?.members?.find((id) => id !== currentUser);
+    const userId = chat?.members?.find((id) => id !== currentUser);
     const getUserData = async () => {
       try {
         const { data } = await getUser(userId);
@@ -37,7 +36,6 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
     if (chat !== null) getUserData();
   }, [chat, currentUser]);
 
-  // fetch messages
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -55,7 +53,6 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Send Message
   const handleSend = async (e) => {
     e.preventDefault();
     const message = {
@@ -64,9 +61,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
       chatId: chat._id,
     };
     const receiverId = chat.members.find((id) => id !== currentUser);
-    // send message to socket server
     setSendMessage({ ...message, receiverId });
-    // send message to database
     try {
       const { data } = await addMessage(message);
       setMessages([...messages, data]);
@@ -76,7 +71,6 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
     }
   };
 
-  // Receive Message from parent component
   useEffect(() => {
     if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
       setMessages([...messages, receivedMessage]);
@@ -90,13 +84,13 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
       <div className="grid  grid-rows-[14vh,68vh,13vh] rounded-md overflow-hidden">
         {chat ? (
           <>
-            {/* chat-header */}
             <div className="flex flex-col p-4 bg-white">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0">
                   <img
                     src={
-                      userData?.userDetails?.profilephoto ||userData?.instructorDetails?.profilephoto||
+                      userData?.userDetails?.profilephoto ||
+                      userData?.instructorDetails?.profilephoto ||
                       "https://cdn1.iconfinder.com/data/icons/instagram-ui-colored/48/JD-17-512.png"
                     }
                     alt="Profile"
@@ -112,7 +106,6 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
               </div>
               <hr className="w-11/12 border-t border-gray-300 mt-4" />
             </div>
-            {/* chat-body */}
             <div className="flex flex-col gap-2 p-6 overflow-auto bg-gray-50">
               {messages.map((message, index) => (
                 <div
@@ -131,14 +124,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
                 </div>
               ))}
             </div>
-            {/* chat-sender */}
             <div className="flex justify-between items-center bg-white rounded p-2">
-              {/* <div
-                onClick={() => imageRef.current.click()}
-                className="bg-gray-200 rounded-full flex items-center justify-center font-bold cursor-pointer text-gray-800"
-              >
-                +
-              </div> */}
               <InputEmoji
                 value={newMessage}
                 onChange={handleChange}
@@ -170,10 +156,10 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
 };
 
 ChatBox.propTypes = {
-  chat: PropTypes.object, // You can specify the shape of the object if needed
+  chat: PropTypes.object,
   currentUser: PropTypes.string.isRequired,
   setSendMessage: PropTypes.func.isRequired,
-  receivedMessage: PropTypes.object, // You can specify the shape of the object if needed
+  receivedMessage: PropTypes.object,
 };
 
 export default ChatBox;

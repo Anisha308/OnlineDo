@@ -7,34 +7,28 @@ import { useNavigate } from "react-router-dom";
 import apiInstance from "../../../Api";
 
 const UserLists = () => {
-  const [page, setPage] = useState(1); 
+  const [page, setPage] = useState(1);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [isLastPage, setIsLastPage] = useState(false); 
+  const [isLastPage, setIsLastPage] = useState(false);
+  const [perPage, setPerPage] = useState(12);
 
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-  });
   const { data, error, isLoading } = useGetUserListQuery({
     page: currentPage,
+    perPage: perPage,
   });
   const [users, setUsers] = useState([]);
   const [blockUserMutation] = useBlockuserMutation();
   const [showModal, setShowModal] = useState(false);
   const [userIdToBlock, setUserIdToBlock] = useState(null);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (data && data.users) {
       setUsers(data.users);
-      // setPagination(data.pagination);
       setCurrentPage(data.pagination.currentPage);
       setTotalPages(data.pagination.totalPages);
-      setIsLastPage(data.pagination.currentPage === data.pagination.totalPages); // Update isLastPage state
-    
+      setIsLastPage(data.pagination.currentPage === data.pagination.totalPages);
     }
   }, [data, error]);
 
@@ -50,7 +44,7 @@ const UserLists = () => {
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user._id === userIdToBlock
-              ? { ...user, Blocked: !user.Blocked } // Toggle the Blocked status
+              ? { ...user, Blocked: !user.Blocked }
               : user
           )
         );
@@ -90,21 +84,16 @@ const UserLists = () => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       try {
         setCurrentPage(pageNumber);
-        const newData = await fetchUsers(pageNumber); // Fetch data for the selected page
+        const newData = await fetchUsers(pageNumber);
         if (newData && newData.users) {
-          setUsers(newData.users); // Update state with the new data
+          setUsers(newData.users);
         }
       } catch (error) {
         console.error("Error fetching users:", error);
-        // Handle error
       }
     }
- 
-
-
-  
-
-  };  return (
+  };
+  return (
     <div className="flex flex-wrap   bg-white p-8 rounded-md ">
       <SideBar />
       <div className=" w-[1000px]   ">
@@ -205,6 +194,7 @@ const UserLists = () => {
                   </span>
                 </a>
               </li>
+
               {Array.from({ length: totalPages }, (_, index) => index + 1).map(
                 (pageNumber) => (
                   <li key={pageNumber}>
@@ -217,7 +207,6 @@ const UserLists = () => {
                     >
                       {pageNumber}
                     </a>
-                  
                   </li>
                 )
               )}

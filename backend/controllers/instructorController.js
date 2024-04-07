@@ -3,7 +3,7 @@ import Instructor from "../models/InstructorModel.js";
 import Course from "../models/courseModel.js";
 import cloudinary from "cloudinary";
 import Category from "../models/categoryModel.js";
-import User from "../models/userModel.js"
+import User from "../models/userModel.js";
 import generateTokenInstructor from "../utils/generateTokenInstructor.js";
 import generateOTP from "../utils/otp.js";
 import sendEmail from "../utils/nodemailer.js";
@@ -69,7 +69,6 @@ const registerInstructor = asyncHandler(async (req, res) => {
     profilephoto,
     experienceCertificateFile,
   } = req.body;
-
   if (!name || !email || !mobile || !experience || !jobrole || !companyname) {
     res.status(401);
     throw new Error("All fields must be filled!");
@@ -262,7 +261,7 @@ const getInstructorCourses = asyncHandler(async (req, res) => {
   try {
     const instructorId = req.params.instructorId;
     const page = parseInt(req.query.page) || 1;
-    const pageSize = 6
+    const pageSize = 6;
 
     const instructor = await Instructor.findById(instructorId).populate({
       path: "courses",
@@ -297,7 +296,6 @@ const getInstructorCourses = asyncHandler(async (req, res) => {
   }
 });
 
-
 const showCategory = asyncHandler(async (req, res) => {
   try {
     const category = await Category.find();
@@ -319,12 +317,12 @@ const instructorviewCourse = asyncHandler(async (req, res) => {
 const getusers = asyncHandler(async (req, res) => {
   try {
     const users = await User.find();
-    const countusers = await User.countDocuments({}); // await the countDocuments() method
+    const countusers = await User.countDocuments({});
     res.status(200).json({ success: true, users, countusers });
   } catch (error) {
-    console.log(error,'error');
+    console.log(error, "error");
   }
-})
+});
 export {
   authInstructor,
   registerInstructor,

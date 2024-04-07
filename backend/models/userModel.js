@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema(
       type: Number,
     },
     profilephoto: {
-      type: String, // or whatever type you are using for storing image URLs or file paths
+      type: String,
       default:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     },
@@ -40,7 +40,7 @@ const userSchema = mongoose.Schema(
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
   const res = await bcrypt.compare(enteredPassword, this.password);
-  return res  
+  return res;
 };
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {

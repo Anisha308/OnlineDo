@@ -4,10 +4,10 @@ const destroyAdminToken = (res) => {
   const jwtToken = "";
 
   const cookieOptions = {
-    httpOnly: true, 
-    secure: process.env.NODE_ENV !== "development", 
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development",
     sameSite: "strict",
-    maxAge: new Date(0), 
+    maxAge: new Date(0),
   };
 
   res.cookie("adminJwt", jwtToken, cookieOptions);

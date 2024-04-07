@@ -4,7 +4,6 @@ import Course from "../models/courseModel.js";
 import { toast } from "react-toastify";
 import Purchase from "../models/purchaseModel.js";
 
-
 const viewCourse = asyncHandler(async (req, res) => {
   try {
     const courseId = req.params.id;
@@ -18,7 +17,6 @@ const instructorcourse = asyncHandler(async (req, res) => {
   try {
     const instructorId = req.params.id;
 
-    // Fetch courses for the given instructorId
     const courses = await Course.find({ instructor: instructorId });
     res.status(200).json({ success: true, courses });
   } catch (error) {
@@ -26,8 +24,6 @@ const instructorcourse = asyncHandler(async (req, res) => {
     res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 });
-
-
 
 const addCourse = asyncHandler(async (req, res) => {
   const instructorId = req.params.instructorId;
@@ -56,33 +52,30 @@ const addCourse = asyncHandler(async (req, res) => {
     res.status(400).json({ error: "All fields must be filled" });
     return;
   }
-   const emptyModuleIndex = modules.findIndex((module) => !module.title.trim());
-   if (emptyModuleIndex !== -1) {
-     toast.error("Please enter a title for all modules");
-     return res
-       .status(400)
-       .json({ error: "Please enter a title for all modules" });
-     
-   }
+  const emptyModuleIndex = modules.findIndex((module) => !module.title.trim());
+  if (emptyModuleIndex !== -1) {
+    toast.error("Please enter a title for all modules");
+    return res
+      .status(400)
+      .json({ error: "Please enter a title for all modules" });
+  }
 
   try {
-    // Check if the instructor exists
     const instructor = await Instructor.findById(instructorId);
     if (!instructor) {
       res.status(404);
       throw new Error("Instructor not found");
     }
 
-const existingCourse = await Course.findOne({
-  instructor: instructorId,
-  courseName,
-});
+    const existingCourse = await Course.findOne({
+      instructor: instructorId,
+      courseName,
+    });
     if (existingCourse) {
-  res.status(400).json({ error: "dup" });
-  return;
-}
+      res.status(400).json({ error: "dup" });
+      return;
+    }
 
-    // Create a new course
     const course = new Course({
       instructor: instructorId,
       courseName,
@@ -92,11 +85,10 @@ const existingCourse = await Course.findOne({
       thumbnail: image,
       duration,
       price,
-      modules, // Corrected to use the modules state
+      modules,
       previewVideo,
     });
     if (req.file) {
-      // Assuming you want to add the file to the first module's videos
       if (
         modules.length > 0 &&
         modules[0].videos &&
@@ -106,10 +98,8 @@ const existingCourse = await Course.findOne({
         modules[0].videos[0].video.contentType = req.file.mimetype;
       }
     }
-  
-    // Save the course
+
     const savedCourse = await course.save();
-    // Add the course to the instructor's courses array
     instructor.courses.push(savedCourse._id);
     await instructor.save();
 
@@ -117,19 +107,19 @@ const existingCourse = await Course.findOne({
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
-}); 
-
-
+});
 
 const getchpurchase = asyncHandler(async (req, res) => {
   try {
     const instructorId = req.query.instructorId;
-    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const limit = parseInt(req.query.limit) || 10; // Default limit to 10 if not provided
+    console.log(instructorId);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
 
     const totalDocs = await Purchase.countDocuments({
       instructor: instructorId,
     });
+    console.log(totalDocs);
     const totalPages = Math.ceil(totalDocs / limit);
 
     const result = await Purchase.find({ instructor: instructorId })
@@ -137,7 +127,7 @@ const getchpurchase = asyncHandler(async (req, res) => {
       .populate("courses")
       .skip((page - 1) * limit)
       .limit(limit);
-
+    console.log(result);
     res.status(200).json({
       data: result,
       pagination: {
@@ -153,8 +143,8 @@ const getchpurchase = asyncHandler(async (req, res) => {
 
 const updatecourse = asyncHandler(async (req, res) => {
   try {
-   const {id,courseName,description,price,duration,paid,categories,modules,image,previewVideo}=req.body
-    const updatecourse = await Course.findByIdAndUpdate(id, {
+    const {
+      id,
       courseName,
       description,
       price,
@@ -163,13 +153,28 @@ const updatecourse = asyncHandler(async (req, res) => {
       categories,
       modules,
       image,
-      previewVideo
-    }, { new: true })
-    
+      previewVideo,
+    } = req.body;
+    const updatecourse = await Course.findByIdAndUpdate(
+      id,
+      {
+        courseName,
+        description,
+        price,
+        duration,
+        paid,
+        categories,
+        modules,
+        image,
+        previewVideo,
+      },
+      { new: true }
+    );
+
     if (!updatecourse) {
-      return res.status(404).json({ error: "course not found"})
+      return res.status(404).json({ error: "course not found" });
     }
-    res.json(updatecourse)
+    res.json(updatecourse);
   } catch (error) {
     console.error("Error updating course:", error);
     res
@@ -190,4 +195,11 @@ const getcoursetoupdate = asyncHandler(async (req, res) => {
     console.error(error);
   }
 });
-export {instructorcourse,viewCourse, addCourse, updatecourse, getcoursetoupdate, getchpurchase };
+export {
+  instructorcourse,
+  viewCourse,
+  addCourse,
+  updatecourse,
+  getcoursetoupdate,
+  getchpurchase,
+};

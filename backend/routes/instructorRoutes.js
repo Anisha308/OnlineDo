@@ -12,7 +12,10 @@ import {
   instructorviewCourse,
   getusers,
 } from "../controllers/instructorController.js";
-import { YearlyRevenue,MonthlyRevenue } from "../controllers/paymentController.js";
+import {
+  YearlyRevenue,
+  MonthlyRevenue,
+} from "../controllers/paymentController.js";
 import {
   addCourse,
   getcoursetoupdate,
@@ -26,21 +29,20 @@ router.post("/auth", authInstructor);
 router.post("/logout", logoutInstructor);
 router
   .route("/showprofile/:id")
-  .get(instructorProtect, getInstructorProfile)
-  .put(instructorProtect, updateInstructProfile);
-router.post("/addcourse/:instructorId", instructorProtect, addCourse);
+  .get(getInstructorProfile)
+  .put(updateInstructProfile);
+router.post("/addcourse/:instructorId", addCourse);
 router.get(
   "/:instructorId/courselist",
-  instructorProtect,
+
   getInstructorCourses
 );
 router.post("/instructotpverify", instructotpVerify);
-router.get("/categories", instructorProtect, showCategory);
-router.get("/instructorcourse/:id", instructorProtect, instructorviewCourse);
-router.put("/updatecourse", instructorProtect, updatecourse);
-// router.get("/:id/courselist", getcoursetoupdate);
-router.get("/purchaselist", getchpurchase)
-router.get("/getusers", getusers)
+router.get("/categories", showCategory);
+router.get("/instructorcourse/:id", instructorviewCourse);
+router.put("/updatecourse", updatecourse);
+router.get("/purchaselist", getchpurchase);
+router.get("/getusers", getusers);
 router.get("/yearlyrevenue", YearlyRevenue);
 router.get("/monthlyrevenue", MonthlyRevenue);
 

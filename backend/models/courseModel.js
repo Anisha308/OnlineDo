@@ -1,12 +1,10 @@
-// models/CourseModel.js
-
 import mongoose from "mongoose";
 
 const courseSchema = new mongoose.Schema(
   {
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Instructor", // Assuming you have an Instructor model
+      ref: "Instructor",
       required: true,
     },
     courseName: {

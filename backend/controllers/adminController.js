@@ -60,16 +60,16 @@ const logoutAdmin = (req, res) => {
 
 const getAllUsers = asyncHandler(async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Default page is 1
-    const pageSize = 1
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 1;
     const users = await User.find(
       {},
       { name: 1, email: 1, mobile: 1, profilephoto: 1, _id: 1 }
     )
-      .skip((page - 1) * pageSize) // Corrected syntax: use parentheses instead of colons
-      .limit(pageSize); // Corrected syntax: use parentheses instead of colons
-    
-    const totalUsers = await User.countDocuments(); // Count total users
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    const totalUsers = await User.countDocuments();
     const totalPages = Math.ceil(totalUsers / pageSize);
 
     res.status(200).json({
@@ -77,10 +77,9 @@ const getAllUsers = asyncHandler(async (req, res) => {
       pagination: {
         currentPage: page,
         totalPages,
-      }
+      },
     });
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -169,7 +168,7 @@ const verifyInstructor = asyncHandler(async (req, res) => {
         _id: instructor._id,
         name: instructor.name,
         email: instructor.email,
-        verified: true, // Update verified status to true
+        verified: true,
       },
     });
   } catch (error) {
@@ -178,10 +177,9 @@ const verifyInstructor = asyncHandler(async (req, res) => {
   }
 });
 
-
 const getAllInstructors = asyncHandler(async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Default page is 1
+    const page = parseInt(req.query.page) || 1;
 
     const pageSize = 2;
 
@@ -198,16 +196,16 @@ const getAllInstructors = asyncHandler(async (req, res) => {
         idProof: 1,
         verified: 1,
         rejected: 1,
-        Blocked:1,
-        courses:1,
+        Blocked: 1,
+        courses: 1,
         experienceCertificateFile: 1,
         _id: 1,
       }
     )
-      .skip((page - 1) * pageSize) // Corrected syntax: use parentheses instead of colons
+      .skip((page - 1) * pageSize)
       .limit(pageSize)
-      .lean(); // Convert Mongoose documents to plain JavaScript objects // Corrected syntax: use parentheses instead of colons
-    const totalInstructors = await Instructor.countDocuments(); // Count total users
+      .lean();
+    const totalInstructors = await Instructor.countDocuments();
     const totalPages = Math.ceil(totalInstructors / pageSize);
     res.status(200).json({
       success: true,
@@ -268,51 +266,46 @@ const rejectmail = asyncHandler(async (req, res) => {
   }
 });
 
-
 const countUser = asyncHandler(async (req, res) => {
   try {
-    const count = await User.countDocuments({})
+    const count = await User.countDocuments({});
     res.json({
       success: true,
       message: "fetched count successfully",
       count,
-    })
+    });
   } catch (error) {
     console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-
+    res.status(500).json({ message: "Internal server error" });
   }
-})
+});
 
 const countInstructor = asyncHandler(async (req, res) => {
   try {
-    const count = await Instructor.countDocuments({})
+    const count = await Instructor.countDocuments({});
     res.json({
       success: true,
       message: "fetched count successfully",
       count,
-    })
+    });
   } catch (error) {
-     console.error(error);
-     res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
-})
+});
 
 const CountCourse = asyncHandler(async (req, res) => {
   try {
-    const course=await Course.countDocuments({})
-    const purchase = await Purchase.countDocuments({})
+    const course = await Course.countDocuments({});
+    const purchase = await Purchase.countDocuments({});
     res.json({
-     
-       purchasedCourse:purchase,
-      totalcourse:course,
-    })
+      purchasedCourse: purchase,
+      totalcourse: course,
+    });
   } catch (error) {
     console.error(error);
   }
-})
-
-
+});
 
 export {
   authAdmin,
@@ -327,5 +320,4 @@ export {
   countUser,
   countInstructor,
   CountCourse,
- 
 };

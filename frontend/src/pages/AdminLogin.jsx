@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useAdminLoginMutation } from "../Slices/adminApiSlice"; // Updated import
+import { useAdminLoginMutation } from "../Slices/adminApiSlice";
 import { adminSetCredentials } from "../Slices/authAdminSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
@@ -14,11 +14,9 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [login, { isLoading }] = useAdminLoginMutation(); // Updated hook
+  const [login, { isLoading }] = useAdminLoginMutation();
 
   const { adminInfo } = useSelector((state) => state.authAdmin);
-
-  
 
   const submitHandler = async (e) => {
     e.preventDefault();

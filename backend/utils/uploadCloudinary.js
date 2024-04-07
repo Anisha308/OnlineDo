@@ -3,13 +3,10 @@ const cloud_name = "dvp3lkojc";
 
 const uploadToCloudinary = async (file, isImage) => {
   const uploadData = new FormData();
-console.log(uploadData,'uploddta');
   uploadData.append("upload_preset", upload_preset);
   uploadData.append("cloud_name", cloud_name);
   uploadData.append("file", file);
-  console.log(FormData,'updatedformdata');
   if (!isImage) {
-    console.log('kjkjjj');
     uploadData.append(file, "video");
   }
 
@@ -20,9 +17,7 @@ console.log(uploadData,'uploddta');
       method: "post",
       body: uploadData,
     });
-    console.log(res,'reessssss');
     const data = await res.json();
-console.log(data,'dataaaa');
     return data;
   } catch (error) {
     console.error("Error uploading to Cloudinary:", error);

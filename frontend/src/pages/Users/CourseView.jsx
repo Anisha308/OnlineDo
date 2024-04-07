@@ -9,19 +9,18 @@ const CourseView = () => {
   const [course, setCourse] = useState(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [rating, setRating] = useState(0);
-  const [count,setCount]=useState(0)
- const [ratings, setRatings] = useState([
-   { _id: 1, count: 0 },
-   { _id: 2, count: 0 },
-   { _id: 3, count: 0 },
-   { _id: 4, count: 0 },
-   { _id: 5, count: 0 },
- ]);
-   const { userInfo } = useSelector((state) => state.auth);
-console.log(userInfo._id,'userInfo');
+  const [count, setCount] = useState(0);
+  const [ratings, setRatings] = useState([
+    { _id: 1, count: 0 },
+    { _id: 2, count: 0 },
+    { _id: 3, count: 0 },
+    { _id: 4, count: 0 },
+    { _id: 5, count: 0 },
+  ]);
+  const { userInfo } = useSelector((state) => state.auth);
   const [comment, setComment] = useState("");
-  
-const [name,setName]=useState("")
+
+  const [name, setName] = useState("");
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -37,31 +36,25 @@ const [name,setName]=useState("")
     fetchCourse();
   }, [purchaseId]);
 
-
   useEffect(() => {
     const fetchRating = async () => {
       try {
         const response = await apiInstance.get(`api/users/rating`);
-        console.log(response, "responseyyy");
         setRatings(response.data.ratings);
         setCount(response.data.count);
         const userNames = response.data.users.map((user) => user.userId.name);
         const userComments = response.data.users.map((user) => user.comment);
-        setComment(userComments); // Set comments in state
+        setComment(userComments);
 
         setName(userNames);
-        console.log(name, "name");
-        console.log(userNames, "usernames");
       } catch (error) {
         console.error(error);
       }
-    }
-    fetchRating()
-  }, [])
-  
-  useEffect(() => {
-    console.log(name, "namessss");
-  }, [name]);
+    };
+    fetchRating();
+  }, []);
+
+  useEffect(() => {}, [name]);
 
   const toggleVideos = (moduleId) => {
     const videosElement = document.getElementById(`videos-${moduleId}`);
@@ -71,37 +64,28 @@ const [name,setName]=useState("")
   };
 
   const handleRating = () => {
-    console.log("rting button clicked");
     setShowRatingModal(true);
   };
   const submitRating = async () => {
     try {
-     const alreadyRated = ratings.some((item) => item._id === rating);
+      const alreadyRated = ratings.some((item) => item._id === rating);
 
-     if (alreadyRated) {
-       toast.warning("User has already rated the course");
-       // Handle the case where the user has already rated the course
-       return;
-     }
+      if (alreadyRated) {
+        toast.warning("User has already rated the course");
+        return;
+      }
 
-
-      console.log(alreadyRated,"gi");
-      console.log(purchaseId, "ummm");
-      console.log(comment, "comment");
-      console.log(rating, "rting");
-      console.log(userInfo._id, "sjjus");
       const response = await apiInstance.post(`/api/users/rating`, {
         purchaseId,
         rating,
         comment,
         userId: userInfo._id,
       });
-      console.log(response, "repone");
       setRatings([...ratings, { _id: rating, count: 1 }]);
-      setName([...name, userInfo.name]); // Assuming userInfo contains the user's name
-      
-      setComment(""); // Reset comment field
-      setRating(0); // Reset rating field
+      setName([...name, userInfo.name]);
+
+      setComment("");
+      setRating(0);
 
       setShowRatingModal(false);
       toast.success("Rating submitted successfully");
@@ -184,8 +168,6 @@ const [name,setName]=useState("")
         </main>
       </section>
 
-      {/* component */}
-      {/* review item */}
       <h5 className="font-bold pl-9">Feedback</h5>
       <div className="mx-autoshadow-lg rounded-lg my-25 px-8 py-8 max-w-xl ">
         <div className="mb-1 tracking-wide px-4 py-4">
@@ -227,8 +209,6 @@ const [name,setName]=useState("")
                 </div>
               );
             })}
-
-            {/* 5th */}
           </div>
         </div>
 
@@ -274,7 +254,6 @@ const [name,setName]=useState("")
         </div>
       </div>
 
-      
       {showRatingModal && (
         <div className="fixed inset-0 pt-9 flex items-center justify-center bg-gray-800 bg-opacity-75">
           <div className="py-3 sm:max-w-xl sm:mx-auto">
@@ -326,7 +305,6 @@ const [name,setName]=useState("")
                     rows={3}
                     className="p-4 text-gray-500 rounded-xl resize-none"
                     placeholder="share your feedback"
-                    // value={comment}
                     onChange={(e) => setComment(e.target.value)}
                   />
                   <button

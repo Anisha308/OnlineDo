@@ -17,7 +17,7 @@ const InstructorProfile = () => {
 
   const [instructors, setInstructors] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedInstructorId, setSelectedInstructorId] = useState(null); // Add this state
+  const [selectedInstructorId, setSelectedInstructorId] = useState(null);
   const [count, setCount] = useState(0);
   const [showDocmodal, setShowDocmodal] = useState(false);
   const [showcerificate, setShowCerticate] = useState(false);
@@ -61,7 +61,7 @@ const InstructorProfile = () => {
       experienceCertificateFile: instructors.experienceCertificateFile || "",
       idProof: instructors.idProof || "",
     });
-    setSelectedInstructorId(instructors._id); // Set the selected user ID
+    setSelectedInstructorId(instructors._id);
 
     setIsModalOpen(true);
   };
@@ -216,9 +216,6 @@ const InstructorProfile = () => {
                 <p className="text-muted mb-2">{instructors.jobrole}</p>
                 <p className="text-muted mb-4">{instructors.email}</p>
                 <div className="flex justify-center mb-2">
-                  {/* <button type="button" className="btn btn-blue me-1">
-                    Edit profile
-                  </button> */}
                   <button
                     type="button"
                     className="btn btn-outline-success"
@@ -317,7 +314,6 @@ const InstructorProfile = () => {
                     onClick={(e) => {
                       handleview(e);
                     }}
-                    // withBorder={true}
                     className="p-0.5 w-16 mb-2 ml-16"
                   />
                 </div>
@@ -326,7 +322,6 @@ const InstructorProfile = () => {
           </div>
         </div>
       </div>
-      {/* ))} */}
       {isModalOpen && (
         <div className="fixed top-0 right-0 left-0  flex items-center z-50 overflow-y-auto overflow-x-hidden justify-center items-center w-full inset-0 h-modal md:h-90">
           <div className="relative p-4 w-full max-w-2xl h-full md:h-auto">
@@ -568,7 +563,7 @@ const InstructorProfile = () => {
                 <div className="flex items-center justify-end space-x-4">
                   <button
                     type="button"
-                    onClick={() => handleUpdateProfile()} // Assuming `.id` is the user ID
+                    onClick={() => handleUpdateProfile()}
                     className="bg-blue-500 text-white px-4 py-2 rounded"
                   >
                     Update

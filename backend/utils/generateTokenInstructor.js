@@ -13,7 +13,7 @@ const generateTokenInstructor = (res, instructorId) => {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development",
     sameSite: "strict",
-    maxAge: 30 * 24 * 60 * 60 * 1000, // Corrected maxAge to seconds
+    maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 };
 export default generateTokenInstructor;

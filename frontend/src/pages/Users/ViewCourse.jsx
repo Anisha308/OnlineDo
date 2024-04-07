@@ -1,42 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import apiInstance from "../../../Api";
-import { useNavigate
-} from "react-router-dom";
- import { useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ViewCourse = () => {
   const user = useSelector((state) => state.auth.userInfo);
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [instructor, setInstructor] = useState(null);
-  // const [categoryId, setCategoryId] = useState(null);
   const [instructorId, setInstructorId] = useState(null);
-  // const [category, setCategory] = useState(null);
 
-  const navigate = useNavigate();
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         const response = await apiInstance.get(`/api/users/getCourse/${id}`);
         setCourse(response.data);
-        // Extracting instructorid from course data
         const instructorId = response.data.course.instructor;
-        // const categoryId = response.data.course.category;
         setInstructorId(instructorId);
-        // setCategoryId(categoryId);
         const instructorresponse = await apiInstance.get(
           `/api/users/getInstructor/${instructorId}`
         );
         setInstructor(instructorresponse.data);
-        // const categoryresponse = await apiInstance.get(
-        //   `api/instructor/getCategory/${categoryId}`
-        // );
-        // setCategory(categoryresponse.data);
       } catch (error) {
         console.error("Error fetching course", error);
-        navigate("/login");
       }
     };
     fetchCourse();
@@ -45,19 +32,18 @@ const ViewCourse = () => {
   const handleBuyClick = async (price) => {
     try {
       const instructorName = instructor.instructor.name;
-      const courses = course
-    
+      const courses = course;
+
       const response = await apiInstance.post(
         `api/users/create-checkout-session/${price}`,
         {
           instructorName: instructorName,
           user,
-          courses
+          courses,
         }
       );
       const stripeCheckoutUrl = response.data;
 
-      // Navigate to the Stripe checkout page
       window.location.href = stripeCheckoutUrl;
     } catch (error) {
       console.error(error, "error");

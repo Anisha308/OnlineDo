@@ -8,12 +8,10 @@ function Home() {
   return (
     <>
       <div className="py-[3px]"></div>
-      {/* ================Hero Section===========*/}
       <div style={{ backgroundColor: "bisque" }}>
         <section className="hero__section pt-[300px] 2xl:h-[800px]">
           <div className="container">
             <div className="flex flex-col lg:flex-row gap-[90px] items-center justify-between">
-              {/* ============Hero content ===================*/}
               <div>
                 <div className="lg:w-[570px]">
                   <h1 className=" text-[30px] leading-[46px] text-whiteText font-[500] md:text-[50px] md:leading-[70px]">
@@ -30,7 +28,6 @@ function Home() {
             </div>
           </div>
         </section>
-        {/* =============hero Counter============*/}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-[30px] mt-[30px] lg:mt-[55px]">
           <div className="py-[30px] px-5">
             <div className="flex items-center justify-center">

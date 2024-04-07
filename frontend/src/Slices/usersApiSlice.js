@@ -25,7 +25,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     getProfile: builder.mutation({
       query: (params) => ({
-        url: `${USERS_URL}/profile/${params.userId}`, // Assuming this endpoint returns user profile details
+        url: `${USERS_URL}/profile/${params.userId}`, 
         method: "GET",
       }),
     }),
@@ -45,7 +45,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     getAllCourse: builder.query({
       query: () => ({
-        url: `${USERS_URL}/getcourse`, // Assuming this endpoint returns user profile details
+        url: `${USERS_URL}/getcourse`, 
         method: "GET",
       }),
     }),

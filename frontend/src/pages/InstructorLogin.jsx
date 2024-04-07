@@ -19,18 +19,14 @@ const InstructorLogin = () => {
   });
   const dispatch = useDispatch();
 
-  const navigate = useNavigate(); // assuming you are using React Router
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // if (instructorInfo) {
-    //   navigate('/instructor')
-    // }
     const instructorJwt = document.cookie
       .split("; ")
       .find((row) => row.startsWith("instructorjwt="));
 
     if (instructorJwt) {
-      // Redirect to instructor page if token exists
       navigate("/instructor");
     }
   }, [navigate]);
@@ -42,7 +38,7 @@ const InstructorLogin = () => {
     }));
   };
 
-  const [login] = useInstructorLoginMutation(); // Assuming 'mutate' is the function used for login
+  const [login] = useInstructorLoginMutation();
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -85,8 +81,8 @@ const InstructorLogin = () => {
             <div
               className="absolute triangle right-0 hidden xl:block"
               style={{
-                borderTop: "calc(100vw / 2) solid #fff", // Adjust the height of the triangle
-                borderLeft: "calc(50vw / 2) solid transparent", // Adjust the width of the triangle
+                borderTop: "calc(100vw / 2) solid #fff",
+                borderLeft: "calc(50vw / 2) solid transparent",
               }}
             />
             <a
@@ -142,8 +138,6 @@ const InstructorLogin = () => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  {" "}
-                  {/* Reduced the top margin here */}
                   <label
                     htmlFor="password"
                     className="text-sm font-semibold text-gray-700 mb-1"

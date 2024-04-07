@@ -33,39 +33,39 @@ const AddCategories = () => {
       });
       if (response.data) {
         toast.success("Category added successfully");
-        fetchCategories(currentPage); // Fetch categories after adding
+        fetchCategories(currentPage);
       } else {
         toast.error("Failed to add category");
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-       return toast.error("Category already exists");
-      } else if(error) {
+        return toast.error("Category already exists");
+      } else if (error) {
         if (error.response && error.response.status === 401) {
-        return  toast.error("All fields must be filled");
+          return toast.error("All fields must be filled");
         }
       }
       console.error("Failed to add category:", error);
       toast.error("Failed to add category. Please try again later.");
     }
-  }
+  };
 
   const fetchCategories = async (page) => {
     try {
-     const response = await apiInstance.get("/api/admin/getcategory", {
-       params: { page }, // Pass the page number as a query parameter
-     });
+      const response = await apiInstance.get("/api/admin/getcategory", {
+        params: { page },
+      });
 
-    if (response.data) {
-      setCategories(response.data.categories);
-       setCurrentPage(response.data.pagination.currentPage);
-       setTotalPages(response.data.pagination.totalPages);
-    } else {
-      console.error(
-        "Invalid response or categories data not an array:",
-        response.data
-      );
-    }
+      if (response.data) {
+        setCategories(response.data.categories);
+        setCurrentPage(response.data.pagination.currentPage);
+        setTotalPages(response.data.pagination.totalPages);
+      } else {
+        console.error(
+          "Invalid response or categories data not an array:",
+          response.data
+        );
+      }
     } catch (error) {
       console.error("failed to fetch categories:", error);
       console.error("Unauthorized access. Redirecting to login...");
@@ -94,10 +94,10 @@ const AddCategories = () => {
     }
   };
 
- const handlePagination = (page) => {
-   setCurrentPage(page);
-   fetchCategories(page);
- };
+  const handlePagination = (page) => {
+    setCurrentPage(page);
+    fetchCategories(page);
+  };
   useEffect(() => {
     fetchCategories(currentPage);
   }, [currentPage]);
@@ -334,7 +334,6 @@ const AddCategories = () => {
                     >
                       {pageNumber}
                     </button>
-                    
                   </li>
                 )
               )}

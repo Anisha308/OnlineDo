@@ -30,33 +30,32 @@ const InstructorLists = () => {
   const [confirmVerify, setConfirmVerify] = useState(null);
   const [reason, setReason] = useState("");
   const [reject, setReject] = useState(null);
-const [showModalUnblock, setShowModalUnblock] = useState(false);
+  const [showModalUnblock, setShowModalUnblock] = useState(false);
   const [instructorIdToUnblock, setInstructorIdToUnblock] = useState(null);
 
   const isLastPage = currentPage === totalPages;
 
-
-    useEffect(() => {
-      const storedInstructors = JSON.parse(localStorage.getItem("instructors"));
-      if (storedInstructors) {
-        setInstructors(storedInstructors);
-      }
-    }, []);
-  
-  
-useEffect(() => {
-  if (data && data.data && data.data.instructors) {
-    setInstructors(data.data.instructors);
-    setTotalPages(data.data.pagination.totalPages);
-    localStorage.setItem("instructors", JSON.stringify(data.data.instructors));
-  } else {
-    if (error) {
-      console.error("Error fetching instructors:", error);
-      // navigate('admin/Login')
+  useEffect(() => {
+    const storedInstructors = JSON.parse(localStorage.getItem("instructors"));
+    if (storedInstructors) {
+      setInstructors(storedInstructors);
     }
-    // Handle error or redirect if needed
-  }
-}, [currentPage, data, error]);
+  }, []);
+
+  useEffect(() => {
+    if (data && data.data && data.data.instructors) {
+      setInstructors(data.data.instructors);
+      setTotalPages(data.data.pagination.totalPages);
+      localStorage.setItem(
+        "instructors",
+        JSON.stringify(data.data.instructors)
+      );
+    } else {
+      if (error) {
+        console.error("Error fetching instructors:", error);
+      }
+    }
+  }, [currentPage, data, error]);
   const openPreview = (image) => {
     setPreviewImage(image);
   };
@@ -65,39 +64,35 @@ useEffect(() => {
     setPreviewImage(null);
   };
 
-
-const cancelUnblock = () => {
-  setShowModalUnblock(false);
-  setInstructorIdToUnblock(null);
-};
+  const cancelUnblock = () => {
+    setShowModalUnblock(false);
+    setInstructorIdToUnblock(null);
+  };
   const handleBlockUnblockInstructor = (e, instructor) => {
-  e.preventDefault()
-  if (instructor.Blocked) {
-    handleUnblockInstructor(e,instructor._id);
-  } else {
-    handleBlockInstructor(instructor._id);
-  }
-};
+    e.preventDefault();
+    if (instructor.Blocked) {
+      handleUnblockInstructor(e, instructor._id);
+    } else {
+      handleBlockInstructor(instructor._id);
+    }
+  };
 
-  
-  
-
-const handleVerifyInstructor = async (instructorId) => {
-  try {
-    const response = await verifyInstructor({ instructorId }).unwrap();
-    setInstructors((prevInstructors) =>
-      prevInstructors.map((instructor) =>
-        instructor._id === instructorId
-          ? { ...instructor, Verified: true, rejected: false } 
-          : instructor
-      )
-    );
-    setSelectedInstructor(null);
-    setConfirmVerify(null);
-  } catch (error) {
-    console.error("Error verifying instructor:", error);
-  }
-};
+  const handleVerifyInstructor = async (instructorId) => {
+    try {
+      const response = await verifyInstructor({ instructorId }).unwrap();
+      setInstructors((prevInstructors) =>
+        prevInstructors.map((instructor) =>
+          instructor._id === instructorId
+            ? { ...instructor, Verified: true, rejected: false }
+            : instructor
+        )
+      );
+      setSelectedInstructor(null);
+      setConfirmVerify(null);
+    } catch (error) {
+      console.error("Error verifying instructor:", error);
+    }
+  };
 
   const handledocs = async (instructorId) => {
     try {
@@ -141,19 +136,18 @@ const handleVerifyInstructor = async (instructorId) => {
     }
   };
   const handleview = (instructorId) => {
-    navigate(`/admin/course/${instructorId}`)
-  }
+    navigate(`/admin/course/${instructorId}`);
+  };
   const cancelBlock = () => {
     setShowModal(false);
     setInstructorIdToBlock(null);
   };
 
-
   const handleUnblockInstructor = async (e, instructorId) => {
-    e.preventDefault()
-    setInstructorIdToUnblock(instructorId)
-    setShowModalUnblock(true)
-  }
+    e.preventDefault();
+    setInstructorIdToUnblock(instructorId);
+    setShowModalUnblock(true);
+  };
   const confirmUnblock = async (instructorId) => {
     try {
       const response = await unblockInstructorMutation({ instructorId });
@@ -164,19 +158,31 @@ const handleVerifyInstructor = async (instructorId) => {
             : instructor
         )
       );
-      setShowModalUnblock(false)
+      setShowModalUnblock(false);
     } catch (error) {
       console.error("Error blocking/unblocking instructor:", error);
     }
   };
 
-
   const mailreason = async (reason) => {
     try {
-      const res = await apiInstance.post(`api/admin/sendmail`, {
-        reason,
-        instructorId: selectedInstructor._id,
-      });
+      const jwtToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("adminjwt="))
+        ?.split("=")[1];
+
+      const res = await apiInstance.post(
+        `api/admin/sendmail`,
+        {
+          reason,
+          instructorId: selectedInstructor._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
       setInstructors((prevInstructors) =>
         prevInstructors.map((instructor) =>
           instructor._id === selectedInstructor._id
@@ -194,14 +200,27 @@ const handleVerifyInstructor = async (instructorId) => {
   const handleReject = async (instructor) => {
     if (!selectedInstructor) return;
     try {
-      const res = await apiInstance.post(`api/admin/sendmail`, {
-        reason,
-        instructorId: selectedInstructor._id,
-      });
+      const jwtToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("adminjwt="))
+        ?.split("=")[1];
+
+      const res = await apiInstance.post(
+        `api/admin/sendmail`,
+        {
+          reason,
+          instructorId: selectedInstructor._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
       setInstructors((prevInstructors) =>
         prevInstructors.map((instructor) =>
           instructor._id === selectedInstructor._id
-            ? { ...instructor, rejected: true, Verified: false } // Set Verified to false if previously verified
+            ? { ...instructor, rejected: true, Verified: false }
             : instructor
         )
       );
@@ -230,36 +249,36 @@ const handleVerifyInstructor = async (instructorId) => {
     setConfirmVerify(true);
   };
 
- const paginate = async (pageNumber) => {
-   try {
-     const response = await fetch(
-       `/api/admin/instructorlist?page=${pageNumber}`,
-       {
-         headers: {
-           Accept: "application/json",
-           // Add other headers if needed
-         },
-       }
-     );
+  const paginate = async (pageNumber) => {
+    try {
+      const jwtToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("jwt="))
+        ?.split("=")[1];
 
+      const response = await fetch(
+        `/api/admin/instructorlist?page=${pageNumber}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
 
-     if (!response.ok) {
-       throw new Error("Failed to fetch data");
-     }
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
 
-     const responseData = await response.json();
-   
-     setInstructors(responseData.data.instructors);
-     setCurrentPage(pageNumber);
-     setTotalPages(responseData.data.pagination.totalPages);
+      const responseData = await response.json();
 
-   
-   } catch (error) {
-     console.error("Error fetching data:", error);
-     // Handle error (e.g., display error message)
-   }
- };
-
+      setInstructors(responseData.data.instructors);
+      setCurrentPage(pageNumber);
+      setTotalPages(responseData.data.pagination.totalPages);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const cancelInstructor = (instructorId) => {
     setConfirmVerify(false);
@@ -425,17 +444,15 @@ const handleVerifyInstructor = async (instructorId) => {
                               <select
                                 value=""
                                 onChange={(e) => {
-                                  e.preventDefault(); // Prevent default form submission behavior
+                                  e.preventDefault();
 
                                   const value = e.target.value;
                                   if (value === "verify") {
-                                    // Set the selected instructor
                                     setSelectedInstructor(instructor);
-                                    // Open the verification modal
                                     setShowVerificationModal(true);
                                   } else if (value === "reject") {
-                                    setReject(true); // Set the reject state to true to trigger the rejection modal
-                                    setShowVerificationModal(true); // Open the verification modal
+                                    setReject(true);
+                                    setShowVerificationModal(true);
                                   } else if (value === "unblock") {
                                     handleBlockUnblockInstructor(e, instructor);
                                   }
@@ -443,7 +460,7 @@ const handleVerifyInstructor = async (instructorId) => {
                                 className={`px-3 py-1 font-semibold text-red-900 leading-tight appearance-none border-none bg-transparent`}
                               >
                                 <option disabled value="">
-                                  &#8942; {/* Vertical ellipsis */}
+                                  &#8942;
                                 </option>
                                 {instructor.Verified && (
                                   <option value="reject">Reject</option>
@@ -457,9 +474,10 @@ const handleVerifyInstructor = async (instructorId) => {
                                 {instructor.rejected && (
                                   <option value="verify">verify</option>
                                 )}{" "}
-                                {!instructor.rejected && !instructor.Verified && (
-                                  <option value="verify">verify</option>
-                                )}
+                                {!instructor.rejected &&
+                                  !instructor.Verified && (
+                                    <option value="verify">verify</option>
+                                  )}
                                 <option value="unblock">
                                   {instructor.Blocked ? "Unblock" : "Block"}
                                 </option>
@@ -544,7 +562,7 @@ const handleVerifyInstructor = async (instructorId) => {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                confirmUnblock(instructorIdToUnblock); // Pass instructorIdToUnblock instead of instructors._id
+                confirmUnblock(instructorIdToUnblock);
               }}
               type="button"
               className="text-white bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
@@ -553,7 +571,6 @@ const handleVerifyInstructor = async (instructorId) => {
             </button>
 
             <button
-              // onClick={cancelunBlock}
               type="button"
               className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
             >
@@ -573,11 +590,9 @@ const handleVerifyInstructor = async (instructorId) => {
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
           )}
-          {/* Modal */}
           {reject && (
             <div className="fixed z-10 inset-0 overflow-y-auto" x-cloak>
               <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                {/* Modal panel */}
                 <div
                   className="w-full inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
                   role="dialog"
@@ -585,10 +600,8 @@ const handleVerifyInstructor = async (instructorId) => {
                   aria-labelledby="modal-headline"
                 >
                   <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    {/* Modal content */}
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                        {/* Icon for newsletter */}
                         <svg
                           width="64px"
                           height="64px"
@@ -598,9 +611,7 @@ const handleVerifyInstructor = async (instructorId) => {
                           xmlns="http://www.w3.org/2000/svg"
                           stroke="#2563eb"
                           strokeWidth="0.36"
-                        >
-                          {/* ... */}
-                        </svg>
+                        ></svg>
                       </div>
                       <div className="w-full mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <h3
@@ -625,7 +636,6 @@ const handleVerifyInstructor = async (instructorId) => {
                     </div>
                   </div>
                   <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    {/* Subscribe button */}
                     <button
                       onClick={() => {
                         mailreason(reason);
@@ -636,7 +646,6 @@ const handleVerifyInstructor = async (instructorId) => {
                     >
                       Confirm
                     </button>
-                    {/* Cancel button */}
                     <button
                       onClick={() => setReject(false)}
                       type="button"
@@ -676,7 +685,7 @@ const handleVerifyInstructor = async (instructorId) => {
                       currentPage === pageNumber ? "bg-gray-500" : ""
                     }`}
                     onClick={() => paginate(pageNumber)}
-                    disabled={isLoading} // Disable button while loading
+                    disabled={isLoading}
                   >
                     {pageNumber}
                   </button>

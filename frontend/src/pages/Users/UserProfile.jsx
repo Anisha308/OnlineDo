@@ -13,13 +13,12 @@ const UserProfile = () => {
   const user = useSelector((state) => state.auth.userInfo);
   const dispatch = useDispatch();
 
-  // const { data, error, isLoading } = useGetProfileQuery(user?._id);
   const [getProfile] = useGetProfileMutation();
 
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [count, setCount] = useState(0);
-  const [selectedUserId, setSelectedUserId] = useState(null); // Add this state
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const navigate = useNavigate();
   const [editedUserData, setEditedUserData] = useState({
     name: "",
@@ -36,7 +35,7 @@ const UserProfile = () => {
       mobile: users.mobile || "",
       profilephoto: users.profilephoto || "",
     });
-    setSelectedUserId(users._id); // Set the selected user ID
+    setSelectedUserId(users._id);
     setIsModalOpen(true);
   };
 
@@ -107,7 +106,6 @@ const UserProfile = () => {
 
   return (
     <section className="bg-gray-100 ">
-      {/* {users.map((, index) => ( */}
       <div key="#key" className="container mx-auto ">
         <div className="row">
           <div className=" lg:flex lg:items-center lg:justify-between flex-wrap">
@@ -124,8 +122,7 @@ const UserProfile = () => {
                 <li className="breadcrumb-item">
                   <span className="text-gray-500">/</span>
                 </li>
-               
-               
+
                 <li className="breadcrumb-item active" aria-current="page">
                   User Profile
                 </li>
@@ -151,7 +148,6 @@ const UserProfile = () => {
                 <p className="text-muted mb-2">Student</p>
                 <p className="text-muted mb-4">{users.email}</p>
                 <div className="flex justify-center mb-2">
-                  
                   <button
                     type="button"
                     className="btn btn-outline-success"
@@ -206,12 +202,10 @@ const UserProfile = () => {
                   </button>
                 </div>
               </div>
-            
             </div>
           </div>
         </div>
       </div>
-      {/* ))} */}
 
       {isModalOpen && (
         <div className="fixed top-0 right-0 left-0  flex items-center z-50 overflow-y-auto overflow-x-hidden justify-center items-center w-full inset-0 h-modal md:h-100">
@@ -272,7 +266,6 @@ const UserProfile = () => {
                     name="email"
                     id="email"
                     value={editedUserData.email}
-                    
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Eg: email@gmail.com"
                   />
@@ -331,7 +324,7 @@ const UserProfile = () => {
                 <div className="flex items-center justify-end space-x-4">
                   <button
                     type="button"
-                    onClick={() => handleUpdateProfile()} // Assuming `.id` is the user ID
+                    onClick={() => handleUpdateProfile()}
                     className="bg-blue-500 text-white px-4 py-2 rounded"
                   >
                     Update

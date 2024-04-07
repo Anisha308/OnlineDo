@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import InstructorSidebar from "../../components/Header/instructorSidebar.jsx"
-import apiInstance from '../../../Api.js'
+import React, { useEffect, useState } from "react";
+import InstructorSidebar from "../../components/Header/instructorSidebar.jsx";
+import apiInstance from "../../../Api.js";
 import { useSelector } from "react-redux";
 import IconChat from "../../components/iconchat";
 import { useNavigate } from "react-router-dom";
@@ -9,52 +9,52 @@ import { useCreateChatMutation } from "../../Slices/chatApiSlice";
 import { instructApiSlice } from "../../Slices/authInstructorSlice";
 
 const DashboardInstructor = () => {
-    const [totalusers, setTotalUsers] = useState(0)
-const [yearlyRevenue, setYearlyRevenue] = useState([]);
-    const [monthlyRevenue, setMonthlyRevenue] = useState([]);
-    
-    useEffect(() => {
-        const fetchData = async()=> {
-    const response = await apiInstance.get(`/api/instructor/getusers`)
-            setTotalUsers(response.data.countusers)
+  const [totalusers, setTotalUsers] = useState(0);
+  const [yearlyRevenue, setYearlyRevenue] = useState([]);
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
 
-            const result= await apiInstance.get(`api/instructor/yearlyrevenue`)
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await apiInstance.get(`/api/instructor/getusers`);
+      setTotalUsers(response.data.countusers);
 
-            setYearlyRevenue(result.data)
+      const result = await apiInstance.get(`api/instructor/yearlyrevenue`);
 
-            const res=await apiInstance.get(`/api/instructor/monthlyrevenue`)
-            setMonthlyRevenue(res.data)
-        }
-    fetchData()
-    }, [])
-    
-    
+      setYearlyRevenue(result.data);
+
+      const res = await apiInstance.get(`/api/instructor/monthlyrevenue`);
+      setMonthlyRevenue(res.data);
+    };
+    fetchData();
+  }, []);
+
   const currentMonth = new Date().getMonth() + 1;
   const currentMonthRevenue = monthlyRevenue.find(
     (data) => data.month === currentMonth
   );
-  const currentYear = new Date().getFullYear(); // Get the current year
+  const currentYear = new Date().getFullYear();
   const currentYearRevenue = yearlyRevenue.find(
     (data) => data.year === currentYear
   );
-const [purchases, setPurchases] = useState([]);
-const instructor = useSelector((state) => state.instructorAuth.instructorInfo);
-const navigate = useNavigate();
-useEffect(() => {
-  const fetchPurchases = async () => {
-    try {
-      const response = await apiInstance.get(`api/instructor/purchaselist`, {
-        params: { instructorId: instructor._id }, // Pass instructorId in params
-      });
-      setPurchases(response.data);
-    } catch (error) {
-      console.error("Error fetching purchases", error);
-    }
-  };
+  const [purchases, setPurchases] = useState([]);
+  const instructor = useSelector(
+    (state) => state.instructorAuth.instructorInfo
+  );
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchPurchases = async () => {
+      try {
+        const response = await apiInstance.get(`api/instructor/purchaselist`, {
+          params: { instructorId: instructor._id },
+        });
+        setPurchases(response.data);
+      } catch (error) {
+        console.error("Error fetching purchases", error);
+      }
+    };
 
-  fetchPurchases();
-}, [instructor._id]);
-
+    fetchPurchases();
+  }, [instructor._id]);
 
   return (
     <div>
@@ -224,16 +224,6 @@ useEffect(() => {
                                 ₹{user.courses.price}
                               </p>
                             </td>
-                            {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                          <div>
-                            <button
-                              onClick={() => handleBlockUser(user._id)}
-                              className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight absolute inset-0 bg-red-200 opacity-50 rounded-full"
-                            >
-                              {user.Blocked ? "Unblock" : "Block"}
-                            </button>
-                          </div>
-                        </td> */}
                           </tr>
                         ))}
                     </tbody>
@@ -249,11 +239,7 @@ useEffect(() => {
                       className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300
                   `}
                       href="#"
-                      // onClick={() =>
-                      //   paginate(currentPage > 1 ? currentPage - 1 : 1)
-                      // }
                       aria-label="Previous"
-                      // disabled={currentPage === 1}
                     >
                       <span className="material-icons text-sm">
                         keyboard_arrow_left
@@ -266,7 +252,6 @@ useEffect(() => {
                       className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 `}
                       href="#"
                       aria-label="Next"
-                      // disabled={isLastPage}
                     >
                       <span className="material-icons text-sm">
                         keyboard_arrow_right
@@ -285,13 +270,11 @@ useEffect(() => {
               rel="stylesheet"
             />
           </div>
-
-          {/* End Content */}
         </main>
       </div>
       <script src="https://unpkg.com/@popperjs/core@2"></script>
     </div>
   );
-}
+};
 
-export default DashboardInstructor
+export default DashboardInstructor;

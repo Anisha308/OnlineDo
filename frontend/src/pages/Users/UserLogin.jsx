@@ -61,8 +61,8 @@ const Login = () => {
             <div
               className="absolute triangle right-0 hidden xl:block"
               style={{
-                borderTop: "calc(100vw / 2) solid #fff", // Adjust the height of the triangle
-                borderLeft: "calc(50vw / 2) solid transparent", // Adjust the width of the triangle
+                borderTop: "calc(100vw / 2) solid #fff",
+                borderLeft: "calc(50vw / 2) solid transparent",
               }}
             />
             <a
@@ -88,7 +88,7 @@ const Login = () => {
           <div className="md:w-1/2 xl:w-1/2  p-6">
             {" "}
             <div className="max-w-md mx-auto space-y-6">
-                <h2 className="mb-2 text-3xl font-bold text-gray-900">
+              <h2 className="mb-2 text-3xl font-bold text-gray-900">
                 Welcome Back!
               </h2>
               <p className="mb-5 text-sm  text-gray-900">
@@ -138,7 +138,7 @@ const Login = () => {
                   >
                     Sign in
                   </button>
-                  {isLoading && <Loader />} {/* Show loader if loading */}
+                  {isLoading && <Loader />}
                   <OAuth />
                 </div>
                 <p className=" text-center text-gray-500 text-sm">

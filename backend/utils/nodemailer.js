@@ -11,7 +11,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Function to send an email
 const sendEmail = async (to, subject, text) => {
   try {
     const info = await transporter.sendMail({

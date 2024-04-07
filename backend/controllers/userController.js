@@ -6,8 +6,8 @@ import generateOTP from "../utils/otp.js";
 import sendEmail from "../utils/nodemailer.js";
 import Instructor from "../models/InstructorModel.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"
-import Rating from '../models/ratingModel.js'
+import jwt from "jsonwebtoken";
+import Rating from "../models/ratingModel.js";
 import Category from "../models/categoryModel.js";
 
 const authUser = asyncHandler(async (req, res) => {
@@ -107,7 +107,6 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = (req, res) => {
-  console.log('ji hii');
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
@@ -117,7 +116,7 @@ const logoutUser = (req, res) => {
 
 const otpVerify = async (req, res) => {
   try {
-    let result; // Define result before the if-else block
+    let result;
 
     const { otp, typedOtp, email, name, mobile, profilephoto, password } =
       req.body;
@@ -141,7 +140,7 @@ const otpVerify = async (req, res) => {
       const jwtoken = generateToken(res, newUser._id);
       res.status(200).json({
         _id: newUser._id,
-        name: newUser.name, // Update with the actual user properties
+        name: newUser.name,
         email: newUser.email,
         userJwt: jwtoken,
         success: true,
@@ -169,8 +168,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
 
 const updateUserProfile = asyncHandler(async (req, res) => {
   try {
@@ -212,13 +209,13 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 const getAllCourses = asyncHandler(async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.ITEMS_PER_PAGE); // Set the number of items per page
+    const pageSize = parseInt(req.query.ITEMS_PER_PAGE);
     const skip = (page - 1) * pageSize;
 
     const courses = await Course.find({})
       .populate("instructor", "name")
       .skip((page - 1) * pageSize)
-      .limit(pageSize); // Limit the number of courses per page
+      .limit(pageSize);
 
     const totalCourses = await Course.countDocuments({});
     const totalPages = Math.ceil(totalCourses / pageSize);
@@ -321,12 +318,9 @@ const getInstructor = asyncHandler(async (req, res) => {
 const googleAuth = asyncHandler(async (req, res) => {
   try {
     const { email, name, photo } = req.body;
-    console.log(email,name,photo,'jjjjgfgygj');
     const user = await User.findOne({ email });
-    console.log(user,'user');
     if (user) {
       const token = generateToken(res, user._id);
-      console.log(token,'token');
       const { password: hashedPassword, ...rest } = user._doc;
 
       const expiryDate = new Date(Date.now() + 3600000);
@@ -342,14 +336,12 @@ const googleAuth = asyncHandler(async (req, res) => {
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
 
-      // Hash the generated password
-
       const newUser = new User({
         name:
           name.replace(/\s+/g, "").toLowerCase() +
           Math.floor(Math.random() * 10000).toString(),
         email,
-        password: generatedPassword, // Store the hashed password in the database
+        password: generatedPassword,
         profilephoto: photo,
       });
       await newUser.save();
@@ -365,7 +357,6 @@ const googleAuth = asyncHandler(async (req, res) => {
         .status(200)
         .json(userWithoutPassword);
 
-      // Send email with generated password
       const subject = "Your Generated Password  : OnlineDo";
       const text = `Your generated password: ${generatedPassword}`;
       await sendEmail(newUser.email, subject, text);
@@ -390,31 +381,32 @@ const getSingleCourseById = asyncHandler(async (req, res) => {
   }
 });
 
-
 const userrating = asyncHandler(async (req, res) => {
   try {
-    const { purchaseId, rating, comment, userId } = req.body
+    const { purchaseId, rating, comment, userId } = req.body;
 
     const newRating = new Rating({
       purchaseId,
       rating,
       comment,
-      userId
-    })
-    await newRating.save()
-    res.status(200).json({newRating,message:"Rating submitted successfully"})
+      userId,
+    });
+    await newRating.save();
+    res
+      .status(200)
+      .json({ newRating, message: "Rating submitted successfully" });
   } catch (error) {
-    console.error(error,'error ');
+    console.error(error, "error ");
   }
-})
+});
 
 const fetchRating = asyncHandler(async (req, res) => {
   try {
-   const users = await Rating.find({}).populate({
-     path: "userId",
-     select: "name"
-   });
-    const count = await Rating.countDocuments({})
+    const users = await Rating.find({}).populate({
+      path: "userId",
+      select: "name",
+    });
+    const count = await Rating.countDocuments({});
     const ratings = await Rating.aggregate([
       {
         $group: {
@@ -429,11 +421,11 @@ const fetchRating = asyncHandler(async (req, res) => {
       },
     ]);
 
-    res.status(200).json({ ratings,count,users, success:true})
+    res.status(200).json({ ratings, count, users, success: true });
   } catch (error) {
     console.error(error);
   }
-})
+});
 export {
   authUser,
   registerUser,

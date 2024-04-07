@@ -22,7 +22,7 @@ const AddCourse = () => {
   ]);
 
   const [previewVideo, setPreviewVideo] = useState(null);
-  const [chapterQueue, setChapterQueue] = useState([]); // Step 1: Define Queue State
+  const [chapterQueue, setChapterQueue] = useState([]);
 
   const [categories, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -64,8 +64,8 @@ const AddCourse = () => {
     setChapterQueue([...chapterQueue, chapter]);
   };
   useEffect(() => {
-    processChapterQueue(); // Trigger processing of queued modules
-  }, [chapterQueue]); // Ensure this effect runs whenever the queue changes
+    processChapterQueue();
+  }, [chapterQueue]);
 
   const dequeueChapter = () => {
     const [firstChapter, ...restChapters] = chapterQueue;
@@ -74,7 +74,7 @@ const AddCourse = () => {
   };
 
   const addCourse = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
     if (
       !courseName ||
       !description ||
@@ -92,15 +92,13 @@ const AddCourse = () => {
 
     if (!previewVideo) {
       toast.error("preview video must be filled");
-      return
+      return;
     }
     if (isNaN(parseFloat(price)) || !isFinite(price)) {
       toast.error("Invalid Price");
       return;
     }
 
-
-  
     if (
       courseName.length < 2 ||
       description.length < 5 ||
@@ -134,15 +132,10 @@ const AddCourse = () => {
       if (data) {
         Navigate(`/instructor/${instructorId}/courselist`);
         toast.success("Course added successfully:", data);
-      
       } else {
-        toast.error("Course already exists")
-
+        toast.error("Course already exists");
       }
-    } 
-   
-    
-     catch (error) {
+    } catch (error) {
       console.error("Error adding courses:", error);
       if (error.response && error.response.status === 400) {
         const errorMessage = error.response.data.error;
@@ -167,14 +160,13 @@ const AddCourse = () => {
   };
   const processChapterQueue = async () => {
     for (const chapter of chapterQueue) {
-      // Process each chapter/module
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      dequeueChapter(); // Dequeue the processed module
+      dequeueChapter();
     }
   };
   const handleOnUpload = async (file, moduleIndex, videoIndex) => {
     try {
-      const isVideo = file.type.startsWith("video"); // Corrected variable name
+      const isVideo = file.type.startsWith("video");
       setLoading(true);
       const cloudinaryResponse = await uploadToCloudinary(file, isVideo);
 
@@ -198,7 +190,7 @@ const AddCourse = () => {
 
     const newModule = {
       title: "",
-      videos: [{ url: "" }], // Add a default video when adding a module
+      videos: [{ url: "" }],
     };
     setModules([...modules, newModule]);
 
@@ -217,7 +209,7 @@ const AddCourse = () => {
 
     setModules(updatedModules);
   };
-  
+
   const handlecategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };
@@ -236,7 +228,6 @@ const AddCourse = () => {
   }, []);
 
   const handlePreviewVideoUpload = async (e) => {
-  
     const file = e.target.files[0];
     try {
       setLoading(true);
@@ -253,7 +244,7 @@ const AddCourse = () => {
   return (
     <div className="flex ">
       <InstructorSidebar instructorId={instructorId} />
-<IconChat/>
+      <IconChat />
       <link
         rel="stylesheet"
         href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
@@ -548,7 +539,6 @@ const AddCourse = () => {
                             >
                               Video{videoIndex + 1}
                             </label>
-                            {/* <div className="flex flex-row items-center ml-2"> */}
                             <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-gray">
                               {loading ? (
                                 <img
@@ -591,7 +581,6 @@ const AddCourse = () => {
                               </button>
                             )}
                           </div>
-                          // </div>
                         ))}
                     </div>
                   ))}
@@ -604,7 +593,7 @@ const AddCourse = () => {
                     <button
                       className="shadow bg-blue-900 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded "
                       type="button"
-                      onClick={addCourse} // Change AddCourse to addCourse
+                      onClick={addCourse}
                     >
                       Add Course
                     </button>

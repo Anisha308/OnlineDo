@@ -12,22 +12,16 @@ const OAuth = () => {
   const handleGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      console.log(provider,'provider');
       const auth = getAuth(app);
-      console.log(auth,'auth');
       const result = await signInWithPopup(auth, provider);
-      console.log(result,'result');
       const res = await apiInstance.post(`/api/users/google`, {
         name: result.user.displayName,
         email: result.user.email,
         photo: result.user.photoURL,
       });
 
-      console.log(res,'res');
-      const data = res.data; // Use res.data directly
-console.log(data,'dataa');
+      const data = res.data;
       if (data) {
-        console.log(data,'hhh');
         dispatch(setCredentials(data));
         navigate("/home");
       }

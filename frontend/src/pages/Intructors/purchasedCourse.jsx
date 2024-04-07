@@ -24,9 +24,10 @@ const PurchaseCourse = () => {
           params: {
             instructorId: instructor._id,
             page: pagination.currentPage,
-            limit: 10, // Adjust as needed
+            limit: 10,
           },
         });
+        console.log(response);
         setPurchases(response.data.data);
         setPagination({
           currentPage: response.data.pagination.currentPage,
@@ -138,51 +139,6 @@ const PurchaseCourse = () => {
               </table>
             </div>
           </div>
-        </div>
-
-        <div className="mt-auto mb-4 text-center">
-          <nav>
-            <ul className="flex justify-center">
-              <li>
-                <button
-                  onClick={() =>
-                    handlePagination(
-                      pagination.currentPage > 1
-                        ? pagination.currentPage - 1
-                        : 1
-                    )
-                  }
-                  disabled={pagination.currentPage === 1}
-                >
-                  Previous
-                </button>
-              </li>
-              {[...Array(pagination.totalPages)].map((_, index) => (
-                <li key={index}>
-                  <button
-                    onClick={() => handlePagination(index + 1)}
-                    disabled={pagination.currentPage === index + 1}
-                  >
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
-              <li>
-                <button
-                  onClick={() =>
-                    handlePagination(
-                      pagination.currentPage < pagination.totalPages
-                        ? pagination.currentPage + 1
-                        : pagination.totalPages
-                    )
-                  }
-                  disabled={pagination.currentPage === pagination.totalPages}
-                >
-                  Next
-                </button>
-              </li>
-            </ul>
-          </nav>
         </div>
       </div>
     </div>
