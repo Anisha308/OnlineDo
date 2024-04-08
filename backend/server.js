@@ -16,7 +16,7 @@ const __dirname = path.resolve();
 
 const frontendDistPath =
   process.env.FRONTEND_DIST_PATH || path.join(__dirname, "frontend", "dist");
-
+console.log(frontendDistPath,'frh');
 
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
