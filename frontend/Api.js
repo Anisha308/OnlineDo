@@ -1,6 +1,6 @@
 import axios from "axios";
 const apiInstance = axios.create({
-  baseURL: "www.anisha.shop",
+  baseURL: "http://localhost:3002",
 });
 
 apiInstance.interceptors.request.use(

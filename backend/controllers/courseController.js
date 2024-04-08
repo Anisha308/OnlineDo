@@ -6,6 +6,7 @@ import Purchase from "../models/purchaseModel.js";
 
 const viewCourse = asyncHandler(async (req, res) => {
   try {
+    console.log('hmmmm');
     const courseId = req.params.id;
     console.log(courseId);
     const course = await Course.findById(courseId);
