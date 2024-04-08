@@ -7,12 +7,16 @@ import Purchase from "../models/purchaseModel.js";
 const viewCourse = asyncHandler(async (req, res) => {
   try {
     const courseId = req.params.id;
+    console.log(courseId);
     const course = await Course.findById(courseId);
+    console.log(course);
     res.status(200).json({ success: true, course });
   } catch (error) {
     console.error("Error fetching course", error);
   }
 });
+
+
 const instructorcourse = asyncHandler(async (req, res) => {
   try {
     const instructorId = req.params.id;
