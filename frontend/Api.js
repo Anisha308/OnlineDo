@@ -20,7 +20,7 @@ apiInstance.interceptors.request.use(
 
 apiInstance.interceptors.response.use(
   (response) => {
-    console.log(response, 'response fromio');
+    console.log(response, 'response from axios');
 
     return response;
   },
