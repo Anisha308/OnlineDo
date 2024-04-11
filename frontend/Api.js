@@ -1,6 +1,11 @@
 import axios from "axios";
+const API_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3002"
+    : "http://13.211.175.247:5002";
+
 const apiInstance = axios.create({
-  baseURL: "http://13.211.175.247:5002",
+  baseURL: API_URL,
 });
 
 apiInstance.interceptors.request.use(
@@ -15,7 +20,7 @@ apiInstance.interceptors.request.use(
 
 apiInstance.interceptors.response.use(
   (response) => {
-    console.log(response, 'repone fromio');
+    console.log(response, 'response fromio');
 
     return response;
   },
